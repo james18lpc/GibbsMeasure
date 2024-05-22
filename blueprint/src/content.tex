@@ -5,3 +5,31 @@
 % If you want to split the blueprint content into several files then
 % the current file can be a simple sequence of \input. Otherwise It
 % can start with a \section or \chapter for instance.
+
+\chapter{Intro}
+\begin{definition}[Cylinder ]
+    \label{def:cdf}
+    \lean{ProbabilityTheory.cdf}
+    \leanok
+    %\uses{def:measure}
+    
+  \end{definition}
+
+\begin{lemma}[Basic Lemma]
+    \label{lem:hello}
+    %\uses{def:cdf}
+    Hello
+\end{lemma}
+\begin{proof}
+    efef
+\end{proof}
+
+\begin{lemma}[Basic Lemma 2]
+    \label{lem:hello2}
+    \uses{def:cdf}
+    hello2
+\end{lemma}
+\begin{proof}
+    \uses{lem:hello}
+    goodbye
+\end{proof}
