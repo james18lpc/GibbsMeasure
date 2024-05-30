@@ -7,29 +7,32 @@
 % can start with a \section or \chapter for instance.
 
 \chapter{Intro}
-\begin{definition}[Cylinder ]
-    \label{def:cdf}
+
+\begin{definition}[Proper Probability Kernel]
+    \label{def:properProbabilityKernel}
     \lean{ProbabilityTheory.cdf}
     \leanok
-    %\uses{def:measure}
+    Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measure spaces. Let $\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}}$ be such that
+    \begin{enumerate}
+        \item $\pi(\cdot\mid y)$ is a measure on $(X,\mathcal{X})$ for all $y\in \mathcal{Y}$,
+        \item $\pi(A\mid\cdot)$ is $\mathcal{Y}$-measurable for each $A\in\mathcal{X}$, and
+        \item $\pi(X\mid\cdot)=1$
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[Specification]
+    \label{def:specification}
+    \lean{ProbabilityTheory.cdf}
+    \leanok
+    \uses{def:properProbabilityKernel}
     
-  \end{definition}
+\end{definition}
 
-\begin{lemma}[Basic Lemma]
-    \label{lem:hello}
-    %\uses{def:cdf}
-    Hello
-\end{lemma}
-\begin{proof}
-    efef
-\end{proof}
+\begin{lemma}
 
-\begin{lemma}[Basic Lemma 2]
-    \label{lem:hello2}
-    \uses{def:cdf}
-    hello2
 \end{lemma}
-\begin{proof}
-    \uses{lem:hello}
-    goodbye
-\end{proof}
+
+\begin{definition}[]
+
+
+\end{definition}
