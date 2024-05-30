@@ -35,6 +35,8 @@ variable (Δ : Set S)
 def cylinderEventsOn (Δ : Set S) : MeasurableSpace (S → E) :=
   ⨆ x ∈ Δ, 𝓔.comap fun σ ↦ σ x
 
+--TODO: write lemma about the measurability of coordinate projections in Δ
+
 lemma cylinderEventsOn_mono {Δ₁ Δ₂ : Set S} (h : Δ₁ ⊆ Δ₂) : cylinderEventsOn E Δ₁ ≤ cylinderEventsOn E Δ₂ := by
   simp only [cylinderEventsOn, iSup_le_iff]
   exact fun i i_1 ↦ le_iSup₂_of_le i (h i_1) fun s a ↦ a
@@ -49,12 +51,16 @@ lemma measurableRestrictEasy (Δ : Set S) : Measurable (restrict E Δ) := by
 
   sorry
 
-#check @Measurable (S → E) (Δ → E) (cylinderEventsOn E Δ) _ (restrict E Δ)
+#check @Measurable (S → E) (Δ → E) (cylinderEventsOn E Δ) MeasurableSpace.pi (restrict E Δ)
 
 lemma measurableRestrict (Δ : Set S) :
-    @Measurable (S → E) (Δ → E) (cylinderEventsOn E Δ) _ (restrict E Δ) := by
-  simp only [cylinderEventsOn, MeasurableSpace.pi]
-  have := @MeasurableSpace.comap_iSup
+    @Measurable (S → E) (Δ → E) (cylinderEventsOn E Δ) MeasurableSpace.pi (restrict E Δ) := by
+  --simp only [cylinderEventsOn, MeasurableSpace.pi]
+  have := @measurable_pi_iff (S → E) Δ (fun _ ↦ E) (cylinderEventsOn E Δ) (fun _ ↦ 𝓔) (restrict E Δ)
+  rw [this]
+  intro x
+  simp [restrict]
+  measurability
   sorry
 
 
