@@ -71,11 +71,9 @@ lemma sup_measurable_of_measurable (X Y : Type*) (𝓢₁ 𝓢₂ : MeasurableSp
 
 
 lemma cylinderEventsOn_univ_eq :
-    cylinderEventsOn E (univ : Set S) = @MeasurableSpace.pi S (fun _ ↦ E) (fun _ ↦ 𝓔) := by
-  rw [cylinderEventsOn]
-  sorry
-
-
+    cylinderEventsOn E (Set.univ : Set S) = @MeasurableSpace.pi S (fun _ ↦ E) (fun _ ↦ 𝓔) := by
+  rw [cylinderEventsOn, MeasurableSpace.pi]
+  simp only [Set.mem_univ, iSup_pos]
 
 lemma measurableCoordinateProjection {Δ : Set S} {x : S} (h : x ∈ Δ) :
     @Measurable (S → E) E (cylinderEventsOn E Δ) _ (fun σ ↦ σ x) := by
