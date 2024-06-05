@@ -71,9 +71,11 @@ lemma sup_measurable_of_measurable (X Y : Type*) (𝓢₁ 𝓢₂ : MeasurableSp
 
 
 lemma cylinderEventsOn_univ_eq :
-    cylinderEventsOn E (univ : Set S) = MeasurableSpace.pi := by
+    cylinderEventsOn E (univ : Set S) = @MeasurableSpace.pi S (fun _ ↦ E) (fun _ ↦ 𝓔) := by
   rw [cylinderEventsOn]
   sorry
+
+
 
 lemma measurableCoordinateProjection {Δ : Set S} {x : S} (h : x ∈ Δ) :
     @Measurable (S → E) E (cylinderEventsOn E Δ) _ (fun σ ↦ σ x) := by
@@ -85,9 +87,14 @@ lemma cylinderEventsOn_mono {Δ₁ Δ₂ : Set S} (h : Δ₁ ⊆ Δ₂) : cylind
   simp only [cylinderEventsOn, iSup_le_iff]
   exact fun i i_1 ↦ le_iSup₂_of_le i (h i_1) fun s a ↦ a
 
-lemma cylinderEventsOn_le (Δ : Set S) : cylinderEventsOn E Δ ≤ MeasurableSpace.pi := by
-  sorry
+-- check rw [cylinderEventsOn_univ_eq]
+lemma cylinderEventsOn_le (Δ : Set S) :
+    cylinderEventsOn E Δ ≤ @MeasurableSpace.pi S (fun _ ↦ E) (fun _ ↦ 𝓔) := by
+  apply le_trans (cylinderEventsOn_mono E (Set.subset_univ Δ))
+  apply le_of_eq
+  exact cylinderEventsOn_univ_eq E
 
+#check cylinderEventsOn_le
 #check (ProbabilityTheory.kernel.comap (γ Λ₁) (fun x ↦ x) (cylinderEventsOn_le _ _)) ∘ₖ (γ Λ₂)
 
 def restrict (Δ : Set S) (σ : S → E) : Δ → E :=
