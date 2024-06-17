@@ -116,28 +116,28 @@ lemma measurableRestrict (Δ : Set S) :
 
 end introduction
 
-section juxtaposition
+section superposition
 variable {S : Type*}
 variable (E : Type*) [𝓔 : MeasurableSpace E]
 variable (Λ : Set S) [DecidablePred (· ∈ Λ)]
 variable (η : S → E)
 
-def juxtaposition (ζ : Λ → E) (x : S) : E :=
+def superposition (ζ : Λ → E) (x : S) : E :=
   dite (x ∈ Λ) (fun h ↦ ζ ⟨x, h⟩) (fun _ ↦ η x)
 
-lemma juxtaposition_apply_of_mem (ζ : Λ → E) (x : S) (h : x ∈ Λ) : (juxtaposition E Λ η ζ x = ζ ⟨x, h⟩) := by
-  simp [juxtaposition, h]
+lemma superposition_apply_of_mem (ζ : Λ → E) (x : S) (h : x ∈ Λ) : (superposition E Λ η ζ x = ζ ⟨x, h⟩) := by
+  simp [superposition, h]
 
-lemma juxtaposition_apply_of_not_mem (ζ : Λ → E) (x : S) (h : x ∉ Λ) : (juxtaposition E Λ η ζ x = η x) := by
-  simp [juxtaposition, h]
+lemma superposition_apply_of_not_mem (ζ : Λ → E) (x : S) (h : x ∉ Λ) : (superposition E Λ η ζ x = η x) := by
+  simp [superposition, h]
 
-lemma juxtaposition_is_measurable : Measurable (juxtaposition E Λ) := by
+lemma superposition_is_measurable : Measurable (superposition E Λ) := by
   sorry
 
 #check Measure.pi
-#check Measure.map (juxtaposition E Λ η)
+#check Measure.map (superposition E Λ η)
 
-end juxtaposition
+end superposition
 
 
 
@@ -151,15 +151,15 @@ example : Fintype Λ := by
   infer_instance
 
 #check Measure.pi (fun (_ : Λ) ↦ ν)
-#check Measure.map (juxtaposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))
+#check Measure.map (superposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))
 #check @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _
-#check @Measurable (S → E) (Measure (S → E)) (cylinderEventsIn E Λᶜ) _ (fun (η : S → E) ↦ Measure.map (juxtaposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν)))
+#check @Measurable (S → E) (Measure (S → E)) (cylinderEventsIn E Λᶜ) _ (fun (η : S → E) ↦ Measure.map (superposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν)))
 
-lemma isssdProbabilityKernel_is_measurable : @Measurable (S → E) (Measure (S → E)) (cylinderEventsIn E Λᶜ) _ (fun (η : S → E) ↦ Measure.map (juxtaposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))) := by
+lemma isssdProbabilityKernel_is_measurable : @Measurable (S → E) (Measure (S → E)) (cylinderEventsIn E Λᶜ) _ (fun (η : S → E) ↦ Measure.map (superposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))) := by
   sorry
 
 noncomputable def isssdProbabilityKernel : @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _ where
-  val := fun (η : S → E) ↦ Measure.map (juxtaposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))
+  val := fun (η : S → E) ↦ Measure.map (superposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))
   property := by
     exact @isssdProbabilityKernel_is_measurable S E _ ν Λ _
 

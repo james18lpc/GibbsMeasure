@@ -12,7 +12,12 @@
     \label{def:cylinderEventsIn}
     \lean{ProbabilityTheory.cdf}
     \leanok
-    Let $(E,\mathcal{E})$ be a measurable space, let $S$ be a set, and let $\Delta\subseteq S$. We define the \textbf{cylinder events in }$\Delta$ to be $\mathcal{F}_\Delta:=\sigma(\{\pi_\delta:E^S\to E\mid \delta\in \Delta\})$, where each $\pi_\delta$ is precisely the canonical projection map.
+    Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
+    \begin{align*}
+        \mathcal{F}:\mathcal{P}(S)&\to\mathcal{P}(E)\\
+        \Delta&\mapsto \sigma(\{\text{proj}_\delta:E^S\to E\mid \delta\in \Delta\})
+    \end{align*}
+    defines the \textbf{cylinder events in }$\Delta$ (for each $\Delta\in\mathcal{P}(S)$), where each $\text{proj}_\delta$ is precisely the canonical projection map.
 \end{definition}
 
 \begin{definition}[Probability Kernel]
@@ -21,9 +26,9 @@
     \leanok
     Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. Then,
     \begin{equation*}
-        \text{ProbKer}(\mathcal{Y},\mathcal{X}):=\left\{\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}_{\geq0}}\mid \forall y\in Y~\pi(\cdot\mid y)\in\mathfrak{M}(X,\mathcal{X}),\forall A\in\mathcal{X}~\pi(A,\cdot)\text{ is }\mathcal{Y}-\text{measurable},\pi(X,\cdot)=1\right\}
+        \text{ProbKer}_{\mathcal{Y},\mathcal{X}}:=\left\{\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}_{\geq0}}~\middle\vert~ \forall y\in Y,\pi(\cdot\mid y)\in\mathfrak{P}(X,\mathcal{X});~\forall A\in\mathcal{X},\pi(A\mid\cdot)\text{ is }\mathcal{Y}\text{-measurable}\right\}
     \end{equation*}
-    defines the set of \textbf{probability kernels from $\mathcal{Y}$ to $\mathcal{X}$}.
+    defines the set of \textbf{probability kernels from $\mathcal{Y}$ to $\mathcal{X}$}, where $\mathfrak{P}(X,\mathcal{X})$ is the space of probability measures on $X$.
 \end{definition}
 
 \begin{definition}[Specification]
@@ -33,80 +38,88 @@
     \uses{def:cylinderEventsIn, def:probabilityKernel}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{equation*}
-        \Gamma(\mathcal{E},S):=\left\{\gamma\in\prod_{\Lambda\in\text{Finset}(S)}\text{ProbKer}(\mathcal{F}_\Lambda,\mathcal{E}^S)\mid \forall \Lambda,\Delta\in\text{Finset}(S)~\Lambda\subseteq\Delta\implies\gamma_\Lambda\circ_k\gamma_\Delta=\gamma_\Delta\right\}
+        \Gamma_{\mathcal{E},S}:=\left\{\gamma\in\prod_{\Lambda\in\text{Finset}(S)}\text{ProbKer}_{\mathcal{F}_{S\setminus\Lambda},\mathcal{E}^S}~\middle\vert~ \forall \Lambda,\Delta\in\text{Finset}(S),\Lambda\subseteq\Delta\implies\gamma_\Lambda\circ_k\gamma_\Delta=\gamma_\Delta\right\}
     \end{equation*}
-    defines the set of \textbf{specifications on $E^S$}, i.e. it is the set of indexed collections of probability kernels that satisfy a consistency criterion.
+    defines the set of \textbf{specifications with parameter set $S$ and state space $(E,\mathcal{E})$}, i.e. it is the set of indexed collections of probability kernels that satisfy a consistency criterion.
 \end{definition}
 
 \begin{definition}[Gibbs Measures]
     \label{def:gibbsMeasures}
     \lean{ProbabilityTheory.cdf}
-    
+
     \uses{def:specification}
-    Let $(E,\mathcal{E})$ be a measurable space, let $S$ be a set, and let $\Gamma$ be the collection of specifications with parameter set $S$ and state space $(E,\mathcal{E})$. Then,
+    Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{align*}
-        \mathcal{G}:\Gamma&\to\mathcal{P}(\mathfrak{P}(E^S,\mathcal{F}_S))\\
-        \gamma&\mapsto\left\{\mu\in\mathfrak{P}(E^S,\mathcal{F}_S):\mu(A\mid\mathcal{F}_{S\setminus\Lambda})=\gamma_\Lambda(A\mid\cdot)~\mu\text{-a.s. for each } A\in\mathcal{F}_S\text{ and }\Lambda\in\text{Finset}(S)\right\}
+        \mathcal{G}:\Gamma_{\mathcal{E},S}&\to\mathcal{P}(\mathfrak{P}(E^S,\mathcal{E}^S))\\
+        \gamma&\mapsto\left\{\mu\in\mathfrak{P}(E^S,\mathcal{E}^S)~\middle\vert~\mu(A\mid\mathcal{F}_{S\setminus\Lambda})=\gamma_\Lambda(A\mid\cdot)~\mu\text{-a.s. for each } A\in\mathcal{F}_S\text{ and }\Lambda\in\text{Finset}(S)\right\}
     \end{align*}
-    defines the set of \textbf{Gibbs measures specified by $\gamma$} (at each $\gamma\in\Gamma$), where $\mathfrak{P}(E^S,\mathcal{F}_S)$ is the space of probability measures, i.e. random fields.
-    
-    %Let $\gamma$ be a specification. Then,
-    %\begin{equation*}
-    %    \mathcal{G}(\gamma):=\left\{\mu\in\mathfrak{P}(E^S,\mathcal{F}_S):\mu(A\mid\mathcal{F}_{S\setminus\Lambda})=\gamma_\Lambda(A\mid\cdot)~\mu\text{-a.s. for each } A\in\mathcal{F}_S\text{ and finite }\Lambda\subseteq S\right\}
-    %\end{equation*}
-    %is defined to be the set of \textbf{Gibbs measures specified by $\gamma$}, where $\mathfrak{P}(E^S,\mathcal{F}_S)$ is the space of probability measures. 
+    defines the set of \textbf{Gibbs measures specified by $\gamma$} (for each $\gamma\in\Gamma_{\mathcal{E},S}$).
 \end{definition}
 
 \begin{lemma}[Characterization of Gibbs Measures]
-    \label{lem:charGibbsMeasures}
+    \label{lem:char_gibbsMeasures}
     \lean{ProbabilityTheory.cdf}
     
     \uses{def:gibbsMeasures}
-    \leanok
-    Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Let $\gamma$ be a specification with parameter set $S$ and state space $(E,\mathcal{E})$, and let $\mu\in\mathfrak{P}(E^S,\mathcal{F}_S)$. TFAE:
+    Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Let $\gamma$ be a \textbf{proper} specification with parameter set $S$ and state space $(E,\mathcal{E})$, and let $\mu\in\mathfrak{P}(E^S,\mathcal{F}_S)$. TFAE:
     \begin{enumerate}
         \item $\mu\in\mathcal{G}(\gamma)$.
-        \item $\mu\circ_k\gamma_\Lambda=\mu$ for all $\Lambda\in\text{Finset}(S)$.
-        \item There is a cofinal subset $\mathcal{S}\subseteq\text{Finset}(S)$ such that $\mu\circ_k\gamma_\Lambda=\mu$ for all $\Lambda\in\mathcal{S}$.
+        \item $\gamma_\Lambda\circ_k\mu=\mu$ for all $\Lambda\in\text{Finset}(S)$.
+        \item There is a cofinal subset $\mathcal{S}\subseteq\text{Finset}(S)$ such that $\gamma_\Lambda\circ_k\mu=\mu$ for all $\Lambda\in\mathcal{S}$.
     \end{enumerate}
 \end{lemma}
 
-\begin{definition}[Product Probability Measure]
-    \label{def:productProbabilityMeasure}
-    \lean{ProbabilityTheory.cdf}
+%\begin{definition}[Product Probability Measure]
+%    \label{def:productProbabilityMeasure}
+%    \lean{ProbabilityTheory.cdf}
+%    characteristic predicate?
+%\end{definition}
 
-    characteristic predicate?
+\begin{definition}[Superposition]
+    \label{def:superposition}
+    \lean{ProbabilityTheory.cdf}
+    \leanok
+    Let $E$ and $S$ be sets. Let $\Delta\in\mathcal{P}(S)$, and let $\omega\in E^S$. We define
+    \begin{align*}
+        \text{super}_\omega:E^\Delta&\to E^S\\
+        \zeta&\mapsto \delta\mapsto\begin{cases}
+            \zeta_\delta & \delta\in\Delta\\
+            \omega_\delta & \delta\notin\Delta
+        \end{cases}
+    \end{align*}
+    to be the \textbf{superposition of $\zeta$ on $\omega$} (for each $\zeta\in E^\Delta$).
 \end{definition}
 
 \begin{definition}[Independent Specification with Single Spin Distribution [ISSSD]]
     \label{def:ISSSD}
     \lean{ProbabilityTheory.cdf}
-    
+    \uses{def:superposition}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{align*}
-        \text{ISSSD}:\mathfrak{P}(E,\mathcal{E})&\to\left(\text{Finset}(S)\to\left(\mathcal{F}_S\times E^S\to\overline{\mathbb{R}}\right)\right)\\
-        \mu&\mapsto\left(\Lambda\mapsto\left((A\mid\omega)\mapsto(\mu^\Lambda\times\delta_{\omega_{S\setminus\Lambda}})(A)\right)\right)
+        \text{ISSSD}:\mathfrak{P}(E,\mathcal{E})&\to\text{Finset}(S)\to\mathcal{E}^S\times E^S\to\overline{\mathbb{R}_{\geq0}}\\
+        \nu&\mapsto\Lambda\mapsto(A\mid\omega)\mapsto\left(\nu^\Lambda\left(\text{super}_\omega^{-1}(A)\right)\right)
     \end{align*}
-    change this
-    defines the \textbf{Independent Specification with Single Spin Distribution with $\mu$} (at each $\mu\in\mathfrak{P}(E,\mathcal{E})$), where $\mu^\Lambda$ is the usual product measure, and $\delta$ is the usual Dirac measure. Then, $\text{ISSSD}(\lambda)$ 
+    defines the \textbf{Independent Specification with Single Spin Distribution with $\nu$} (for each $\nu\in\mathfrak{P}(E,\mathcal{E})$), where $\nu^\Lambda$ is the usual product measure.
 \end{definition}
 
 \begin{lemma}[ISSSDs are Specifications]
-    \label{lem:ISSSDSpecification}
+    \label{lem:ISSSDs_are_specifications}
     \lean{ProbabilityTheory.cdf}
     \uses{def:ISSSD, def:specification}
     The image of $\text{ISSSD}$ is always a collection of specifications.
 \end{lemma}
 
-\begin{lemma}[Basic Properties of ISSSDs]
-    \label{lem:basicPropISSSD}
+\begin{lemma}[Strong Consistency of ISSSDs]
+    \label{lem:strong_consistency_of_ISSSDs}
     \lean{ProbabilityTheory.cdf}
-    \uses{lem:ISSSDSpecification}
-    split this
-    Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\text{ISSSD}(\mu)$ satisfies
-    \begin{enumerate}
-        \item $\text{ISSSD}(\mu)_\Delta\circ_k\text{ISSSD}(\mu)_\Lambda=\text{ISSSD}(\mu)_{\Delta\cup\Lambda}$ for all $\Delta,\Lambda\in\text{Finset}(S)$, and
-        \item $\mathcal{G}(\text{ISSSD}(\mu))=\{\mu^S\}$
-    \end{enumerate}
-    for all $\mu\in\mathfrak{P}(E,\mathcal{E})$.
+    \uses{lem:ISSSDs_are_specifications}
+    Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\text{ISSSD}$ satisfies $\text{ISSSD}(\mu)_\Delta\circ_k\text{ISSSD}(\mu)_\Lambda=\text{ISSSD}(\mu)_{\Delta\cup\Lambda}$ for all $\Delta,\Lambda\in\text{Finset}(S)$ and $\mu\in\mathfrak{P}(E,\mathcal{E})$.
 \end{lemma}
+
+\begin{lemma}[Existence of Gibbs Measures Specified by ISSSDs]
+    \label{lem:exist_uniq_ISSSD_gibbsMeasures}
+    \lean{ProbabilityTheory.cdf}
+    \uses{def:gibbsMeasures, lem:ISSSDs_are_specifications}
+    Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\mathcal{G}(\text{ISSSD}(\mu))=\{\mu^S\}$.
+\end{lemma}
+
