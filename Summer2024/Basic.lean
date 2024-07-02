@@ -39,11 +39,14 @@ lemma _root_.ProbabilityTheory.kernel.IsProper.def (hProper : kernel.IsProper hS
 variable (hProper : kernel.IsProper hSub π) (f g : X → ℝ≥0∞) (hf : @Measurable _ _ 𝓧 _ f) (hg : @Measurable _ _ 𝓑 _ g) (x₀ : X)
 #check @MeasureTheory.lintegral_eq_nnreal X 𝓧 f (π x₀)
 
+#check Set.inter_indicator_mul
 lemma lintegral_indicator_mul_indicator_eq_of_isProper (hProper : kernel.IsProper hSub π)
     {A B : Set X} (A_mble : @MeasurableSet X 𝓧 A) (B_mble : @MeasurableSet X 𝓑 B) :
     ∫⁻ x, B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x ∂(π x₀)
         = B.indicator (fun _↦ (1 : ℝ≥0∞)) x₀ * ∫⁻ x, A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x ∂(π x₀) := by
-  have aux (x : X) : B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x = (A ∩ B).indicator (fun _ ↦ (1 : ℝ≥0∞)) x := by
+  have aux (x : X) : B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x
+      = (A ∩ B).indicator (fun _ ↦ (1 : ℝ≥0∞)) x := by
+    --rw [Set.inter_indicator_mul]
     sorry
   simp_rw [aux]
   rw [lintegral_indicator, lintegral_indicator]
@@ -150,6 +153,25 @@ structure Specification where
     (ProbabilityTheory.kernel.comap (kernel Λ₁) (fun x ↦ x) (cylinderEventsIn_le _ _)) ∘ₖ
       (kernel Λ₂) = kernel Λ₂
 
+variable (μ : Measure (S → E)) (A : Set (S → E))
+
+def _root_.MeasureTheory.Measure.IsGibbsMeasure (μ : Measure (S → E)) (γ : Specification S E) :=
+    ∀ (Λ : Finset S) (A : Set (S → E)) (_ : MeasurableSet A),
+      condexp (cylinderEventsIn E Λ.toSetᶜ) μ (A.indicator (fun _ ↦ (1 : ℝ)))
+        =ᵐ[μ] (fun σ ↦ (γ.kernel Λ σ A).toReal)
+
+#check ProbabilityTheory.condDistrib_ae_eq_condexp
+#check ProbabilityTheory.condexp_ae_eq_integral_condDistrib_id
+
+def _root_.GibbsMeasure (γ : Specification S E) := {μ // MeasureTheory.Measure.IsGibbsMeasure S E μ γ}
+
+lemma something (X : Type*) [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X) (hSub : 𝓑 ≤ 𝓧)
+    (μ : Measure X) (π : @kernel X X 𝓑 𝓧) :
+    (∀ (f : X → ℝ), Integrable f μ → condexp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)))
+    ↔ (∀ (A : Set X), MeasurableSet A → condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
+      =ᵐ[μ] (fun x ↦ (π x A).toReal)) := by
+  sorry
+
 variable {S}
 /-- Restrict `σ : S → E` to a subset `Δ⊆S` to get `σ′ : Δ → E`
 -/
@@ -175,6 +197,8 @@ lemma measurableRestrict (Δ : Set S) :
   rw [@measurable_pi_iff (S → E) Δ (fun _ ↦ E) (cylinderEventsIn E Δ) (fun _ ↦ 𝓔) (restrict E Δ)]
   intro x
   exact measurable_coordinate_projection E x.prop
+
+
 
 end introduction
 
