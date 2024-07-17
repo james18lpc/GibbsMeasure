@@ -478,28 +478,12 @@ lemma _root_.MeasureTheory.Measure.condKernel_apply_of_ne_zero_of_measurableSet
   simp only [Measure.restrict_singleton, lintegral_smul_measure, lintegral_dirac]
   rw [← mul_assoc, ENNReal.inv_mul_cancel hx (measure_ne_top ρ'.fst _), one_mul]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/-- If the singleton `{x}` has non-zero mass for `ρ.fst`, then for all `s : Set Ω`,
-`ρ.condKernel x s = (ρ.fst {x})⁻¹ * ρ ({x} ×ˢ s)` . -/
+/-- If the singleton `{x}` has non-zero mass for `ρ'.fst`, then for all `s : Set Ω`,
+`ρCond' x s = (ρ'.fst {x})⁻¹ * ρ' ({x} ×ˢ s)` . -/
 lemma _root_.MeasureTheory.Measure.condKernel_apply_of_ne_zero [MeasurableSingletonClass α]
-    {x : α} (hx : ρ.fst {x} ≠ 0) (s : Set Ω) :
-    ρ.condKernel x s = (ρ.fst {x})⁻¹ * ρ ({x} ×ˢ s) := by
-  have : ρ.condKernel x s = ((ρ.fst {x})⁻¹ • ρ).comap (fun (y : Ω) ↦ (x, y)) s := by
+    {x : α} (hx : ρ'.fst {x} ≠ 0) (s : Set Ω') :
+    ρCond' x s = (ρ'.fst {x})⁻¹ * ρ' ({x} ×ˢ s) := by
+  have : ρCond' x s = ((ρ'.fst {x})⁻¹ • ρ').comap (fun (y : Ω') ↦ (x, y)) s := by
     congr 2 with s hs
     simp [Measure.condKernel_apply_of_ne_zero_of_measurableSet hx hs,
       (measurableEmbedding_prod_mk_left x).comap_apply]
@@ -507,25 +491,50 @@ lemma _root_.MeasureTheory.Measure.condKernel_apply_of_ne_zero [MeasurableSingle
 
 end Measure
 
+
+
+
+
+
+
+
 section Countable
 
+variable {γ' Ω' : Type*} {mγ' : MeasurableSpace γ'} [MeasurableSpace Ω'] [Nonempty Ω']
+--variable {κ' : Measure (α × (β × Ω'))} [IsFiniteMeasure κ']
+--variable {κCond' : kernel α (β × Ω')} [HasCondKernel κ' κCond'] [IsSFiniteKernel κCond']
 variable [Countable α]
 
+lemma
+
 /-- Auxiliary definition for `ProbabilityTheory.kernel.condKernel`.
-A conditional kernel for `κ : kernel α (β × Ω)` where `α` is countable and `Ω` is standard Borel. -/
+A conditional kernel for `κ' : kernel α (β × Ω')` where `α` is countable and `Ω'` is a measurable space. -/
 noncomputable
-def condKernelCountable (κ : kernel α (β × Ω)) [IsFiniteKernel κ] : kernel (α × β) Ω where
-  val p := (κ p.1).condKernel p.2
+def condKernelCountable' (κ' : kernel α (β × Ω')) [IsFiniteKernel κ']
+    (κCond' : α → kernel β Ω') (h_atom : ∀ (y y' : α), y' ∈ measurableAtom y → κCond' y = κCond' y')
+    [∀ (a : α), HasCondKernel (κ' a) (κCond' a)] : kernel (α × β) Ω' where
+  val p := (κCond' p.1) p.2
   property := by
-    change Measurable ((fun q : β × α ↦ (κ q.2).condKernel q.1) ∘ Prod.swap)
+    change Measurable ((fun q : β × α ↦ (κCond' q.2) q.1) ∘ Prod.swap)
     refine (measurable_from_prod_countable' (fun a ↦ ?_) ?_).comp measurable_swap
-    · exact kernel.measurable (κ a).condKernel
+    · exact kernel.measurable (κCond' a)
     · intro y y' x hy'
-      have : κ y' = κ y := by
+      have : κ' y' = κ' y := by
         ext s hs
         exact mem_of_mem_measurableAtom hy'
-          (kernel.measurable_coe κ hs (measurableSet_singleton (κ y s))) rfl
-      simp [this]
+          (kernel.measurable_coe κ' hs (measurableSet_singleton (κ' y s))) rfl
+      simpa [this] using (DFunLike.congr (h_atom y y' hy') rfl).symm
+
+noncomputable
+def condKernelCountable (κ : kernel α (β × Ω)) [IsFiniteKernel κ] : kernel (α × β) Ω :=
+  condKernelCountable' κ (fun a ↦ (κ a).condKernel)
+    (by
+        intro y y' h
+        have : κ y' = κ y := by
+          ext s hs
+          exact mem_of_mem_measurableAtom h
+            (kernel.measurable_coe κ hs (measurableSet_singleton (κ y s))) rfl
+        simp [this])
 
 lemma condKernelCountable_apply (κ : kernel α (β × Ω)) [IsFiniteKernel κ] (p : α × β) :
     condKernelCountable κ p = (κ p.1).condKernel p.2 := rfl

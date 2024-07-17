@@ -1,10 +1,8 @@
 import Mathlib
 open scoped ProbabilityTheory
 open ProbabilityTheory
-
 open scoped Set
 open Set
-
 open MeasureTheory ENNReal NNReal
 
 
@@ -15,38 +13,39 @@ namespace GibbsMeasure
 
 variable {S : Type*}
 variable (E : Type*) [𝓔 : MeasurableSpace E]
+variable (Δ : Set S)
 variable (Λ : Finset S)
 
 
-#check ProbabilityTheory.kernel.comp
---def cylinderEventsIn [m : ∀ a, MeasurableSpace (π a)] : MeasurableSpace (∀ a, π a) :=
-  --⨆ a, (m a).comap fun b => b a
-#check ‹MeasurableSpace E›
 
+/-
+# Properness
+We define the notion of properness for measure kernels and highlight important consequences in this section
+-/
 section proper
 
-variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} (hSub : 𝓑 ≤ 𝓧) (π : @kernel X X 𝓑 𝓧)
+variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} (B_sub_X : 𝓑 ≤ 𝓧) (π : @kernel X X 𝓑 𝓧)
 
 def _root_.ProbabilityTheory.kernel.IsProper : Prop :=
   ∀ (B : Set X) (B_mble : @MeasurableSet X 𝓑 B),
-    kernel.restrict π (hSub B B_mble) = (fun x ↦ B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x)
+    kernel.restrict π (B_sub_X B B_mble) = (fun x ↦ B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x)
 
-lemma _root_.ProbabilityTheory.kernel.IsProper.def (hProper : kernel.IsProper hSub π)
+lemma _root_.ProbabilityTheory.kernel.IsProper.def (hProper : kernel.IsProper B_sub_X π)
     {A B : Set X} (A_mble : @MeasurableSet X 𝓧 A) (B_mble : @MeasurableSet X 𝓑 B) (x : X):
-    kernel.restrict π (hSub B B_mble) x A = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * π x A := by
+    kernel.restrict π (B_sub_X B B_mble) x A = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * π x A := by
   sorry
 
-variable (hProper : kernel.IsProper hSub π) (f g : X → ℝ≥0∞) (hf : @Measurable _ _ 𝓧 _ f) (hg : @Measurable _ _ 𝓑 _ g) (x₀ : X)
-#check @MeasureTheory.lintegral_eq_nnreal X 𝓧 f (π x₀)
 
 #check Set.inter_indicator_mul
 lemma lintegral_indicator_mul_indicator_eq_of_isProper (hProper : kernel.IsProper hSub π)
     {A B : Set X} (A_mble : @MeasurableSet X 𝓧 A) (B_mble : @MeasurableSet X 𝓑 B) :
     ∫⁻ x, B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x ∂(π x₀)
         = B.indicator (fun _↦ (1 : ℝ≥0∞)) x₀ * ∫⁻ x, A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x ∂(π x₀) := by
+  have one_mul_func (x : X) : (fun _ ↦ (1 : ℝ≥0∞)) x * (fun _ ↦ (1 : ℝ≥0∞)) x = (fun _ ↦ (1 : ℝ≥0∞)) x := one_mul ((fun _ ↦ 1) x)
   have aux (x : X) : B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x
       = (A ∩ B).indicator (fun _ ↦ (1 : ℝ≥0∞)) x := by
-    --rw [Set.inter_indicator_mul]
+    nth_rewrite 2 [← one_mul_func]
+    exact Set.inter_indicator_mul
     sorry
   simp_rw [aux]
   rw [lintegral_indicator, lintegral_indicator]
