@@ -121,9 +121,7 @@ example (X Y : Type*) [MeasurableSpace X] (𝓨₁ 𝓨₂: MeasurableSpace Y) (
 
 --variable (γ : Π (Λ : Finset S), @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _)
 --variable (Λ₁ Λ₂ : Finset S)
---#check cylinderEventsIn_le
---#check (ProbabilityTheory.kernel.comap (γ Λ₁) (fun x ↦ x) (cylinderEventsIn_le _ _)) ∘ₖ (γ Λ₂)
-
+----
 variable (S)
 structure Specification where
   kernel : Π (Λ : Finset S), @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _
@@ -138,8 +136,6 @@ def _root_.MeasureTheory.Measure.IsGibbsMeasure (μ : Measure (S → E)) (γ : S
       condexp (cylinderEventsIn E Λ.toSetᶜ) μ (A.indicator (fun _ ↦ (1 : ℝ)))
         =ᵐ[μ] (fun σ ↦ (γ.kernel Λ σ A).toReal)
 
-#check ProbabilityTheory.condDistrib_ae_eq_condexp
-#check ProbabilityTheory.condexp_ae_eq_integral_condDistrib_id
 
 def _root_.GibbsMeasure (γ : Specification S E) :=
   {μ // MeasureTheory.Measure.IsGibbsMeasure S E μ γ}
@@ -157,12 +153,7 @@ variable {S}
 def restrict (Δ : Set S) (σ : S → E) : Δ → E :=
   @Subtype.restrict S (fun _ ↦ E) Δ σ
 
-#check @measurable_pi_apply (S → E) (fun _ ↦ E) _
 variable (Δ : Set S)
-#check restrict E Δ
-#check @Measurable (S → E) (Δ → E) (cylinderEventsIn E Δ) MeasurableSpace.pi (restrict E Δ)
-#check Measurable (restrict E Δ)
-#check @measurable_pi_iff (S → E) Δ (fun _ ↦ E) MeasurableSpace.pi (fun _ ↦ 𝓔) (restrict E Δ)
 
 lemma measurableRestrictEasy (Δ : Set S) : Measurable (restrict E Δ) := by
   rw [measurable_pi_iff]
@@ -216,8 +207,6 @@ lemma superposition_is_measurable : Measurable (superposition E Λ) := by
   --exact measurable_pi_apply _
   sorry
 
-#check Measure.pi
-#check Measure.map (superposition E Λ η)
 
 end superposition
 
@@ -232,10 +221,7 @@ variable (η : S → E)
 example : Fintype Λ := by
   infer_instance
 
---#check Measure.pi (fun (_ : Λ) ↦ ν)
---#check Measure.map (superposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))
---#check @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _
-
+------
 lemma isssdProbabilityKernel_is_measurable (Λ : Finset S) [DecidablePred (· ∈ Λ.toSet)] :
     @Measurable (S → E) (Measure (S → E)) (cylinderEventsIn E Λᶜ) _
       (fun (η : S → E) ↦ Measure.map (superposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))) := by
@@ -254,10 +240,6 @@ def isssd [∀ (Λ : Finset S), DecidablePred (· ∈ Λ.toSet)] :
       kernel := (fun Λ ↦ isssdProbabilityKernel E ν Λ)
       consistent := by sorry
 
-#check Finset.toSet
-#check Set.compl
-#check @Measure.dirac Λ.toSet.compl
-#check ProbabilityTheory.iIndepFun
 
 
 class IsISSSD (γ : Specification S E) : Prop where
@@ -302,5 +284,3 @@ lemma _root_.MeasureTheory.Measure.eq_prod_of_dirac_left (X Y : Type*) [Measurab
 
 end ISSSD
 end GibbsMeasure
-
-#check Subtype.restrict
