@@ -58,7 +58,6 @@
 
 \begin{lemma}[Characterization of Gibbs Measures]
     \label{lem:gibbs-measure-char}
-    \lean{ProbabilityTheory.cdf}
 
     \uses{def:gibbs-measure}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Let $\gamma$ be a \textbf{proper} specification with parameter set $S$ and state space $(E,\mathcal{E})$, and let $\mu\in\mathfrak{P}(E^S,\mathcal{F}_S)$. TFAE:
@@ -104,21 +103,18 @@
 
 \begin{lemma}[ISSSDs are Specifications]
     \label{lem:isssd-specification}
-    \lean{}
-    \uses{def:ISSSD, def:specification}
+        \uses{def:ISSSD, def:specification}
     The image of $\text{ISSSD}$ is always a collection of specifications.
 \end{lemma}
 
 \begin{lemma}[Strong Consistency of ISSSDs]
     \label{lem:isssd-strong-consistency}
-    \lean{}
-    \uses{lem:isssd-specification}
+        \uses{lem:isssd-specification}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\text{ISSSD}$ satisfies $\text{ISSSD}(\mu)_\Delta\circ_k\text{ISSSD}(\mu)_\Lambda=\text{ISSSD}(\mu)_{\Delta\cup\Lambda}$ for all $\Delta,\Lambda\in\text{Finset}(S)$ and $\mu\in\mathfrak{P}(E,\mathcal{E})$.
 \end{lemma}
 
 \begin{lemma}[Existence of Gibbs Measures Specified by ISSSDs]
     \label{lem:gibbs-measure-existence}
-    \lean{}
-    \uses{def:gibbs-measure, lem:isssd-specification}
+        \uses{def:gibbs-measure, lem:isssd-specification}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\mathcal{G}(\text{ISSSD}(\mu))=\{\mu^S\}$.
 \end{lemma}
