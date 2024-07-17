@@ -9,8 +9,8 @@
 \chapter{Intro}
 
 \begin{definition}[Cylinder Events]
-    \label{def:cylinderEventsIn}
-    \lean{ProbabilityTheory.cdf}
+    \label{def:cylinder-event}
+    \lean{cylinder-event}
     \leanok
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{align*}
@@ -21,8 +21,8 @@
 \end{definition}
 
 \begin{definition}[Probability Kernel]
-    \label{def:probabilityKernel}
-    \lean{ProbabilityTheory.cdf}
+    \label{def:kernel}
+    \lean{ProbabilityTheory.kernel}
     \leanok
     Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. Then,
     \begin{equation*}
@@ -33,9 +33,9 @@
 
 \begin{definition}[Specification]
     \label{def:specification}
-    \lean{ProbabilityTheory.cdf}
+    \lean{Specification}
     \leanok
-    \uses{def:cylinderEventsIn, def:probabilityKernel}
+    \uses{def:cylinder-event, def:kernel}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{equation*}
         \Gamma_{\mathcal{E},S}:=\left\{\gamma\in\prod_{\Lambda\in\text{Finset}(S)}\text{ProbKer}_{\mathcal{F}_{S\setminus\Lambda},\mathcal{E}^S}~\middle\vert~ \forall \Lambda,\Delta\in\text{Finset}(S),\Lambda\subseteq\Delta\implies\gamma_\Lambda\circ_k\gamma_\Delta=\gamma_\Delta\right\}
@@ -44,8 +44,8 @@
 \end{definition}
 
 \begin{definition}[Gibbs Measures]
-    \label{def:gibbsMeasures}
-    \lean{ProbabilityTheory.cdf}
+    \label{def:gibbs-measure}
+    \lean{GibbsMeasure}
 
     \uses{def:specification}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
@@ -57,10 +57,10 @@
 \end{definition}
 
 \begin{lemma}[Characterization of Gibbs Measures]
-    \label{lem:char_gibbsMeasures}
+    \label{lem:gibbs-measure-char}
     \lean{ProbabilityTheory.cdf}
-    
-    \uses{def:gibbsMeasures}
+
+    \uses{def:gibbs-measure}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Let $\gamma$ be a \textbf{proper} specification with parameter set $S$ and state space $(E,\mathcal{E})$, and let $\mu\in\mathfrak{P}(E^S,\mathcal{F}_S)$. TFAE:
     \begin{enumerate}
         \item $\mu\in\mathcal{G}(\gamma)$.
@@ -77,7 +77,7 @@
 
 \begin{definition}[Superposition]
     \label{def:superposition}
-    \lean{ProbabilityTheory.cdf}
+    \lean{extend}
     \leanok
     Let $E$ and $S$ be sets. Let $\Delta\in\mathcal{P}(S)$, and let $\omega\in E^S$. We define
     \begin{align*}
@@ -92,7 +92,7 @@
 
 \begin{definition}[Independent Specification with Single Spin Distribution [ISSSD]]
     \label{def:ISSSD}
-    \lean{ProbabilityTheory.cdf}
+    \lean{isssd}
     \uses{def:superposition}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{align*}
@@ -103,23 +103,22 @@
 \end{definition}
 
 \begin{lemma}[ISSSDs are Specifications]
-    \label{lem:ISSSDs_are_specifications}
-    \lean{ProbabilityTheory.cdf}
+    \label{lem:isssd-specification}
+    \lean{}
     \uses{def:ISSSD, def:specification}
     The image of $\text{ISSSD}$ is always a collection of specifications.
 \end{lemma}
 
 \begin{lemma}[Strong Consistency of ISSSDs]
-    \label{lem:strong_consistency_of_ISSSDs}
-    \lean{ProbabilityTheory.cdf}
-    \uses{lem:ISSSDs_are_specifications}
+    \label{lem:isssd-strong-consistency}
+    \lean{}
+    \uses{lem:isssd-specification}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\text{ISSSD}$ satisfies $\text{ISSSD}(\mu)_\Delta\circ_k\text{ISSSD}(\mu)_\Lambda=\text{ISSSD}(\mu)_{\Delta\cup\Lambda}$ for all $\Delta,\Lambda\in\text{Finset}(S)$ and $\mu\in\mathfrak{P}(E,\mathcal{E})$.
 \end{lemma}
 
 \begin{lemma}[Existence of Gibbs Measures Specified by ISSSDs]
-    \label{lem:exist_uniq_ISSSD_gibbsMeasures}
-    \lean{ProbabilityTheory.cdf}
-    \uses{def:gibbsMeasures, lem:ISSSDs_are_specifications}
+    \label{lem:gibbs-measure-existence}
+    \lean{}
+    \uses{def:gibbs-measure, lem:isssd-specification}
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\mathcal{G}(\text{ISSSD}(\mu))=\{\mu^S\}$.
 \end{lemma}
-
