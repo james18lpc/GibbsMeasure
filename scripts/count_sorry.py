@@ -9,10 +9,10 @@ def ident_to_word(ident: str):
 def pretty_file(file: str):
     segments = file[4:].replace(".lean", "").split("/")
     name = ": ".join(ident_to_word(s) for s in segments)
-    url = f"https://github.com/YaelDillies/LeanAPAP/blob/master/{file}"
+    url = f"https://github.com/YaelDillies/GibbsMeasure/blob/master/{file}"
     return f"[{name}]({url})"
 
-files = [file for tree in os.walk("LeanAPAP") for file in glob(os.path.join(tree[0], '*.lean'))]
+files = [file for tree in os.walk("GibbsMeasure") for file in glob(os.path.join(tree[0], '*.lean'))]
 sorries = {}
 
 for file in files:
