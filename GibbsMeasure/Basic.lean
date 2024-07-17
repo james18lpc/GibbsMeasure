@@ -1,4 +1,12 @@
 import Mathlib
+
+/-!
+# Properness
+
+We define the notion of properness for measure kernels and highlight important consequences in this
+section
+-/
+
 open scoped ProbabilityTheory
 open ProbabilityTheory
 open scoped Set
@@ -15,42 +23,27 @@ variable {S : Type*}
 variable (E : Type*) [𝓔 : MeasurableSpace E]
 variable (Δ : Set S)
 variable (Λ : Finset S)
-
-
-
-/-
-# Properness
-We define the notion of properness for measure kernels and highlight important consequences in this section
--/
 section proper
 
-variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} (B_sub_X : 𝓑 ≤ 𝓧) (π : @kernel X X 𝓑 𝓧)
+variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} (hSub : 𝓑 ≤ 𝓧) (π : @kernel X X 𝓑 𝓧) {x₀ : X}
 
 def _root_.ProbabilityTheory.kernel.IsProper : Prop :=
   ∀ (B : Set X) (B_mble : @MeasurableSet X 𝓑 B),
-    kernel.restrict π (B_sub_X B B_mble) = (fun x ↦ B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x)
+    kernel.restrict π (hSub B B_mble) = (fun x ↦ B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x)
 
-lemma _root_.ProbabilityTheory.kernel.IsProper.def (hProper : kernel.IsProper B_sub_X π)
+lemma _root_.ProbabilityTheory.kernel.IsProper.def (hProper : kernel.IsProper hSub π)
     {A B : Set X} (A_mble : @MeasurableSet X 𝓧 A) (B_mble : @MeasurableSet X 𝓑 B) (x : X):
-    kernel.restrict π (B_sub_X B B_mble) x A = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * π x A := by
+    kernel.restrict π (hSub B B_mble) x A = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * π x A := by
   sorry
 
-
-#check Set.inter_indicator_mul
 lemma lintegral_indicator_mul_indicator_eq_of_isProper (hProper : kernel.IsProper hSub π)
     {A B : Set X} (A_mble : @MeasurableSet X 𝓧 A) (B_mble : @MeasurableSet X 𝓑 B) :
-    ∫⁻ x, B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x ∂(π x₀)
-        = B.indicator (fun _↦ (1 : ℝ≥0∞)) x₀ * ∫⁻ x, A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x ∂(π x₀) := by
-  have one_mul_func (x : X) : (fun _ ↦ (1 : ℝ≥0∞)) x * (fun _ ↦ (1 : ℝ≥0∞)) x = (fun _ ↦ (1 : ℝ≥0∞)) x := one_mul ((fun _ ↦ 1) x)
-  have aux (x : X) : B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x
-      = (A ∩ B).indicator (fun _ ↦ (1 : ℝ≥0∞)) x := by
-    nth_rewrite 2 [← one_mul_func]
-    exact Set.inter_indicator_mul
-    sorry
-  simp_rw [aux]
+    ∫⁻ x, B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x ∂(π x₀) =
+      B.indicator (fun _↦ (1 : ℝ≥0∞)) x₀ * ∫⁻ x, A.indicator (fun _ ↦ (1 : ℝ≥0∞)) x ∂(π x₀) := by
+  simp_rw [← inter_indicator_mul]
   rw [lintegral_indicator, lintegral_indicator]
   · simp only [lintegral_const, MeasurableSet.univ, Measure.restrict_apply, univ_inter, one_mul]
-    rw [←kernel.IsProper.def hSub π hProper A_mble B_mble]
+    rw [←kernel.IsProper.def hSub π hProper A_mble B_mble, inter_comm]
     exact (kernel.restrict_apply' π (hSub B B_mble) x₀ A_mble).symm
   · exact A_mble
   · sorry
@@ -62,9 +55,6 @@ lemma lintegral_simple_mul_indicator_eq_of_isProper (hProper : kernel.IsProper h
         = B.indicator (fun _↦ (1 : ℝ≥0∞)) x₀ * ∫⁻ x, f x ∂(π x₀) := by
   sorry
 
-#check MeasureTheory.SimpleFunc.approxOn
-#check MeasureTheory.SimpleFunc.tendsto_approxOn
-
 lemma lintegral_mul_indicator_eq_of_isProper (hProper : kernel.IsProper hSub π)
     {f : X → ℝ≥0∞} (hf : @Measurable _ _ 𝓧 _ f) {B : Set X} (B_mble : @MeasurableSet X 𝓑 B) :
     ∫⁻ x, f x * B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x ∂(π x₀)
@@ -73,12 +63,15 @@ lemma lintegral_mul_indicator_eq_of_isProper (hProper : kernel.IsProper hSub π)
   sorry
 
 
-lemma lintegral_mul_eq_of_isProper (hProper : kernel.IsProper hSub π) {f g : X → ℝ≥0∞} (hf : @Measurable _ _ 𝓧 _ f) (hg : @Measurable _ _ 𝓑 _ g) (x₀ : X) :
+lemma lintegral_mul_eq_of_isProper (hProper : kernel.IsProper hSub π) {f g : X → ℝ≥0∞}
+    (hf : @Measurable _ _ 𝓧 _ f) (hg : @Measurable _ _ 𝓑 _ g) (x₀ : X) :
     ∫⁻ x, f x * g x ∂(π x₀) = g x₀ * ∫⁻ x, f x ∂(π x₀) := by
-  rw [@MeasureTheory.lintegral_eq_nnreal X 𝓧 f (π x₀), @MeasureTheory.lintegral_eq_nnreal X 𝓧 (fun x ↦ f x * g x) (π x₀)]
+  rw [@lintegral_eq_nnreal X 𝓧 f (π x₀), @lintegral_eq_nnreal X 𝓧 (fun x ↦ f x * g x) (π x₀)]
   sorry
 
-lemma integral_mul_eq_of_isProper (hProper : kernel.IsProper hSub π) (f g : X → ℝ) (x₀ : X) (hf : @Integrable _ _ _ 𝓧 f (π x₀)) (hg : @Integrable _ _ _ 𝓑 (f * g) (@Measure.map _ _ 𝓑 𝓧 id (π x₀))) :
+lemma integral_mul_eq_of_isProper (hProper : kernel.IsProper hSub π) (f g : X → ℝ) (x₀ : X)
+    (hf : @Integrable _ _ _ 𝓧 f (π x₀))
+    (hg : @Integrable _ _ _ 𝓑 (f * g) (@Measure.map _ _ 𝓑 𝓧 id (π x₀))) :
     ∫ x, f x * g x ∂(π x₀) = g x₀ * ∫ x, f x ∂(π x₀) := by
   --Integrable.induction
   sorry
@@ -104,7 +97,8 @@ lemma measurable_coordinate_projection {Δ : Set S} {x : S} (h : x ∈ Δ) :
     exact Measurable.of_comap_le fun s a ↦ a
   exact key.mono (le_iSup₂_of_le x h (fun s a ↦ a)) le_rfl
 
-lemma cylinderEventsIn_mono {Δ₁ Δ₂ : Set S} (h : Δ₁ ⊆ Δ₂) : cylinderEventsIn E Δ₁ ≤ cylinderEventsIn E Δ₂ := by
+lemma cylinderEventsIn_mono {Δ₁ Δ₂ : Set S} (h : Δ₁ ⊆ Δ₂) :
+    cylinderEventsIn E Δ₁ ≤ cylinderEventsIn E Δ₂ := by
   simp only [cylinderEventsIn, iSup_le_iff]
   exact fun i i_1 ↦ le_iSup₂_of_le i (h i_1) fun s a ↦ a
 
@@ -116,31 +110,13 @@ lemma cylinderEventsIn_le (Δ : Set S) :
 
 
 
-example (X Y : Type*) [𝓧 : MeasurableSpace X] (𝓨₁ 𝓨₂: MeasurableSpace Y) (h : 𝓨₁ ≤ 𝓨₂)
+example (X Y : Type*) [MeasurableSpace X] (𝓨₁ 𝓨₂: MeasurableSpace Y) (h : 𝓨₁ ≤ 𝓨₂)
     (π : @kernel Y X 𝓨₁ _) :
     @kernel Y X 𝓨₂ _ :=
   kernel.comap π (fun x ↦ x) h
 
 
-
-
--- TODO: pull request
-lemma iSup_measurable_of_measurable (X Y I : Type*) (sigmaAlgebras : I → MeasurableSpace X) (i₀ : I) (f : X → Y) [MeasurableSpace Y]
-    (h : @Measurable X Y (sigmaAlgebras i₀) _ f) :
-    @Measurable X Y (⨆ i, sigmaAlgebras i) _ f :=
-  h.mono (le_iSup sigmaAlgebras i₀) le_rfl
-
--- TODO: pull request
-lemma sup_measurable_of_measurable (X Y : Type*) (𝓢₁ 𝓢₂ : MeasurableSpace X) (f : X → Y) [MeasurableSpace Y]
-    (h : @Measurable X Y 𝓢₁ _ f) :
-    @Measurable X Y (𝓢₁ ⊔ 𝓢₂) _ f :=
-  h.mono (SemilatticeSup.le_sup_left 𝓢₁ 𝓢₂) le_rfl
-
-
-
-#check @ProbabilityTheory.kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _
-#check Π (Λ : Finset S), @ProbabilityTheory.kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _
---variable (γ : Π (Λ : Finset S), @ProbabilityTheory.kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _)
+--variable (γ : Π (Λ : Finset S), @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _)
 --variable (Λ₁ Λ₂ : Finset S)
 --#check cylinderEventsIn_le
 --#check (ProbabilityTheory.kernel.comap (γ Λ₁) (fun x ↦ x) (cylinderEventsIn_le _ _)) ∘ₖ (γ Λ₂)
@@ -162,7 +138,8 @@ def _root_.MeasureTheory.Measure.IsGibbsMeasure (μ : Measure (S → E)) (γ : S
 #check ProbabilityTheory.condDistrib_ae_eq_condexp
 #check ProbabilityTheory.condexp_ae_eq_integral_condDistrib_id
 
-def _root_.GibbsMeasure (γ : Specification S E) := {μ // MeasureTheory.Measure.IsGibbsMeasure S E μ γ}
+def _root_.GibbsMeasure (γ : Specification S E) :=
+  {μ // MeasureTheory.Measure.IsGibbsMeasure S E μ γ}
 
 lemma something (X : Type*) [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X) (hSub : 𝓑 ≤ 𝓧)
     (μ : Measure X) (π : @kernel X X 𝓑 𝓧) :
@@ -182,7 +159,6 @@ variable (Δ : Set S)
 #check restrict E Δ
 #check @Measurable (S → E) (Δ → E) (cylinderEventsIn E Δ) MeasurableSpace.pi (restrict E Δ)
 #check Measurable (restrict E Δ)
-#check Measurable (restrict E Δ) = @Measurable (S → E) (Δ → E) (cylinderEventsIn E Δ) MeasurableSpace.pi (restrict E Δ)
 #check @measurable_pi_iff (S → E) Δ (fun _ ↦ E) MeasurableSpace.pi (fun _ ↦ 𝓔) (restrict E Δ)
 
 lemma measurableRestrictEasy (Δ : Set S) : Measurable (restrict E Δ) := by
@@ -216,11 +192,11 @@ variable (η : S → E)
 def superposition (ζ : Λ → E) (x : S) : E :=
   dite (x ∈ Λ) (fun h ↦ ζ ⟨x, h⟩) (fun _ ↦ η x)
 
-lemma superposition_apply_of_mem (ζ : Λ → E) (x : S) (h : x ∈ Λ) : (superposition E Λ η ζ x = ζ ⟨x, h⟩) := by
-  simp [superposition, h]
+lemma superposition_apply_of_mem (ζ : Λ → E) (x : S) (h : x ∈ Λ) :
+    superposition E Λ η ζ x = ζ ⟨x, h⟩ := by simp [superposition, h]
 
-lemma superposition_apply_of_not_mem (ζ : Λ → E) (x : S) (h : x ∉ Λ) : (superposition E Λ η ζ x = η x) := by
-  simp [superposition, h]
+lemma superposition_apply_of_not_mem (ζ : Λ → E) (x : S) (h : x ∉ Λ) :
+    superposition E Λ η ζ x = η x := by simp [superposition, h]
 
 lemma measurable_coordinate_projection_2 {Δ : Set S} {x : S} (h : x ∈ Δ) :
     @Measurable (S → E) E (cylinderEventsIn E Δ) _ (fun σ ↦ σ x) := by
@@ -256,14 +232,14 @@ example : Fintype Λ := by
 --#check Measure.pi (fun (_ : Λ) ↦ ν)
 --#check Measure.map (superposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))
 --#check @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _
---#check @Measurable (S → E) (Measure (S → E)) (cylinderEventsIn E Λᶜ) _ (fun (η : S → E) ↦ Measure.map (superposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν)))
 
 lemma isssdProbabilityKernel_is_measurable (Λ : Finset S) [DecidablePred (· ∈ Λ.toSet)] :
     @Measurable (S → E) (Measure (S → E)) (cylinderEventsIn E Λᶜ) _
       (fun (η : S → E) ↦ Measure.map (superposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))) := by
   sorry
 
-def isssdProbabilityKernel (Λ : Finset S) [DecidablePred (· ∈ Λ.toSet)] : @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _ where
+def isssdProbabilityKernel (Λ : Finset S) [DecidablePred (· ∈ Λ.toSet)] :
+    @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _ where
   val := fun (η : S → E) ↦ Measure.map (superposition E Λ η) (Measure.pi (fun (_ : Λ) ↦ ν))
   property := by
     exact @isssdProbabilityKernel_is_measurable S E _ ν Λ _
@@ -283,16 +259,18 @@ def isssd [∀ (Λ : Finset S), DecidablePred (· ∈ Λ.toSet)] :
 
 class IsISSSD (γ : Specification S E) : Prop where
   indep : ∀ (Λ : Finset S) (σ : S → E),
-    ProbabilityTheory.iIndepFun (fun (_ : Λ) ↦ 𝓔) (fun (x : Λ) ↦ (fun (η : S → E) ↦ η x)) (γ.kernel Λ σ)
+    iIndepFun (fun (_ : Λ) ↦ 𝓔) (fun (x : Λ) ↦ (fun (η : S → E) ↦ η x)) (γ.kernel Λ σ)
   marginal : ∀ Λ (x : S) (_ : x ∈ Λ) (σ : S → E), (γ.kernel Λ σ).map (fun η ↦ η x) = ν
   exterior : ∀ Λ (σ : S → E),
     (γ.kernel Λ σ).map (restrict E  Λ.toSet.compl ) = Measure.dirac (fun (x : Λ.toSet.compl) ↦ σ x)
 
---class IsISSSD (kernel : Π (Λ : Finset S), @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _) : Prop where
---  indep : ∀ (Λ : Finset S) (σ : S → E), ProbabilityTheory.iIndepFun (fun (_ : Λ) ↦ 𝓔) (fun (x : Λ) ↦ (fun η ↦ η x)) (kernel Λ σ)
---  marginal : ∀ Λ (x : S) (_ : x ∈ Λ) (σ : S → E), (kernel Λ σ).map (fun η ↦ η x) = ν
--- exterior : ∀ Λ (σ : S → E), (kernel Λ σ).map (restrict E  Λ.toSet.compl ) = Measure.dirac (fun (x : Λ.toSet.compl) ↦ σ x)
-
+-- class IsISSSD (kernel : Π (Λ : Finset S), @kernel (S → E) (S → E) (cylinderEventsIn E Λᶜ) _) :
+--    Prop where
+--   indep : ∀ (Λ : Finset S) (σ : S → E),
+--     iIndepFun (fun (_ : Λ) ↦ 𝓔) (fun (x : Λ) ↦ (fun η ↦ η x)) (kernel Λ σ)
+--   marginal : ∀ Λ (x : S) (_ : x ∈ Λ) (σ : S → E), (kernel Λ σ).map (fun η ↦ η x) = ν
+--   exterior : ∀ Λ (σ : S → E),
+--     (kernel Λ σ).map (restrict E  Λ.toSet.compl ) = Measure.dirac (fun (x : Λ.toSet.compl) ↦ σ x)
 
 instance  [∀ (Λ : Finset S), DecidablePred (· ∈ Λ.toSet)] : IsISSSD E ν (@isssd S E 𝓔 ν _) where
   indep := by sorry
@@ -301,21 +279,21 @@ instance  [∀ (Λ : Finset S), DecidablePred (· ∈ Λ.toSet)] : IsISSSD E ν 
 
 
 
-lemma _root_.MeasureTheory.Measure.eq_prod_of_dirac_right (X Y : Type*) [MeasurableSpace X] [MeasurableSpace Y]
-    (ν : Measure X) (y : Y) (μ : Measure (X × Y))
+lemma _root_.MeasureTheory.Measure.eq_prod_of_dirac_right (X Y : Type*) [MeasurableSpace X]
+    [MeasurableSpace Y] (ν : Measure X) (y : Y) (μ : Measure (X × Y))
     (marg_X : Measure.map Prod.fst μ = ν) (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
     μ = ν.prod (Measure.dirac y) := by
 -- dynkin's pi system lemma
   sorry
 
-lemma _root_.MeasureTheory.Measure.eq_prod_of_dirac_left (X Y : Type*) [MeasurableSpace X] [MeasurableSpace Y]
-    (x : X) (ν : Measure Y) (μ : Measure (X × Y))
+lemma _root_.MeasureTheory.Measure.eq_prod_of_dirac_left (X Y : Type*) [MeasurableSpace X]
+    [MeasurableSpace Y] (x : X) (ν : Measure Y) (μ : Measure (X × Y))
     (marg_X : Measure.map Prod.fst μ = Measure.dirac x) (marg_Y : Measure.map Prod.snd μ = ν) :
     μ = (Measure.dirac x).prod ν := by
 
   sorry
 
-lemma IsISSSD.indep_marginal_exterior :
+-- lemma IsISSSD.indep_marginal_exterior :
 
 --def isssd (h : ):
 
