@@ -1,4 +1,7 @@
-import Mathlib
+import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Probability.Independence.Basic
+import Mathlib.Probability.Kernel.Composition
 
 /-!
 # Properness
