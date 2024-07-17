@@ -6,32 +6,12 @@ import Mathlib.Probability.Independence.Basic
 import Mathlib.Probability.Kernel.Composition
 
 /-!
-# Properness
+# Gibbs measures
 
-We define the notion of properness for measure kernels and highlight important consequences in this
-section
+This file defines Gibbs measures.
 -/
 
 open ProbabilityTheory Set MeasureTheory ENNReal NNReal
-
-variable {S E : Type*} [𝓔 : MeasurableSpace E]
-
-section introduction
-
-variable (S E) in
-structure Specification where
-  toKernel (Λ : Finset S) : @kernel (S → E) (S → E) (cylinderEvents Λᶜ) _
-  toKernel_comp_toKernel (Λ₁ Λ₂) (_ : Λ₁ ⊆ Λ₂) :
-    kernel.comap (toKernel Λ₁) (fun x ↦ x) (cylinderEvents_le_pi _) ∘ₖ toKernel Λ₂ = toKernel Λ₂
-
-variable (μ : Measure (S → E)) (A : Set (S → E))
-
-def MeasureTheory.Measure.IsGibbsMeasure (μ : Measure (S → E)) (γ : Specification S E) :=
-    ∀ (Λ : Finset S) (A : Set (S → E)) (_ : MeasurableSet A),
-      condexp (cylinderEvents Λ.toSetᶜ) μ (A.indicator (fun _ ↦ (1 : ℝ)))
-        =ᵐ[μ] (fun σ ↦ (γ.toKernel Λ σ A).toReal)
-
-def GibbsMeasure (γ : Specification S E) := {μ : Measure _ // μ.IsGibbsMeasure  γ}
 
 lemma something (X : Type*) [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X) (hSub : 𝓑 ≤ 𝓧)
     (μ : Measure X) (π : @kernel X X 𝓑 𝓧) :
@@ -40,7 +20,32 @@ lemma something (X : Type*) [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X
       =ᵐ[μ] (fun x ↦ (π x A).toReal)) := by
   sorry
 
-end introduction
+variable {S E : Type*} [𝓔 : MeasurableSpace E]
+
+variable (S E) in
+/-- A specification from `S` to `E` is a collection of "marginals" on the complement of finite sets,
+compatible under restriction.
+
+The marginals are implemented as a collection of kernels, one `Λᶜ`-measurable kernel for each finite
+set `Λ`. -/
+structure Specification where
+  /-- The marginals of a specification. -/
+  condKernelCompl (Λ : Finset S) : @kernel (S → E) (S → E) (cylinderEvents Λᶜ) _
+  /-- The marginals of a specification are compatible under restriction.
+
+  Morally, the LHS should be thought of as discovering `Λ₁` then `Λ₂`, while the RHS should be
+  thought of as discovering `Λ₂`. -/
+  condKernelCompl_comp_condKernelCompl (Λ₁ Λ₂) (_ : Λ₁ ⊆ Λ₂) :
+    kernel.comap (condKernelCompl Λ₁) (fun x ↦ x) (cylinderEvents_le_pi _) ∘ₖ condKernelCompl Λ₂ =
+      condKernelCompl Λ₂
+
+variable (μ : Measure (S → E)) (A : Set (S → E))
+
+/-- For a specification `γ`, a Gibbs measure is a measure whose finite marginals agree with `γ`. -/
+def MeasureTheory.Measure.IsGibbs (μ : Measure (S → E)) (γ : Specification S E) : Prop :=
+    ∀ (Λ : Finset S) (A : Set (S → E)) (_ : MeasurableSet A),
+      condexp (cylinderEvents Λ.toSetᶜ) μ (A.indicator (fun _ ↦ (1 : ℝ)))
+        =ᵐ[μ] (fun σ ↦ (γ.condKernelCompl Λ σ A).toReal)
 
 
 noncomputable section ISSSD
@@ -64,17 +69,17 @@ def isssdProbabilityKernel (Λ : Finset S) [DecidablePred (· ∈ Λ.toSet)] :
 
 
 def isssd [∀ (Λ : Finset S), DecidablePred (· ∈ Λ.toSet)] : Specification S E where
-  toKernel Λ := isssdProbabilityKernel E ν Λ
-  toKernel_comp_toKernel := by sorry
+  condKernelCompl Λ := isssdProbabilityKernel E ν Λ
+  condKernelCompl_comp_condKernelCompl := by sorry
 
 
 
 class IsISSSD (γ : Specification S E) : Prop where
   indep : ∀ (Λ : Finset S) (σ : S → E),
-    iIndepFun (fun (_ : Λ) ↦ 𝓔) (fun (x : Λ) ↦ (fun (η : S → E) ↦ η x)) (γ.toKernel Λ σ)
-  marginal : ∀ Λ (x : S) (_ : x ∈ Λ) (σ : S → E), (γ.toKernel Λ σ).map (fun η ↦ η x) = ν
+    iIndepFun (fun (_ : Λ) ↦ 𝓔) (fun (x : Λ) ↦ (fun (η : S → E) ↦ η x)) (γ.condKernelCompl Λ σ)
+  marginal : ∀ Λ (x : S) (_ : x ∈ Λ) (σ : S → E), (γ.condKernelCompl Λ σ).map (fun η ↦ η x) = ν
   exterior : ∀ Λ (σ : S → E),
-    (γ.toKernel Λ σ).map (restrict Λ.toSet.compl) = .dirac (fun (x : Λ.toSet.compl) ↦ σ x)
+    (γ.condKernelCompl Λ σ).map (restrict Λ.toSet.compl) = .dirac (fun (x : Λ.toSet.compl) ↦ σ x)
 
 -- class IsISSSD (kernel : Π (Λ : Finset S), @kernel (S → E) (S → E) (cylinderEvents Λᶜ) _) :
 --    Prop where
