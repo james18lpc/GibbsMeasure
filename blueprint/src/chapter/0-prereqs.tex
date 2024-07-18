@@ -1,0 +1,55 @@
+\chapter{Prereqs}
+
+\begin{definition}[Cylinder Events]
+    \label{def:cylinder-event}
+    \lean{cylinderEvents}
+    \leanok
+    Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
+    \begin{align*}
+        \mathcal{F}:\mathcal{P}(S)&\to\mathcal{P}(E)\\
+        \Delta&\mapsto \sigma(\{\text{proj}_\delta:E^S\to E\mid \delta\in \Delta\})
+    \end{align*}
+    defines the \textbf{cylinder events in }$\Delta$ (for each $\Delta\in\mathcal{P}(S)$), where each $\text{proj}_\delta$ is precisely the canonical projection map.
+\end{definition}
+
+\begin{definition}[Kernel]
+    \label{def:kernel}
+    \lean{ProbabilityTheory.kernel}
+    \leanok
+    Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. Then,
+    \begin{equation*}
+        \text{ProbKer}_{\mathcal{Y},\mathcal{X}}:=\left\{\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}_{\geq0}}~\middle\vert~ \forall y\in Y,\pi(\cdot\mid y)\in\mathfrak{P}(X,\mathcal{X});~\forall A\in\mathcal{X},\pi(A\mid\cdot)\text{ is }\mathcal{Y}\text{-measurable}\right\}
+    \end{equation*}
+    defines the set of \textbf{probability kernels from $\mathcal{Y}$ to $\mathcal{X}$}, where $\mathfrak{P}(X,\mathcal{X})$ is the space of probability measures on $X$.
+\end{definition}
+
+\begin{definition}[Proper Kernel]
+    \label{def:proper-kernel}
+    \lean{ProbabilityTheory.kernel.IsProper}
+    \leanok
+    Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. Then,
+    \begin{equation*}
+        \text{ProbKer}_{\mathcal{Y},\mathcal{X}}:=\left\{\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}_{\geq0}}~\middle\vert~ \forall y\in Y,\pi(\cdot\mid y)\in\mathfrak{P}(X,\mathcal{X});~\forall A\in\mathcal{X},\pi(A\mid\cdot)\text{ is }\mathcal{Y}\text{-measurable}\right\}
+    \end{equation*}
+    defines the set of \textbf{probability kernels from $\mathcal{Y}$ to $\mathcal{X}$}, where $\mathfrak{P}(X,\mathcal{X})$ is the space of probability measures on $X$.
+\end{definition}
+
+\begin{definition}[Product Probability Measure]
+   \label{def:product-probability-measure}
+   characteristic predicate?
+\end{definition}
+
+\begin{definition}[Superposition]
+    \label{def:superposition}
+    \lean{extend}
+    \leanok
+    Let $E$ and $S$ be sets. Let $\Delta\in\mathcal{P}(S)$, and let $\omega\in E^S$. We define
+    \begin{align*}
+        \text{super}_\omega:E^\Delta&\to E^S\\
+        \zeta&\mapsto \delta\mapsto\begin{cases}
+            \zeta_\delta & \delta\in\Delta\\
+            \omega_\delta & \delta\notin\Delta
+        \end{cases}
+    \end{align*}
+    to be the \textbf{superposition of $\zeta$ on $\omega$} (for each $\zeta\in E^\Delta$).
+\end{definition}
