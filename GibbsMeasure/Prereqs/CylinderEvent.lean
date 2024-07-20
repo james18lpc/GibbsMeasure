@@ -16,10 +16,11 @@ def cylinderEvents (Δ : Set ι) : MeasurableSpace (∀ i, π i) := ⨆ i ∈ Δ
 @[simp] lemma cylinderEvents_univ : cylinderEvents (π := π) univ = MeasurableSpace.pi := by
   simp [cylinderEvents, MeasurableSpace.pi]
 
+@[gcongr]
 lemma cylinderEvents_mono (h : Δ₁ ⊆ Δ₂) : cylinderEvents (π := π) Δ₁ ≤ cylinderEvents Δ₂ :=
   biSup_mono h
 
-lemma cylinderEvents_le_pi (Δ : Set ι) : cylinderEvents (π := π) Δ ≤ MeasurableSpace.pi := by
+lemma cylinderEvents_le_pi : cylinderEvents (π := π) Δ ≤ MeasurableSpace.pi := by
   simpa using cylinderEvents_mono (subset_univ _)
 
 lemma measurable_cylinderEvents_iff {g : α → ∀ i, π i} :

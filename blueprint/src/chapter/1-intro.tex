@@ -21,7 +21,7 @@
 
 \begin{definition}[Gibbs Measures]
     \label{def:gibbs-measure}
-    \lean{MeasureTheory.Measure.IsGibbs}
+    \lean{Specification.IsGibbsMeasure}
     \leanok
     \uses{def:specification}
 
@@ -64,6 +64,7 @@
 \begin{lemma}[Strong Consistency of ISSSDs]
     \label{lem:isssd-strong-consistency}
     \uses{def:ISSSD}
+    \lean{Specification.isssd_comp_isssd}
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\text{ISSSD}$ satisfies $\text{ISSSD}(\mu)_\Delta\circ_k\text{ISSSD}(\mu)_\Lambda=\text{ISSSD}(\mu)_{\Delta\cup\Lambda}$ for all $\Delta, \Lambda\in\text{Finset}(S)$ and $\mu\in\mathfrak{P}(E, \mathcal{E})$.
 \end{lemma}
