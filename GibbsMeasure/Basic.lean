@@ -79,12 +79,12 @@ private lemma measurable_isssdFun (Λ : Finset S) :
   sorry
 
 /-- Auxiliary definition for `Specification.isssd`. -/
-private def isssdFun (Λ : Finset S) : kernel[cylinderEvents Λᶜ] (S → E) (S → E) where
+def isssdFun (Λ : Finset S) : kernel[cylinderEvents Λᶜ] (S → E) (S → E) where
   val := fun η ↦ Measure.map (extend E Λ η) (Measure.pi fun _ : Λ ↦ ν)
   property := by exact @measurable_isssdFun S E _ ν Λ
 
 /-- The ISSSD of a measure is strongly consistent. -/
-private lemma isssdFun_comp_isssdFun [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
+lemma isssdFun_comp_isssdFun [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
     kernel.comap (isssdFun ν Λ₁) id cylinderEvents_le_pi ∘ₖ isssdFun ν Λ₂ =
       kernel.comap (isssdFun ν (Λ₁ ∪ Λ₂)) id
         (measurable_id'' $ by gcongr; exact Finset.subset_union_right) :=

@@ -50,7 +50,7 @@
 
 \begin{definition}[Independent Specification with Single Spin Distribution [ISSSD]]
     \label{def:ISSSD}
-    \lean{Specification.isssd}
+    \lean{Specification.isssdFun}
     \uses{def:superposition}
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then
@@ -64,7 +64,7 @@
 \begin{lemma}[Strong Consistency of ISSSDs]
     \label{lem:isssd-strong-consistency}
     \uses{def:ISSSD}
-    \lean{Specification.isssd_comp_isssd}
+    \lean{Specification.isssdFun_comp_isssdFun}
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\text{ISSSD}$ satisfies $\text{ISSSD}(\mu)_\Delta\circ_k\text{ISSSD}(\mu)_\Lambda=\text{ISSSD}(\mu)_{\Delta\cup\Lambda}$ for all $\Delta, \Lambda\in\text{Finset}(S)$ and $\mu\in\mathfrak{P}(E, \mathcal{E})$.
 \end{lemma}
@@ -72,17 +72,13 @@
   Immediate.
 \end{proof}
 
-\begin{lemma}[ISSSDs are Specifications]
-    \label{lem:isssd-specification}
-    \uses{def:ISSSD, def:specification}
+\begin{definition}[ISSSDs are Specifications]
+    \label{def:isssd-specification}
+    \uses{lem:isssd-strong-consistency, def:specification}
+    \lean{Specification.isssd}
 
     $\text{ISSSD}(\nu)$ is a specification.
-\end{lemma}
-\begin{proof}
-    \uses{lem:isssd-strong-consistency}
-
-    Immediate from strong consistency.
-\end{proof}
+\end{definition}
 
 \begin{lemma}[ISSSDs are Proper Specifications]
     \label{lem:isssd-proper-specification}
@@ -91,14 +87,14 @@
     $\text{ISSSD}(\nu)$ is a proper specification.
 \end{lemma}
 \begin{proof}
-    \uses{lem:isssd-specification}
+    \uses{def:isssd-specification}
 
     We already know it's a specification. Properness is immediate.
 \end{proof}
 
 \begin{lemma}[Uniqueness of a Gibbs Measure Specified by an ISSSD]
     \label{lem:gibbs-measure-uniqueness}
-    \uses{def:gibbs-measure, def:ISSSD}
+    \uses{def:gibbs-measure, def:isssd-specification}
 
     Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\mu$ a measure on $E$. Then there is at most one $\text{ISSSD}(\mu)$-Gibbs measure.
 \end{lemma}
@@ -110,7 +106,7 @@
 
 \begin{lemma}[Existence of a Gibbs Measure Specified by an ISSSD]
     \label{lem:gibbs-measure-existence}
-    \uses{def:gibbs-measure, def:product-probability-measure, def:ISSSD}
+    \uses{def:gibbs-measure, def:product-probability-measure, def:isssd-specification}
 
     Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\mu$ a measure on $E$. Then $\mu^S$ is a $\text{ISSSD}(\mu)$-Gibbs measure.
 \end{lemma}
