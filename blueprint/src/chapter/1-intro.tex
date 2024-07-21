@@ -50,7 +50,7 @@
 
 \begin{definition}[Independent Specification with Single Spin Distribution [ISSSD]]
     \label{def:ISSSD}
-    \lean{isssd}
+    \lean{Specification.isssd}
     \uses{def:superposition}
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then
@@ -110,7 +110,7 @@
 
 \begin{lemma}[Existence of a Gibbs Measure Specified by an ISSSD]
     \label{lem:gibbs-measure-existence}
-    \uses{def:gibbs-measure, def:product-probability-measure}
+    \uses{def:gibbs-measure, def:product-probability-measure, def:ISSSD}
 
     Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\mu$ a measure on $E$. Then $\mu^S$ is a $\text{ISSSD}(\mu)$-Gibbs measure.
 \end{lemma}
