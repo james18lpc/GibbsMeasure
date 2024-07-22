@@ -400,14 +400,14 @@ instance _root_.MeasureTheory.Measure.instIsMarkovKernelCondKernelNew
   rw [Measure.condKernelNew]
   infer_instance
 
-class _root_.MeasureTheory.HasCondKernelNew {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
-    (ρ : Measure (X × Y)) [IsFiniteMeasure ρ] (π : kernel X Y) where
+class _root_.MeasureTheory.Measure.IsCondKernel {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+    (ρ : Measure (X × Y)) [IsFiniteMeasure ρ] (π : kernel X Y) : Prop where
   disintegrate' : ρ.fst ⊗ₘ π = ρ
 
-lemma _root_.MeasureTheory.HasCondKernel.disintegrateNew {X Y : Type*} [MeasurableSpace X]
+lemma _root_.MeasureTheory.Measure.IsCondKernel.disintegrateNew {X Y : Type*} [MeasurableSpace X]
     [MeasurableSpace Y] (ρ : Measure (X × Y)) [IsFiniteMeasure ρ] (π : kernel X Y)
-    [HasCondKernelNew ρ π] : ρ.fst ⊗ₘ π = ρ := by
-  apply HasCondKernelNew.disintegrate'
+    [ρ.IsCondKernel π] : ρ.fst ⊗ₘ π = ρ := by
+  apply Measure.IsCondKernel.disintegrate'
 
 /-- **Disintegration** of finite product measures on `α × Ω`, where `Ω` is standard Borel. Such a
 measure can be written as the composition-product of `ρ.fst` (marginal measure over `α`) and
@@ -430,21 +430,21 @@ lemma _root_.MeasureTheory.Measure.compProd_fst_condKernelNew
 -- FROM HERE ON, REFACTOR
 
 
-instance _root_.MeasureTheory.Measure.hasCondKernel_condKernelNew
+instance _root_.MeasureTheory.Measure.IsCondKernel_condKernelNew
     (ρ : Measure (α × Ω)) [IsFiniteMeasure ρ] :
-    HasCondKernelNew ρ ρ.condKernelNew where
+    ρ.IsCondKernel ρ.condKernelNew where
   disintegrate' := by
     apply MeasureTheory.Measure.compProd_fst_condKernelNew
 
 variable {γ' Ω' : Type*} {mγ' : MeasurableSpace γ'} [MeasurableSpace Ω'] [Nonempty Ω']
 variable {ρ' : Measure (α × Ω')} [IsFiniteMeasure ρ']
-variable {ρCond' : kernel α Ω'} [HasCondKernelNew ρ' ρCond'] [IsSFiniteKernel ρCond']
+variable {ρCond' : kernel α Ω'} [ρ'.IsCondKernel ρCond'] [IsSFiniteKernel ρCond']
 
 /-- Auxiliary lemma for `condKernel_apply_of_ne_zero`. -/
 lemma _root_.MeasureTheory.Measure.condKernel_apply_of_ne_zero_of_measurableSetNew
     [MeasurableSingletonClass α] {x : α} (hx : ρ'.fst {x} ≠ 0) {s : Set Ω'} (hs : MeasurableSet s) :
     ρCond' x s = (ρ'.fst {x})⁻¹ * ρ' ({x} ×ˢ s) := by
-  have := @MeasureTheory.HasCondKernel.disintegrateNew α Ω' _ _ ρ' _ ρCond' _
+  have := @MeasureTheory.Measure.IsCondKernel.disintegrateNew α Ω' _ _ ρ' _ ρCond' _
   nth_rewrite 2 [← this]
   rw [Measure.compProd_apply (measurableSet_prod.mpr (Or.inl ⟨measurableSet_singleton x, hs⟩))]
   classical
@@ -489,7 +489,7 @@ section Countable
 
 variable {γ' Ω' : Type*} {mγ' : MeasurableSpace γ'} [MeasurableSpace Ω'] [Nonempty Ω']
 --variable {κ' : Measure (α × (β × Ω'))} [IsFiniteMeasure κ']
---variable {κCond' : kernel α (β × Ω')} [HasCondKernel κ' κCond'] [IsSFiniteKernel κCond']
+--variable {κCond' : kernel α (β × Ω')} [IsCondKernel κ' κCond'] [IsSFiniteKernel κCond']
 variable [Countable α]
 
 /-- Auxiliary definition for `ProbabilityTheory.kernel.condKernelNew`.
@@ -499,7 +499,7 @@ space. -/
 noncomputable
 def condKernelCountable' (κ' : kernel α (β × Ω')) [IsFiniteKernel κ']
     (κCond' : α → kernel β Ω') (h_atom : ∀ (y y' : α), y' ∈ measurableAtom y → κCond' y = κCond' y')
-    [∀ (a : α), HasCondKernelNew (κ' a) (κCond' a)] : kernel (α × β) Ω' where
+    [∀ a, (κ' a).IsCondKernel (κCond' a)] : kernel (α × β) Ω' where
   val p := (κCond' p.1) p.2
   property := by
     change Measurable ((fun q : β × α ↦ (κCond' q.2) q.1) ∘ Prod.swap)
