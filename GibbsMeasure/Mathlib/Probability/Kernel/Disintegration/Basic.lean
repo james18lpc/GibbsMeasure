@@ -473,12 +473,27 @@ variable {γ' Ω' : Type*} {mγ' : MeasurableSpace γ'} [MeasurableSpace Ω'] [N
 --variable {κCond' : Kernel α (β × Ω')} [IsCondKernel κ' κCond'] [IsSFiniteKernel κCond']
 variable [Countable α]
 
+lemma apply_congr_of_mem_measurableAtom (κ : Kernel α Ω') {y' y : α} (hy' : y' ∈ measurableAtom y) :
+  κ y' = κ y := by
+  ext s hs
+  exact mem_of_mem_measurableAtom hy'
+    (Kernel.measurable_coe κ hs (measurableSet_singleton (κ y s))) rfl
+
+-- lemma apply_congr_of_mem_measurableAtom2 (κCond : α → kernel β Ω') (κCond_mble : Measurable κCond)
+--     {y' y : α} (hy' : y' ∈ measurableAtom y) : κCond y' = κCond y := by
+--   have : measurableSet_singleton (κCond y) := by
+--     sorry
+--   ext b s hs
+
+
+--   sorry
+
 /-- Auxiliary definition for `ProbabilityTheory.Kernel.condKernelNew`.
 
 A conditional kernel for `κ' : Kernel α (β × Ω')` where `α` is countable and `Ω'` is a measurable
 space. -/
 noncomputable
-def condKernelCountable' (κ' : Kernel α (β × Ω')) [IsFiniteKernel κ']
+def condKernelCountable'' (κ' : Kernel α (β × Ω')) [IsFiniteKernel κ']
     (κCond' : α → Kernel β Ω') (h_atom : ∀ (y y' : α), y' ∈ measurableAtom y → κCond' y = κCond' y')
     [∀ a, (κ' a).IsCondKernel (κCond' a)] : Kernel (α × β) Ω' where
   toFun p := (κCond' p.1) p.2
@@ -487,24 +502,38 @@ def condKernelCountable' (κ' : Kernel α (β × Ω')) [IsFiniteKernel κ']
     refine (measurable_from_prod_countable' (fun a ↦ ?_) ?_).comp measurable_swap
     · exact (κCond' a).measurable
     · intro y y' x hy'
-      have : κ' y' = κ' y := by
-        ext s hs
-        exact mem_of_mem_measurableAtom hy'
-          (κ'.measurable_coe hs (measurableSet_singleton (κ' y s))) rfl
-      simpa [this] using (DFunLike.congr (h_atom y y' hy') rfl).symm
+      simpa [apply_congr_of_mem_measurableAtom] using (DFunLike.congr (h_atom y y' hy') rfl).symm
+
+-- noncomputable
+-- def condKernelCountable' (κ' : kernel α (β × Ω')) [IsFiniteKernel κ']
+--     (κCond' : α → kernel β Ω') (κCond'_mble : Measurable κCond')
+--     [∀ (a : α), HasCondKernelNew (κ' a) (κCond' a)] : kernel (α × β) Ω' :=
+--   condKernelCountable'' κ' κCond'
+--     (by
+--         intro y y' h
+
+--         sorry)
 
 noncomputable
 def condKernelCountable (κ : Kernel α (β × Ω)) [IsFiniteKernel κ] : Kernel (α × β) Ω :=
-  condKernelCountable' κ (fun a ↦ (κ a).condKernelNew)
+  condKernelCountable'' κ (fun a ↦ (κ a).condKernelNew)
     (by
         intro y y' h
-        have : κ y' = κ y := by
-          ext s hs
-          exact mem_of_mem_measurableAtom h (κ.measurable_coe hs (measurableSet_singleton _)) rfl
-        simp [this])
+        simp [apply_congr_of_mem_measurableAtom _ h] )
 
 lemma condKernelCountable_apply (κ : Kernel α (β × Ω)) [IsFiniteKernel κ] (p : α × β) :
     condKernelCountable κ p = (κ p.1).condKernelNew p.2 := rfl
+
+lemma condKernelCountable''_apply (κ' : Kernel α (β × Ω')) [IsFiniteKernel κ']
+    (κCond' : α → Kernel β Ω') (h_atom : ∀ (y y' : α), y' ∈ measurableAtom y → κCond' y = κCond' y')
+    [∀ (a : α), (κ' a).IsCondKernel (κCond' a)] (p : α × β) :
+    (condKernelCountable'' κ' κCond' h_atom) p = (κCond' p.1) p.2 := rfl
+
+-- instance instIsMarkovKernelCondKernelCountable'' (κ' : Kernel α (β × Ω')) [IsFiniteKernel κ']
+--     (κCond' : α → Kernel β Ω') (h_atom : ∀ (y y' : α), y' ∈ measurableAtom y → κCond' y = κCond' y')
+--     [∀ (a : α), (κ' a).IsCondKernel (κCond' a)] :
+--     IsMarkovKernel (condKernelCountable'' κ' κCond' h_atom) :=
+--   ⟨fun p ↦ (HasCondKernelNew (κ' p.1)).isProbabilityMeasure p.2⟩
 
 instance instIsMarkovKernelCondKernelCountable (κ : Kernel α (β × Ω)) [IsFiniteKernel κ] :
     IsMarkovKernel (condKernelCountable κ) :=
