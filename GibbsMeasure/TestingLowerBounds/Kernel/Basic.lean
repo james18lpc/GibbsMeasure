@@ -13,34 +13,34 @@ import Mathlib.Probability.Kernel.Composition
 
 open MeasureTheory
 
-namespace ProbabilityTheory.kernel
+namespace ProbabilityTheory.Kernel
 
 variable {α β γ δ : Type*} {mα : MeasurableSpace α} {mβ : MeasurableSpace β}
   {mγ : MeasurableSpace γ} {mδ : MeasurableSpace δ}
 
 lemma snd_compProd_prodMkLeft
-    (κ : kernel α β) (η : kernel β γ) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
+    (κ : Kernel α β) (η : Kernel β γ) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
     snd (κ ⊗ₖ prodMkLeft α η) = η ∘ₖ κ := by
   ext a s hs
   rw [snd_apply' _ _ hs, compProd_apply, comp_apply' _ _ _ hs]
   · rfl
   · exact measurable_snd hs
 
-lemma map_comp (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel β γ) [IsSFiniteKernel η]
+lemma map_comp (κ : Kernel α β) [IsSFiniteKernel κ] (η : Kernel β γ) [IsSFiniteKernel η]
     {f : γ → δ} (hf : Measurable f) :
-    kernel.map (η ∘ₖ κ) f hf = (kernel.map η f hf) ∘ₖ κ := by
+    (η ∘ₖ κ).map f hf = η.map f hf ∘ₖ κ := by
   ext a s hs
   rw [map_apply' _ hf _ hs, comp_apply', comp_apply' _ _ _ hs]
   · simp_rw [map_apply' _ hf _ hs]
   · exact hf hs
 
-lemma fst_comp (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel β (γ × δ)) [IsSFiniteKernel η] :
+lemma fst_comp (κ : Kernel α β) [IsSFiniteKernel κ] (η : Kernel β (γ × δ)) [IsSFiniteKernel η] :
     fst (η ∘ₖ κ) = fst η ∘ₖ κ :=
-  kernel.map_comp κ η measurable_fst
+  κ.map_comp η measurable_fst
 
-lemma snd_comp (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel β (γ × δ)) [IsSFiniteKernel η] :
+lemma snd_comp (κ : Kernel α β) [IsSFiniteKernel κ] (η : Kernel β (γ × δ)) [IsSFiniteKernel η] :
     snd (η ∘ₖ κ) = snd η ∘ₖ κ :=
-  kernel.map_comp κ η measurable_snd
+  κ.map_comp η measurable_snd
 
 lemma deterministic_prod_deterministic {f : α → β} {g : α → γ}
     (hf : Measurable f) (hg : Measurable g) :
@@ -52,9 +52,9 @@ lemma deterministic_prod_deterministic {f : α → β} {g : α → γ}
 
 lemma deterministic_comp_deterministic {f : α → β} {g : β → γ}
     (hf : Measurable f) (hg : Measurable g) :
-    (kernel.deterministic g hg) ∘ₖ (kernel.deterministic f hf) = kernel.deterministic (g ∘ f) (hg.comp hf) := by
+    deterministic g hg ∘ₖ deterministic f hf = deterministic (g ∘ f) (hg.comp hf) := by
   ext a
-  simp_rw [kernel.comp_deterministic_eq_comap, comap_apply, deterministic_apply]
+  simp_rw [comp_deterministic_eq_comap, comap_apply, deterministic_apply]
   rfl
 
-end ProbabilityTheory.kernel
+end ProbabilityTheory.Kernel

@@ -8,28 +8,28 @@ We define the notion of properness for measure kernels and highlight important c
 
 open MeasureTheory ENNReal NNReal Set
 
-namespace ProbabilityTheory.kernel
+namespace ProbabilityTheory.Kernel
 variable {S : Type*} (E : Type*) [𝓔 : MeasurableSpace E] (Δ : Set S) (Λ : Finset S)
 
-variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : kernel[𝓑, 𝓧] X X}{A B : Set X}  {x₀ : X}
+variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : kernel[𝓑, 𝓧] X X}{A B : Set X} {x₀ : X}
 
 /-- For two σ-algebras `𝓑 ≤ 𝓧` on a space `X`, a `𝓑, 𝓧`-kernel `π : X → Measure X` is proper if,
-for all `B ∈ 𝓑`, `π` restricted to  is the same as `π` times the indicator of `B`.
+for all `B ∈ 𝓑`, `π` restricted to is the same as `π` times the indicator of `B`.
 
 To avoid assuming `𝓑 ≤ 𝓧` in the definition, we replace `𝓑` by `𝓑 ⊓ 𝓧` in the restriction. -/
 def IsProper (π : kernel[𝓑, 𝓧] X X) : Prop :=
   ∀ ⦃B : Set X⦄ (hB : MeasurableSet[𝓑 ⊓ 𝓧] B) (x : X),
-    kernel.restrict π (inf_le_right (b := 𝓧) _ hB) x = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x
+    π.restrict (inf_le_right (b := 𝓧) _ hB) x = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x
 
 lemma isProper_iff_restrict_eq_indicator_smul (h𝓑𝓧 : 𝓑 ≤ 𝓧) :
     IsProper π ↔ ∀ ⦃B : Set X⦄ (hB : MeasurableSet[𝓑] B) (x : X),
-      kernel.restrict π (h𝓑𝓧 _ hB) x = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x := by
+      π.restrict (h𝓑𝓧 _ hB) x = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x := by
   simp_rw [IsProper, inf_eq_left.2 h𝓑𝓧]
 
 lemma isProper_iff_restrict_eq_indicator_mul (h𝓑𝓧 : 𝓑 ≤ 𝓧) :
     IsProper π ↔
       ∀ ⦃A : Set X⦄ (_hA : MeasurableSet[𝓧] A) ⦃B : Set X⦄ (hB : MeasurableSet[𝓑] B)(x : X),
-        kernel.restrict π (h𝓑𝓧 _ hB) x A = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * π x A := by
+        π.restrict (h𝓑𝓧 _ hB) x A = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x * π x A := by
   simp [isProper_iff_restrict_eq_indicator_smul h𝓑𝓧, Measure.ext_iff]; aesop
 
 alias ⟨IsProper.restrict_eq_indicator_smul, IsProper.of_restrict_eq_indicator_smul⟩ :=
@@ -47,7 +47,7 @@ lemma IsProper.lintegral_indicator_mul_indicator (hπ : IsProper π) (h𝓑𝓧 
   · simp only [MeasureTheory.lintegral_const, MeasurableSet.univ, Measure.restrict_apply,
       univ_inter, one_mul]
     rw [← hπ.restrict_eq_indicator_mul h𝓑𝓧 hA hB, inter_comm]
-    exact (kernel.restrict_apply' π (h𝓑𝓧 B hB) x₀ hA).symm
+    exact (π.restrict_apply' (h𝓑𝓧 B hB) x₀ hA).symm
   · exact hA
   · sorry
 
@@ -77,4 +77,4 @@ lemma IsProper.integral_mul (hπ : IsProper π) (f g : X → ℝ) (x₀ : X)
   --Integrable.induction
   sorry
 
-end ProbabilityTheory.kernel
+end ProbabilityTheory.Kernel

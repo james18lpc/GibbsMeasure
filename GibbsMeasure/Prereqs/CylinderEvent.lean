@@ -10,7 +10,7 @@ open MeasureTheory
 variable {α ι : Type*} {π : ι → Type*} {mα : MeasurableSpace α} [m : ∀ i, MeasurableSpace (π i)]
   {Δ Δ₁ Δ₂ : Set ι} {i : ι}
 
-/-- The σ-algebra of cylindrical events on `Δ`. It is the smallest σ-algebra making  by the -/
+/-- The σ-algebra of cylindrical events on `Δ`. It is the smallest σ-algebra making by the -/
 def cylinderEvents (Δ : Set ι) : MeasurableSpace (∀ i, π i) := ⨆ i ∈ Δ, (m i).comap fun σ ↦ σ i
 
 @[simp] lemma cylinderEvents_univ : cylinderEvents (π := π) univ = MeasurableSpace.pi := by

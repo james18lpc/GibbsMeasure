@@ -43,7 +43,7 @@ structure Specification where
   DO NOT USE. Instead use the coercion to function `⇑γ`. Lean should insert it automatically in most
   cases. -/
   comp_of_subset' {Λ₁ Λ₂} :
-    Λ₁ ⊆ Λ₂ → kernel.comap (toFun Λ₁) id cylinderEvents_le_pi ∘ₖ toFun Λ₂ = toFun Λ₂
+    Λ₁ ⊆ Λ₂ → (toFun Λ₁).comap id cylinderEvents_le_pi ∘ₖ toFun Λ₂ = toFun Λ₂
 
 namespace Specification
 
@@ -58,19 +58,18 @@ instance instDFunLike :
 Morally, the LHS should be thought of as discovering `Λ₁` then `Λ₂`, while the RHS should be
 thought of as discovering `Λ₂`. -/
 lemma comp_of_subset (γ : Specification S E) (hΛ : Λ₁ ⊆ Λ₂) :
-  kernel.comap (γ Λ₁) id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂ := γ.comp_of_subset' hΛ
+  (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂ := γ.comp_of_subset' hΛ
 
 /-- A specification is proper if all its marginal kernels are. -/
-def IsProper (γ : Specification S E) : Prop := ∀ (Λ : Finset S), kernel.IsProper (γ Λ)
+def IsProper (γ : Specification S E) : Prop := ∀ Λ : Finset S, (γ Λ).IsProper
 
 /-- For a specification `γ`, a Gibbs measure is a measure whose finite marginals agree with `γ`. -/
 def IsGibbsMeasure (γ : Specification S E) (μ : Measure (S → E)) : Prop :=
   ∀ (Λ : Finset S) (A : Set (S → E)), MeasurableSet A →
     condexp (cylinderEvents Λᶜ) μ (A.indicator fun _ ↦ 1) =ᵐ[μ] fun σ ↦ (γ Λ σ A).toReal
 
-
 noncomputable section ISSSD
-variable (ν : Measure E) [IsProbabilityMeasure ν] (η : S → E)
+variable (ν : Measure E) (η : S → E)
 
 private lemma measurable_isssdFun (Λ : Finset S) :
     Measurable[cylinderEvents Λᶜ]
@@ -79,14 +78,16 @@ private lemma measurable_isssdFun (Λ : Finset S) :
   sorry
 
 /-- Auxiliary definition for `Specification.isssd`. -/
-def isssdFun (Λ : Finset S) : kernel[cylinderEvents Λᶜ] (S → E) (S → E) where
-  val := fun η ↦ Measure.map (extend E Λ η) (Measure.pi fun _ : Λ ↦ ν)
-  property := by exact @measurable_isssdFun S E _ ν Λ
+def isssdFun (ν : Measure E) (Λ : Finset S) :
+    kernel[cylinderEvents Λᶜ] (S → E) (S → E) :=
+  @Kernel.mk _ _ (_) _
+    (fun η ↦ Measure.map (extend E Λ η) (Measure.pi fun _ : Λ ↦ ν))
+    (measurable_isssdFun ν Λ)
 
 /-- The ISSSD of a measure is strongly consistent. -/
 lemma isssdFun_comp_isssdFun [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
-    kernel.comap (isssdFun ν Λ₁) id cylinderEvents_le_pi ∘ₖ isssdFun ν Λ₂ =
-      kernel.comap (isssdFun ν (Λ₁ ∪ Λ₂)) id
+    (isssdFun ν Λ₁).comap id cylinderEvents_le_pi ∘ₖ isssdFun ν Λ₂ =
+      (isssdFun ν (Λ₁ ∪ Λ₂)).comap id
         (measurable_id'' $ by gcongr; exact Finset.subset_union_right) :=
   sorry
 
@@ -99,8 +100,8 @@ def isssd : Specification S E where
 
 /-- The ISSSD of a measure is strongly consistent. -/
 lemma isssd_comp_isssd [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
-    kernel.comap (isssd ν Λ₁) id cylinderEvents_le_pi ∘ₖ isssd ν Λ₂ =
-      kernel.comap (isssd ν (Λ₁ ∪ Λ₂)) id
+    (isssd ν Λ₁).comap id cylinderEvents_le_pi ∘ₖ isssd ν Λ₂ =
+      (isssd ν (Λ₁ ∪ Λ₂)).comap id
         (measurable_id'' $ by gcongr; exact Finset.subset_union_right) := isssdFun_comp_isssdFun ..
 
 end ISSSD
