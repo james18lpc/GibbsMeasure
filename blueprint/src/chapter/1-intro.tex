@@ -16,6 +16,9 @@
 \begin{definition}[Proper specification]
     \label{def:proper-specification}
     \uses{def:specification, def:proper-kernel}
+    \lean{Specification.IsProper}
+    \leanok
+
     A specification $\gamma$ is a {\bf proper specification} if the kernel $\gamma_\Lambda$ is proper for every finite $\Lambda$.
 \end{definition}
 
@@ -65,6 +68,7 @@
     \label{lem:isssd-strong-consistency}
     \uses{def:ISSSD}
     \lean{Specification.isssdFun_comp_isssdFun}
+    \leanok
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\text{ISSSD}$ satisfies $\text{ISSSD}(\mu)_\Delta\circ_k\text{ISSSD}(\mu)_\Lambda=\text{ISSSD}(\mu)_{\Delta\cup\Lambda}$ for all $\Delta, \Lambda\in\text{Finset}(S)$ and $\mu\in\mathfrak{P}(E, \mathcal{E})$.
 \end{lemma}
@@ -76,6 +80,7 @@
     \label{def:isssd-specification}
     \uses{lem:isssd-strong-consistency, def:specification}
     \lean{Specification.isssd}
+    \leanok
 
     $\text{ISSSD}(\nu)$ is a specification.
 \end{definition}
@@ -83,6 +88,8 @@
 \begin{lemma}[ISSSDs are Proper Specifications]
     \label{lem:isssd-proper-specification}
     \uses{def:isssd, def:proper-specification}
+    \lean{Specification.IsProper.isssd}
+    \leanok
 
     $\text{ISSSD}(\nu)$ is a proper specification.
 \end{lemma}

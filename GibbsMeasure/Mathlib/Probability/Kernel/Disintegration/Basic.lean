@@ -26,7 +26,7 @@ For `κ : Kernel α (β × ℝ)`, the construction of the conditional kernel pro
 * Build a measurable function `f : (α × β) → ℚ → ℝ` such that for all measurable sets
   `s` and all `q : ℚ`, `∫ x in s, f (a, x) q ∂(kernel.fst κ a) = (κ a (s ×ˢ Iic (q : ℝ))).toReal`.
   We restrict to `ℚ` here to be able to prove the measurability.
-* Extend that function to `(α × β) → StieltjesFunction`. See the file `MeasurableStieltjes.lean`.
+* Juxt that function to `(α × β) → StieltjesFunction`. See the file `MeasurableStieltjes.lean`.
 * Finally obtain from the measurable Stieltjes function a measure on `ℝ` for each element of `α × β`
   in a measurable way: we have obtained a `Kernel (α × β) ℝ`.
   See the file `CdfToKernel.lean` for that step.

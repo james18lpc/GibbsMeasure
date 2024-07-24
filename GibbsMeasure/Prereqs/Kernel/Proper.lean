@@ -9,22 +9,21 @@ We define the notion of properness for measure kernels and highlight important c
 open MeasureTheory ENNReal NNReal Set
 
 namespace ProbabilityTheory.Kernel
-variable {S : Type*} (E : Type*) [𝓔 : MeasurableSpace E] (Δ : Set S) (Λ : Finset S)
-
 variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : Kernel[𝓑, 𝓧] X X}{A B : Set X} {x₀ : X}
 
 /-- For two σ-algebras `𝓑 ≤ 𝓧` on a space `X`, a `𝓑, 𝓧`-kernel `π : X → Measure X` is proper if,
 for all `B ∈ 𝓑`, `π` restricted to is the same as `π` times the indicator of `B`.
 
 To avoid assuming `𝓑 ≤ 𝓧` in the definition, we replace `𝓑` by `𝓑 ⊓ 𝓧` in the restriction. -/
-def IsProper (π : Kernel[𝓑, 𝓧] X X) : Prop :=
-  ∀ ⦃B : Set X⦄ (hB : MeasurableSet[𝓑 ⊓ 𝓧] B) (x : X),
-    π.restrict (inf_le_right (b := 𝓧) _ hB) x = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x
+structure IsProper (π : Kernel[𝓑, 𝓧] X X) : Prop :=
+  restrict_eq_indicator_smul' :
+    ∀ ⦃B : Set X⦄ (hB : MeasurableSet[𝓑 ⊓ 𝓧] B) (x : X),
+      π.restrict (inf_le_right (b := 𝓧) _ hB) x = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x
 
 lemma isProper_iff_restrict_eq_indicator_smul (h𝓑𝓧 : 𝓑 ≤ 𝓧) :
     IsProper π ↔ ∀ ⦃B : Set X⦄ (hB : MeasurableSet[𝓑] B) (x : X),
       π.restrict (h𝓑𝓧 _ hB) x = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x := by
-  simp_rw [IsProper, inf_eq_left.2 h𝓑𝓧]
+  refine ⟨fun ⟨h⟩ ↦ ?_, fun h ↦ ⟨?_⟩⟩ <;> simpa only [inf_eq_left.2 h𝓑𝓧] using h
 
 lemma isProper_iff_restrict_eq_indicator_mul (h𝓑𝓧 : 𝓑 ≤ 𝓧) :
     IsProper π ↔

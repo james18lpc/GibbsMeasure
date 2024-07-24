@@ -4,7 +4,7 @@ import Mathlib.Order.Ideal
 import Mathlib.Probability.Independence.Basic
 import Mathlib.Probability.Kernel.Composition
 import GibbsMeasure.Mathlib.Data.Finset.Basic
-import GibbsMeasure.Prereqs.Extend
+import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.Proper
 
 /-!
@@ -37,7 +37,7 @@ structure Specification where
 
   DO NOT USE. Instead use the coercion to function `⇑γ`. Lean should insert it automatically in most
   cases. -/
-  comp_of_subset' {Λ₁ Λ₂} :
+  comp_of_subset' (Λ₁ Λ₂) :
     Λ₁ ⊆ Λ₂ → (toFun Λ₁).comap id cylinderEvents_le_pi ∘ₖ toFun Λ₂ = toFun Λ₂
 
 namespace Specification
@@ -53,10 +53,25 @@ instance instDFunLike :
 Morally, the LHS should be thought of as discovering `Λ₁` then `Λ₂`, while the RHS should be
 thought of as discovering `Λ₂`. -/
 lemma comp_of_subset (γ : Specification S E) (hΛ : Λ₁ ⊆ Λ₂) :
-  (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂ := γ.comp_of_subset' hΛ
+  (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂ := γ.comp_of_subset' _ _ hΛ
 
 /-- A specification is proper if all its marginal kernels are. -/
 def IsProper (γ : Specification S E) : Prop := ∀ Λ : Finset S, (γ Λ).IsProper
+
+variable {γ : Specification S E}
+
+lemma isProper_iff_restrict_eq_indicator_smul :
+    γ.IsProper ↔
+      ∀ (Λ : Finset S) ⦃B : Set (S → E)⦄ (hB : MeasurableSet[cylinderEvents Λᶜ] B) (x : S → E),
+      (γ Λ).restrict (cylinderEvents_le_pi _ hB) x = B.indicator (1 : (S → E) → ℝ≥0∞) x • γ Λ x :=
+  forall_congr' fun _ ↦ Kernel.isProper_iff_restrict_eq_indicator_smul _
+
+lemma isProper_iff_restrict_eq_indicator_mul :
+    γ.IsProper ↔
+      ∀ (Λ : Finset S) ⦃A : Set (S → E)⦄ (_hA : MeasurableSet A) ⦃B : Set (S → E)⦄
+        (hB : MeasurableSet[cylinderEvents Λᶜ] B) (x : S → E),
+      (γ Λ).restrict (cylinderEvents_le_pi _ hB) x A = B.indicator 1 x * γ Λ x A :=
+  forall_congr' fun _ ↦ Kernel.isProper_iff_restrict_eq_indicator_mul _
 
 /-- For a specification `γ`, a Gibbs measure is a measure whose finite marginals agree with `γ`. -/
 def IsGibbsMeasure (γ : Specification S E) (μ : Measure (S → E)) : Prop :=
@@ -66,17 +81,21 @@ def IsGibbsMeasure (γ : Specification S E) (μ : Measure (S → E)) : Prop :=
 noncomputable section ISSSD
 variable (ν : Measure E) (η : S → E)
 
+-- TODO: Use `measurable_of_measurable_coe'` + measurable rectangles here
 private lemma measurable_isssdFun (Λ : Finset S) :
     Measurable[cylinderEvents Λᶜ]
-      fun η : S → E ↦ (Measure.pi fun _ : Λ ↦ ν).map (extend E Λ η) := by
+      fun η : S → E ↦ (Measure.pi fun _ : Λ ↦ ν).map (juxt E Λ η) := by
+  refine @Measure.measurable_of_measurable_coe _ _ _ (_) _ ?_
   rintro A hA
+  simp
   sorry
 
 /-- Auxiliary definition for `Specification.isssd`. -/
+@[simps (config := .asFn)]
 def isssdFun (ν : Measure E) (Λ : Finset S) :
     Kernel[cylinderEvents Λᶜ] (S → E) (S → E) :=
   @Kernel.mk _ _ (_) _
-    (fun η ↦ Measure.map (extend E Λ η) (Measure.pi fun _ : Λ ↦ ν))
+    (fun η ↦ Measure.map (juxt E Λ η) (Measure.pi fun _ : Λ ↦ ν))
     (measurable_isssdFun ν Λ)
 
 /-- The ISSSD of a measure is strongly consistent. -/
@@ -88,10 +107,16 @@ lemma isssdFun_comp_isssdFun [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
 
 /-- The **Independent Specification with Single Spin Distribution**.
 
-This is the specification corre -/
+This is the specification corresponding to the product measure -/
+@[simps]
 def isssd : Specification S E where
   toFun := isssdFun ν
-  comp_of_subset' := by sorry
+  comp_of_subset' Λ₁ Λ₂ hΛ := by
+    classical
+    rw [isssdFun_comp_isssdFun]
+    ext a s _
+    simp only [Kernel.comap_apply, id_eq, isssdFun_toFun, Finset.coe_sort_coe]
+    rw [Finset.union_eq_right.2 hΛ]
 
 /-- The ISSSD of a measure is strongly consistent. -/
 lemma isssd_comp_isssd [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
@@ -99,13 +124,17 @@ lemma isssd_comp_isssd [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
       (isssd ν (Λ₁ ∪ Λ₂)).comap id
         (measurable_id'' $ by gcongr; exact Finset.subset_union_right) := isssdFun_comp_isssdFun ..
 
+protected lemma IsProper.isssd : (isssd (S := S) ν).IsProper := by
+  rw [isProper_iff_restrict_eq_indicator_mul]
+  rintro Λ A hA B hB x
+  rw [Kernel.restrict_apply, Measure.restrict_apply hA]
+  simp only [isssd_toFun, isssdFun_toFun, Finset.coe_sort_coe]
+  sorry
+
 end ISSSD
 end Specification
 
 variable (X : Type*) (f : X → ℝ)
-#check Bornology.IsBounded (Set.range f)
-#check BoundedContinuousFunction
-#check Bornology.IsBounded.subset
 
 -- TODO: add to blueprint
 lemma condexp_ae_eq_kernel_apply {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X)
@@ -127,7 +156,6 @@ lemma condexp_ae_eq_kernel_apply {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : 
   apply h.trans
   simp_rw [← Pi.one_def, @integral_indicator_one X 𝓧 _ _ A_mble]
   rfl
-
 
 lemma condexp_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X)
     --(hSub : 𝓑 ≤ 𝓧)
@@ -175,8 +203,6 @@ lemma condexp_const_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : Measurab
   --change c • μ[A.indicator fun x ↦ 1|𝓑] =ᶠ[ae μ] c • (fun x₀ ↦ ∫ (a : X), A.indicator (fun x ↦ 1) a ∂π x₀)
   sorry
 
-#check SimpleFunc.induction
-
 lemma condexp_simpleFunc_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X)
     --(hSub : 𝓑 ≤ 𝓧)
     (μ : @Measure X 𝓧) [IsFiniteMeasure μ]
@@ -200,7 +226,6 @@ lemma bind_eq_self_iff (X : Type*) [𝓧 : MeasurableSpace X] (𝓑 : Measurable
   intro h
   have : μ A = μ A := by
     sorry
-  funext
   sorry,
   by sorry⟩
 
