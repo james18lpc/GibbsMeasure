@@ -1,0 +1,73 @@
+{
+  "Definition": {
+    "scope": "latex",
+		"prefix": "dfn",
+		"body": [
+      "\\begin{definition}",
+      "  \\label{$1}",
+      "  \\uses{$2}",
+      "  \\lean{$3}",
+      "  % \\leanok",
+      "",
+      "  $4",
+      "\\end{definition}"
+		],
+		"description": "Definition"
+	},
+  "Theorem": {
+    "scope": "latex",
+		"prefix": "thm",
+		"body": [
+      "\\begin{theorem}",
+      "  \\label{$1}",
+      "  \\uses{$2}",
+      "  \\lean{$3}",
+      "  % \\leanok",
+      "",
+      "  $4",
+      "\\end{theorem}"
+		],
+		"description": "Theorem"
+	},
+  "Lemma": {
+    "scope": "latex",
+		"prefix": "lem",
+		"body": [
+      "\\begin{lemma}",
+      "  \\label{$1}",
+      "  \\uses{$2}",
+      "  \\lean{$3}",
+      "  % \\leanok",
+      "",
+      "  $4",
+      "\\end{lemma}"
+		],
+		"description": "Lemma"
+  },
+  "Proposition": {
+    "scope": "latex",
+		"prefix": "prop",
+		"body": [
+      "\\begin{proposition}",
+      "  \\label{$1}",
+      "  \\uses{$2}",
+      "  \\lean{$3}",
+      "  % \\leanok",
+      "  $4",
+      "\\end{proposition}",
+		],
+		"description": "Proposition"
+  },
+  "Proof": {
+    "scope": "latex",
+		"prefix": "proof",
+		"body": [
+      "\\begin{proof}",
+      "  \\uses{$1}",
+      "  % \\leanok",
+      "  $2",
+      "\\end{proof}",
+		],
+		"description": "Proof"
+  }
+}
