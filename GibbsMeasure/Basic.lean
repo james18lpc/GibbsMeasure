@@ -4,6 +4,7 @@ import Mathlib.Order.Ideal
 import Mathlib.Probability.Independence.Basic
 import Mathlib.Probability.Kernel.Composition
 import GibbsMeasure.Mathlib.Data.Finset.Basic
+import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.Proper
 
@@ -132,6 +133,16 @@ protected lemma IsProper.isssd : (isssd (S := S) ν).IsProper := by
   sorry
 
 end ISSSD
+
+section ProductMeasure
+
+/-- The product measure `ν ^ S` is a `isssd μ`-Gibbs measure. -/
+lemma isGibbsMeasure_isssd_productMeasure (ν : Measure E) [IsProbabilityMeasure ν] :
+    (isssd ν).IsGibbsMeasure (productMeasure fun _ : S ↦  ν) := by
+  rintro Λ
+  sorry
+
+end ProductMeasure
 end Specification
 
 variable (X : Type*) (f : X → ℝ)
