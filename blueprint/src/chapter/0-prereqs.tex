@@ -27,12 +27,30 @@
     We say that $\pi\in\text{Ker}_{\mathcal{Y},\mathcal{X}}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
 \end{definition}
 
+\begin{definition}[Markov Kernel]
+    \label{def:markov-kernel}
+    \lean{ProbabilityTheory.Kernel}
+    \leanok
+
+    Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. We say that $\pi\in\text{Ker}_{\mathcal{Y},\mathcal{X}}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
+\end{definition}
+
 \begin{definition}[Proper Kernel]
     \label{def:proper-kernel}
     \uses{def:kernel}
     \lean{ProbabilityTheory.Kernel.IsProper}
     \leanok
+
     Let $(X,\mathcal{X})$ be a measurable space, and let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is \textbf{proper} iff $\pi(A\cap B\mid x)=\pi(A\mid x)\cdot\mathbf{1}_B(x)$ for all $A\in\mathcal{X}$, $B\in\mathcal{B}$ and $x\in X$.
+\end{definition}
+
+\begin{definition}[Conditional Expectation Kernel]
+    \label{def:cond-exp-kernel}
+    \uses{def:kernel}
+    \lean{ProbabilityTheory.Kernel.Condexp}
+    \leanok
+
+    Let $(X,\mathcal{X})$ be a measurable space, let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$ and let $\mu\in\mathfrak{M}(X,\mathcal{X})$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is a \textbf{conditional expectation kernel} iff $\mu(A\mid \mathcal{B})=\pi(A\mid\cdot)$ $\mu$-a.e..
 \end{definition}
 
 \begin{definition}[Product Probability Measure]

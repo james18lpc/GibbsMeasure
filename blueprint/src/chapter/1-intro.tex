@@ -15,7 +15,7 @@
 
 \end{definition}
 
-\begin{definition}[Markov specification]
+\begin{definition}[Markov Specification]
     \label{def:markov-specification}
     \lean{Specification}
     \leanok
@@ -24,7 +24,7 @@
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. We say that a specification $\gamma\in\Gamma_{\mathcal{E},S}$ is a \textbf{Markov specification} iff the $\gamma_\Lambda$ is a probability kernel for every $\Lambda\in\text{Finset}(S)$.
 \end{definition}
 
-\begin{definition}[Proper specification]
+\begin{definition}[Proper Specification]
     \label{def:proper-specification}
     \uses{def:specification, def:proper-kernel}
     \lean{Specification.IsProper}
@@ -32,6 +32,15 @@
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. We say that a specification $\gamma\in\Gamma_{\mathcal{E},S}$ is \textbf{proper} iff the kernel $\gamma_\Lambda$ is proper for every $\Lambda\in\text{Finset}(S)$.
 \end{definition}
+
+\begin{lemma}[Characterization of Conditional Expectation Kernels]
+    \label{def:cond-exp-ker-char}
+    \uses{def:cond-exp-ker, def:proper-kernel}
+    \lean{ProbabilityTheory.Kernel.IsProper, ProbabilityTheory.Kernel.Condexp}
+    \leanok
+
+    Let $(X,\mathcal{X})$ be a measurable space, let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$ and let $\mu\in\mathfrak{M}(X,\mathcal{X})$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is a proper conditional expectation kernel iff $\mu\circ_k \pi=\mu$.
+\end{lemma}
 
 \begin{definition}[Gibbs Measures]
     \label{def:gibbs-measure}
@@ -42,7 +51,7 @@
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{align*}
         \mathcal{G}:\Gamma_{\mathcal{E}, S}&\to\text{Set}(\mathfrak{P}(E^S, \mathcal{E}^S))\\
-        \gamma&\mapsto\left\{\mu\in\mathfrak{M}(E^S, \mathcal{E}^S)~\middle\vert~\mu(A\mid\mathcal{F}_{S\setminus\Lambda})=\gamma_\Lambda(A\mid\cdot)~\mu\text{-a.s. for each } A\in\mathcal{E}^S\text{ and }\Lambda\in\text{Finset}(S)\right\}
+        \gamma&\mapsto\left\{\mu\in\mathfrak{M}(E^S, \mathcal{E}^S)~\middle\vert~\gamma_\Lambda(A\mid\cdot)~\text{is a conditional expectation kernel w.r.t }\mu\text{ for each } A\in\mathcal{E}^S\text{ and }\Lambda\in\text{Finset}(S)\right\}
     \end{align*}
     defines the set of \textbf{Gibbs measures specified by $\gamma$} (for each $\gamma\in\Gamma_{\mathcal{E}, S}$).
 \end{definition}
@@ -67,7 +76,7 @@
 
 \begin{definition}[Independent Specification with Single Spin Distribution [ISSSD]]
     \label{def:ISSSD}
-    \uses{def:superposition}
+    \uses{def:juxtaposition}
     \lean{Specification.isssdFun}
     % \leanok
 
