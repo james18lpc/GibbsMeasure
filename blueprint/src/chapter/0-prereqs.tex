@@ -20,9 +20,11 @@
 
     Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. Then,
     \begin{equation*}
-        \text{ProbKer}_{\mathcal{Y},\mathcal{X}}:=\left\{\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}_{\geq0}}~\middle\vert~ \forall y\in Y,\pi(\cdot\mid y)\in\mathfrak{P}(X,\mathcal{X});~\forall A\in\mathcal{X},\pi(A\mid\cdot)\text{ is }\mathcal{Y}\text{-measurable}\right\}
+        \text{Ker}_{\mathcal{Y},\mathcal{X}}:=\left\{\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}}_{\geq0}~\middle\vert~ \forall y\in Y,\pi(\cdot\mid y)\in\mathfrak{M}(X,\mathcal{X});~\forall A\in\mathcal{X},\pi(A\mid\cdot)\text{ is }\mathcal{Y}\text{-measurable}\right\}
     \end{equation*}
-    defines the set of \textbf{probability kernels from $\mathcal{Y}$ to $\mathcal{X}$}, where $\mathfrak{P}(X,\mathcal{X})$ is the space of probability measures on $X$.
+    defines the set of \textbf{kernels from $\mathcal{Y}$ to $\mathcal{X}$}, where $\mathfrak{M}(X,\mathcal{X})$ is the space of measures on $X$.
+
+    We say that $\pi\in\text{Ker}_{\mathcal{Y},\mathcal{X}}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
 \end{definition}
 
 \begin{definition}[Proper Kernel]
@@ -30,24 +32,19 @@
     \uses{def:kernel}
     \lean{ProbabilityTheory.Kernel.IsProper}
     \leanok
-
-    Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. Then,
-    \begin{equation*}
-        \text{ProbKer}_{\mathcal{Y},\mathcal{X}}:=\left\{\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}_{\geq0}}~\middle\vert~ \forall y\in Y,\pi(\cdot\mid y)\in\mathfrak{P}(X,\mathcal{X});~\forall A\in\mathcal{X},\pi(A\mid\cdot)\text{ is }\mathcal{Y}\text{-measurable}\right\}
-    \end{equation*}
-    defines the set of \textbf{probability kernels from $\mathcal{Y}$ to $\mathcal{X}$}, where $\mathfrak{P}(X,\mathcal{X})$ is the space of probability measures on $X$.
+    Let $(X,\mathcal{X})$ be a measurable space, and let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is \textbf{proper} iff $\pi(A\cap B\mid x)=\pi(A\mid x)\cdot\mathbf{1}_B(x)$ for all $A\in\mathcal{X}$, $B\in\mathcal{B}$ and $x\in X$.
 \end{definition}
 
 \begin{definition}[Product Probability Measure]
-   \label{def:product-probability-measure}
-   \lean{MeasureTheory.productMeasure}
-   \leanok
+    \label{def:product-probability-measure}
+    \lean{MeasureTheory.productMeasure}
+    \leanok
 
-   characteristic predicate?
+    Let $I$ be a set. Suppose for each $i\in I$ that $(\Omega_i,\mathcal{B}_i,P_i)$ is a probability space. Then, $P\coloneqq\bigotimes_{i\in I}P_i$ is a well-defined product probability measure on $\prod_{i\in I}\Omega_i$.
 \end{definition}
 
-\begin{definition}[Superposition]
-    \label{def:superposition}
+\begin{definition}[Juxtaposition]
+    \label{def:juxtaposition}
     \lean{juxt}
     \leanok
 
@@ -59,5 +56,5 @@
             \omega_\delta & \delta\notin\Delta
         \end{cases}
     \end{align*}
-    to be the \textbf{superposition of $\zeta$ on $\omega$} (for each $\zeta\in E^\Delta$).
+    to be the \textbf{juxtaposition of $\zeta$ and $\omega$} (for each $\zeta\in E^\Delta$).
 \end{definition}

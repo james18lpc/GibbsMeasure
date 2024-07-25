@@ -8,9 +8,20 @@
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{equation*}
-        \Gamma_{\mathcal{E}, S}:=\left\{\gamma\in\prod_{\Lambda\in\text{Finset}(S)}\text{ProbKer}_{\mathcal{F}_{S\setminus\Lambda}, \mathcal{E}^S}~\middle\vert~ \forall \Lambda, \Delta\in\text{Finset}(S), \Lambda\subseteq\Delta\implies\gamma_\Lambda\circ_k\gamma_\Delta=\gamma_\Delta\right\}
+        \Gamma_{\mathcal{E}, S}:=\left\{\gamma\in\prod_{\Lambda\in\text{Finset}(S)}\text{Ker}_{\mathcal{F}_{S\setminus\Lambda}, \mathcal{E}^S}~\middle\vert~ \forall \Lambda, \Delta\in\text{Finset}(S), \Lambda\subseteq\Delta\implies\gamma_\Lambda\circ_k\gamma_\Delta=\gamma_\Delta\right\}
     \end{equation*}
-    defines the set of \textbf{specifications with parameter set $S$ and state space $(E, \mathcal{E})$}, i.e. it is the set of indexed collections of probability kernels that satisfy a consistency criterion.
+    defines the set of \textbf{specifications with parameter set $S$ and state space $(E, \mathcal{E})$}, i.e.\ it is the set of indexed collections of probability kernels that satisfy a consistency criterion.
+
+
+\end{definition}
+
+\begin{definition}[Markov specification]
+    \label{def:markov-specification}
+    \lean{Specification}
+    \leanok
+    \uses{def:specification}
+
+    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. We say that a specification $\gamma\in\Gamma_{\mathcal{E},S}$ is a \textbf{Markov specification} iff the $\gamma_\Lambda$ is a probability kernel for every $\Lambda\in\text{Finset}(S)$.
 \end{definition}
 
 \begin{definition}[Proper specification]
@@ -19,7 +30,7 @@
     \lean{Specification.IsProper}
     \leanok
 
-    A specification $\gamma$ is a {\bf proper specification} if the kernel $\gamma_\Lambda$ is proper for every finite $\Lambda$.
+    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. We say that a specification $\gamma\in\Gamma_{\mathcal{E},S}$ is \textbf{proper} iff the kernel $\gamma_\Lambda$ is proper for every $\Lambda\in\text{Finset}(S)$.
 \end{definition}
 
 \begin{definition}[Gibbs Measures]
@@ -30,17 +41,18 @@
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{align*}
-        \mathcal{G}:\Gamma_{\mathcal{E}, S}&\to\mathcal{P}(\mathfrak{P}(E^S, \mathcal{E}^S))\\
-        \gamma&\mapsto\left\{\mu\in\mathfrak{P}(E^S, \mathcal{E}^S)~\middle\vert~\mu(A\mid\mathcal{F}_{S\setminus\Lambda})=\gamma_\Lambda(A\mid\cdot)~\mu\text{-a.s. for each } A\in\mathcal{F}_S\text{ and }\Lambda\in\text{Finset}(S)\right\}
+        \mathcal{G}:\Gamma_{\mathcal{E}, S}&\to\text{Set}(\mathfrak{P}(E^S, \mathcal{E}^S))\\
+        \gamma&\mapsto\left\{\mu\in\mathfrak{M}(E^S, \mathcal{E}^S)~\middle\vert~\mu(A\mid\mathcal{F}_{S\setminus\Lambda})=\gamma_\Lambda(A\mid\cdot)~\mu\text{-a.s. for each } A\in\mathcal{E}^S\text{ and }\Lambda\in\text{Finset}(S)\right\}
     \end{align*}
     defines the set of \textbf{Gibbs measures specified by $\gamma$} (for each $\gamma\in\Gamma_{\mathcal{E}, S}$).
 \end{definition}
+
 
 \begin{lemma}[Characterization of Gibbs Measures]
     \label{lem:gibbs-measure-char}
     \uses{def:gibbs-measure, def:proper-specification}
 
-    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Let $\gamma$ be a \textbf{proper} specification with parameter set $S$ and state space $(E, \mathcal{E})$, and let $\mu\in\mathfrak{P}(E^S, \mathcal{F}_S)$. TFAE:
+    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Let $\gamma$ be a \textbf{proper} specification with parameter set $S$ and state space $(E, \mathcal{E})$, and let $\mu\in\mathfrak{P}(E^S, \mathcal{E}^S)$. TFAE:
     \begin{enumerate}
         \item $\mu\in\mathcal{G}(\gamma)$.
         \item $\gamma_\Lambda\circ_k\mu=\mu$ for all $\Lambda\in\text{Finset}(S)$.
