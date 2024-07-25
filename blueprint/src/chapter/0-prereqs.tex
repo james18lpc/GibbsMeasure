@@ -4,6 +4,7 @@
     \label{def:cylinder-event}
     \lean{cylinderEvents}
     \leanok
+
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{align*}
         \mathcal{F}:\mathcal{P}(S)&\to\mathcal{P}(E)\\
@@ -16,6 +17,7 @@
     \label{def:kernel}
     \lean{ProbabilityTheory.Kernel}
     \leanok
+
     Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. Then,
     \begin{equation*}
         \text{ProbKer}_{\mathcal{Y},\mathcal{X}}:=\left\{\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}_{\geq0}}~\middle\vert~ \forall y\in Y,\pi(\cdot\mid y)\in\mathfrak{P}(X,\mathcal{X});~\forall A\in\mathcal{X},\pi(A\mid\cdot)\text{ is }\mathcal{Y}\text{-measurable}\right\}
@@ -28,6 +30,7 @@
     \uses{def:kernel}
     \lean{ProbabilityTheory.Kernel.IsProper}
     \leanok
+
     Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. Then,
     \begin{equation*}
         \text{ProbKer}_{\mathcal{Y},\mathcal{X}}:=\left\{\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}_{\geq0}}~\middle\vert~ \forall y\in Y,\pi(\cdot\mid y)\in\mathfrak{P}(X,\mathcal{X});~\forall A\in\mathcal{X},\pi(A\mid\cdot)\text{ is }\mathcal{Y}\text{-measurable}\right\}
@@ -39,7 +42,7 @@
    \label{def:product-probability-measure}
    \lean{MeasureTheory.productMeasure}
    \leanok
-   
+
    characteristic predicate?
 \end{definition}
 
@@ -47,6 +50,7 @@
     \label{def:superposition}
     \lean{juxt}
     \leanok
+
     Let $E$ and $S$ be sets. Let $\Delta\in\mathcal{P}(S)$, and let $\omega\in E^S$. We define
     \begin{align*}
         \text{super}_\omega:E^\Delta&\to E^S\\

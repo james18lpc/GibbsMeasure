@@ -2,9 +2,9 @@
 
 \begin{definition}[Specification]
     \label{def:specification}
+    \uses{def:cylinder-event, def:kernel}
     \lean{Specification}
     \leanok
-    \uses{def:cylinder-event, def:kernel}
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{equation*}
@@ -24,9 +24,9 @@
 
 \begin{definition}[Gibbs Measures]
     \label{def:gibbs-measure}
+    \uses{def:specification}
     \lean{Specification.IsGibbsMeasure}
     \leanok
-    \uses{def:specification}
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{align*}
@@ -48,13 +48,16 @@
     \end{enumerate}
 \end{lemma}
 \begin{proof}
+    % \leanok
+
   See book.
 \end{proof}
 
 \begin{definition}[Independent Specification with Single Spin Distribution [ISSSD]]
     \label{def:ISSSD}
-    \lean{Specification.isssdFun}
     \uses{def:superposition}
+    \lean{Specification.isssdFun}
+    % \leanok
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then
     \begin{align*}
@@ -73,6 +76,8 @@
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\text{ISSSD}$ satisfies $\text{ISSSD}(\mu)_\Delta\circ_k\text{ISSSD}(\mu)_\Lambda=\text{ISSSD}(\mu)_{\Delta\cup\Lambda}$ for all $\Delta, \Lambda\in\text{Finset}(S)$ and $\mu\in\mathfrak{P}(E, \mathcal{E})$.
 \end{lemma}
 \begin{proof}
+    % \leanok
+
   Immediate.
 \end{proof}
 
@@ -95,6 +100,7 @@
 \end{lemma}
 \begin{proof}
     \uses{def:isssd-specification}
+    % \leanok
 
     We already know it's a specification. Properness is immediate.
 \end{proof}
@@ -107,6 +113,7 @@
 \end{lemma}
 \begin{proof}
     \uses{lem:isssd-proper-specification}
+    % \leanok
 
     See book.
 \end{proof}
@@ -115,9 +122,12 @@
     \label{lem:gibbs-measure-existence}
     \uses{def:gibbs-measure, def:product-probability-measure, def:isssd-specification}
     \lean{Specification.isGibbsMeasure_isssd_productMeasure}
+    % \leanok
 
     Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\mu$ a measure on $E$. Then $\mu^S$ is a $\text{ISSSD}(\mu)$-Gibbs measure.
 \end{lemma}
 \begin{proof}
+    % \leanok
+
    Immediate.
 \end{proof}
