@@ -1,4 +1,5 @@
 import GibbsMeasure.Basic
+import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Mathlib.Data.Finset.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Prod.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Basic
