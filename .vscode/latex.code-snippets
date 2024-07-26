@@ -4,12 +4,12 @@
 		"prefix": "dfn",
 		"body": [
       "\\begin{definition}[$1]",
-      "  \\label{$2}",
-      "  \\uses{$3}",
-      "  \\lean{$4}",
-      "  % \\leanok",
+      "    \\label{$2}",
+      "    \\uses{$3}",
+      "    \\lean{$4}",
+      "    % \\leanok",
       "",
-      "  $5",
+      "    $5",
       "\\end{definition}"
 		],
 		"description": "Definition"
@@ -19,12 +19,12 @@
 		"prefix": "thm",
 		"body": [
       "\\begin{theorem}[$1]",
-      "  \\label{$2}",
-      "  \\uses{$3}",
-      "  \\lean{$4}",
-      "  % \\leanok",
+      "    \\label{$2}",
+      "    \\uses{$3}",
+      "    \\lean{$4}",
+      "    % \\leanok",
       "",
-      "  $5",
+      "    $5",
       "\\end{theorem}"
 		],
 		"description": "Theorem"
@@ -34,12 +34,12 @@
 		"prefix": "lem",
 		"body": [
       "\\begin{lemma}[$1]",
-      "  \\label{$2}",
-      "  \\uses{$3}",
-      "  \\lean{$4}",
-      "  % \\leanok",
+      "    \\label{$2}",
+      "    \\uses{$3}",
+      "    \\lean{$4}",
+      "    % \\leanok",
       "",
-      "  $5",
+      "    $5",
       "\\end{lemma}"
 		],
 		"description": "Lemma"
@@ -49,12 +49,12 @@
 		"prefix": "prop",
 		"body": [
       "\\begin{proposition}[$1]",
-      "  \\label{$2}",
-      "  \\uses{$3}",
-      "  \\lean{$4}",
-      "  % \\leanok",
+      "    \\label{$2}",
+      "    \\uses{$3}",
+      "    \\lean{$4}",
+      "    % \\leanok",
       "",
-      "  $5",
+      "    $5",
       "\\end{proposition}",
 		],
 		"description": "Proposition"
@@ -64,10 +64,10 @@
 		"prefix": "proof",
 		"body": [
       "\\begin{proof}",
-      "  \\uses{$1}",
-      "  % \\leanok",
+      "    \\uses{$1}",
+      "    % \\leanok",
       "",
-      "  $2",
+      "    $2",
       "\\end{proof}",
 		],
 		"description": "Proof"
