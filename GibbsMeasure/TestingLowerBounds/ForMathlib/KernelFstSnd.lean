@@ -114,7 +114,8 @@ lemma snd'_swapRight (κ : Kernel (α × β) γ) : snd' (swapLeft κ) = fst' κ 
 
 end FstSnd
 
---this may be put in a different place than the rest, maybe still in the same file, also find a better name
+-- this may be put in a different place than the rest, maybe still in the same file, also find a
+-- better name
 lemma compProd_apply_eq_compProd_snd' (κ : Kernel α β) (η : Kernel (α × β) γ)
     [IsSFiniteKernel κ] [IsSFiniteKernel η] (a : α) :
     (κ ⊗ₖ η) a = (κ a) ⊗ₘ (snd' η a) := by

@@ -6,7 +6,6 @@ import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import GibbsMeasure.Mathlib.Probability.Kernel.Basic
-import GibbsMeasure.Mathlib.Probability.Kernel.Disintegration.Basic
 import GibbsMeasure.Prereqs.CylinderEvent
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.Proper

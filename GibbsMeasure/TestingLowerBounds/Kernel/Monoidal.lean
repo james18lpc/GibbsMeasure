@@ -171,7 +171,9 @@ lemma swap_parallelComp {κ : Kernel α β} [IsSFiniteKernel κ]
     ← Measure.map_apply measurable_swap hs, Measure.prod_swap]
   rfl
 
---move this and PR it to mathlib, it should go right after `kernel.measurable_kernel_prod_mk_left'`, but in that file ∘ₖ is not defined, so maybe we should find a better place for it or modify the proof so it does not need it
+-- move this and PR it to mathlib, it should go right after
+-- `kernel.measurable_kernel_prod_mk_left'`, but in that file ∘ₖ is not defined, so maybe we should
+-- find a better place for it or modify the proof so it does not need it
 lemma measurable_kernel_prod_mk_left'' {κ : Kernel α β}
     [IsSFiniteKernel κ] {t : Set (γ × β)} (ht : MeasurableSet t) :
     Measurable (Function.uncurry fun a y ↦ (κ a) (Prod.mk y ⁻¹' t)) := by
@@ -197,7 +199,8 @@ lemma parallelComp_comp_parallelComp {α' β' γ' : Type*} {mα' : MeasurableSpa
   rw [Measure.bind_apply hs (measurable _), Measure.prod_apply hs,
     lintegral_prod_of_measurable _ (Kernel.measurable_coe _ hs)]
   simp_rw [parallelComp_apply, comp_apply]
-  have : SFinite ((κ' a.2).bind ⇑η') := by sorry --this instance is in MeasureCompProd, which imports this file, we may have to move some lemmas around or create a new file
+  have : SFinite ((κ' a.2).bind ⇑η') := by sorry --this instance is in MeasureCompProd, which
+  -- imports this file, we may have to move some lemmas around or create a new file
   rw [Measure.lintegral_bind η.measurable (measurable_measure_prod_mk_left hs)]
   simp_rw [Measure.bind_apply (measurable_prod_mk_left hs) η'.measurable,
     Measure.prod_apply hs,

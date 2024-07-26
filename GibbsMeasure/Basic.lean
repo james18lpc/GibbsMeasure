@@ -24,7 +24,7 @@ variable {S E : Type*} [𝓔 : MeasurableSpace E] {Λ₁ Λ₂ : Finset S}
 Morally, the LHS should be thought of as discovering `Λ₁` then `Λ₂`, while the RHS should be
 thought of as discovering `Λ₂` straight away. -/
 def IsConsistent (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) : Prop :=
-  ∀ ⦃Λ₁ Λ₂⦄, Λ₁ ⊆ Λ₂ → (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ toFun Λ₂ = toFun Λ₂
+  ∀ ⦃Λ₁ Λ₂⦄, Λ₁ ⊆ Λ₂ → (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂
 
 variable (S E) in
 /-- A specification from `S` to `E` is a collection of "marginal kernels" on the complement of
@@ -38,10 +38,7 @@ structure Specification where
   DO NOT USE. Instead use the coercion to function `⇑γ`. Lean should insert it automatically in most
   cases. -/
   toFun (Λ : Finset S) : Kernel[cylinderEvents Λᶜ] (S → E) (S → E)
-  /-- The marginal kernels of a specification are compatible under restriction.
-
-  Morally, the LHS should be thought of as discovering `Λ₁` then `Λ₂`, while the RHS should be
-  thought of as discovering `Λ₂`.
+  /-- The marginal kernels of a specification are consistent.
 
   DO NOT USE. Instead use `Specification.isConsistent`. -/
   isConsistent' : IsConsistent toFun
@@ -55,8 +52,7 @@ instance instDFunLike :
   coe_injective' γ₁ γ₂ h := by cases γ₁; cases γ₂; congr
 
 /-- The marginal kernels of a specification are consistent. -/
-lemma isConsistent (γ : Specification S E) (hΛ : Λ₁ ⊆ Λ₂) :
-  (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂ := γ.isConsistent' _ _ hΛ
+lemma isConsistent (γ : Specification S E) : IsConsistent γ := γ.isConsistent'
 
 /-- A specification is proper if all its marginal kernels are. -/
 def IsProper (γ : Specification S E) : Prop := ∀ Λ : Finset S, (γ Λ).IsProper
@@ -170,7 +166,8 @@ lemma condexp_ae_eq_kernel_apply {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : 
   simp_rw [← Pi.one_def, @integral_indicator_one X 𝓧 _ _ A_mble]
   rfl
 
-lemma condexp_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X)
+lemma condexp_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X]
+   (𝓑 : MeasurableSpace X)
     --(hSub : 𝓑 ≤ 𝓧)
     (μ : @Measure X 𝓧) [IsFiniteMeasure μ]
     (π : Kernel[𝓑, 𝓧] X X) [∀ (x : X), IsFiniteMeasure (π x)]
@@ -183,7 +180,8 @@ lemma condexp_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpac
   rfl
 
 
-lemma condexp_const_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X)
+lemma condexp_const_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X]
+    (𝓑 : MeasurableSpace X)
     --(hSub : 𝓑 ≤ 𝓧)
     (μ : @Measure X 𝓧) [IsFiniteMeasure μ]
     (π : Kernel[𝓑, 𝓧] X X) [∀ (x : X), IsFiniteMeasure (π x)]
@@ -200,7 +198,8 @@ lemma condexp_const_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : Measurab
     rw [smul_eq]
     exact Filter.EventuallyEq.symm this
   nth_rw 2 [smul_eq]
-  have int_smul (x₀ : X) := @integral_smul X ℝ _ ℝ _ _ 𝓧 (π x₀) _ _ c (A.indicator (fun _ ↦ (1 : ℝ)))
+  have int_smul (x₀ : X) := @integral_smul X ℝ _ ℝ _ _ 𝓧 (π x₀) _ _ c
+    (A.indicator (fun _ ↦ (1 : ℝ)))
   --simp_rw [@integral_smul X ℝ _ ℝ _ _ 𝓧 (π _) _ _ c (A.indicator (fun _ ↦ (1 : ℝ)))]
   --apply this.symm
   simp at *
@@ -213,10 +212,12 @@ lemma condexp_const_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : Measurab
   rw [← this]
   have := @condexp_indicator_ae_eq_integral_kernel X 𝓧 𝓑 μ _ π _ A A_mble h
 
-  --change c • μ[A.indicator fun x ↦ 1|𝓑] =ᶠ[ae μ] c • (fun x₀ ↦ ∫ (a : X), A.indicator (fun x ↦ 1) a ∂π x₀)
+  -- change c • μ[A.indicator fun x ↦ 1|𝓑] =ᶠ[ae μ]
+  --   c • (fun x₀ ↦ ∫ (a : X), A.indicator (fun x ↦ 1) a ∂π x₀)
   sorry
 
-lemma condexp_simpleFunc_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X)
+lemma condexp_simpleFunc_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X]
+   (𝓑 : MeasurableSpace X)
     --(hSub : 𝓑 ≤ 𝓧)
     (μ : @Measure X 𝓧) [IsFiniteMeasure μ]
     (π : Kernel[𝓑, 𝓧] X X) [∀ (x : X), IsFiniteMeasure (π x)]
