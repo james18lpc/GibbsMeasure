@@ -3,7 +3,9 @@ Copyright (c) 2024 Etienne Marion. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Etienne Marion
 -/
-import Mathlib
+import Mathlib.MeasureTheory.Constructions.Projective
+import Mathlib.Probability.Kernel.Composition
+import Mathlib.Probability.Process.Filtration
 
 open MeasureTheory MeasurableSpace ProbabilityTheory Finset ENNReal Filter Topology Function Kernel
 
