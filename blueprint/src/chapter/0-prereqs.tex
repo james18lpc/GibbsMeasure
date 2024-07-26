@@ -29,6 +29,7 @@
 
 \begin{definition}[Markov Kernel]
     \label{def:markov-kernel}
+    \uses{def:kernel}
     \lean{ProbabilityTheory.Kernel}
     \leanok
 
@@ -47,7 +48,7 @@
 \begin{definition}[Conditional Expectation Kernel]
     \label{def:cond-exp-kernel}
     \uses{def:kernel}
-    \lean{ProbabilityTheory.Kernel.Condexp}
+    \lean{ProbabilityTheory.condexpKernel}
     \leanok
 
     Let $(X,\mathcal{X})$ be a measurable space, let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$ and let $\mu\in\mathfrak{M}(X,\mathcal{X})$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is a \textbf{conditional expectation kernel} iff $\mu(A\mid \mathcal{B})=\pi(A\mid\cdot)$ $\mu$-a.e..
@@ -58,7 +59,7 @@
 \begin{lemma}[Characterization of Conditional Expectation Kernels]
     \label{lemma:cond-exp-ker-char}
     \uses{def:cond-exp-ker, def:proper-kernel}
-    \lean{ProbabilityTheory.Kernel.IsProper, ProbabilityTheory.Kernel.Condexp}
+    \lean{ProbabilityTheory.Kernel.IsProper, ProbabilityTheory.condexpKernel}
     \leanok
 
     Let $(X,\mathcal{X})$ be a measurable space, let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$, let $\mu\in\mathfrak{M}(X,\mathcal{X})$ and let $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$. TFAE:
