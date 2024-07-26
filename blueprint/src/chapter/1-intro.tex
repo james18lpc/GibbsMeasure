@@ -1,16 +1,18 @@
-\chapter{Intro}
+\chapter{Specifications of random fields}
+
+Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure on $E$.
+
 \begin{definition}[Specification]
     \label{def:specification}
     \uses{def:cylinder-event, def:kernel}
     \lean{Specification}
     \leanok
 
-    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
-    \begin{equation*}
-        \Gamma_{\mathcal{E}, S}:=\left\{\gamma\in\prod_{\Lambda\in\text{Finset}(S)}\text{Ker}_{\mathcal{F}_{S\setminus\Lambda}, \mathcal{E}^S}~\middle\vert~ \forall \Lambda, \Delta\in\text{Finset}(S), \Lambda\subseteq\Delta\implies\gamma_\Lambda\circ_k\gamma_\Delta=\gamma_\Delta\right\}
-    \end{equation*}
-    defines the set of \textbf{specifications with parameter set $S$ and state space $(E, \mathcal{E})$}, i.e.\ it is the set of indexed collections of probability kernels that satisfy a consistency criterion.
+    A {\bf specification} is a family of kernels $\gamma : \Finset S \to \Ker_{\mathcal{F}_{S\setminus\Lambda}, \mathcal{E}^S}$ which is {\bf consistent}, in the sense that
+    $$\forall \Lambda_1, \Lambda_2 \in \Finset(S), \Lambda_1 \subseteq \Lambda_2 \implies \gamma_{\Lambda_1} \circ_k \gamma_{\Lambda_2} = \gamma_{\Lambda_2}$$
 \end{definition}
+
+All specifications will be with parameter set $S$ and state space $(E, \mathcal{E})$ in this chapter.
 
 \begin{definition}[Markov Specification]
     \label{def:markov-specification}
@@ -18,7 +20,7 @@
     \leanok
     \uses{def:specification}
 
-    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. We say that a specification $\gamma\in\Gamma_{\mathcal{E},S}$ is a \textbf{Markov specification} iff the $\gamma_\Lambda$ is a probability kernel for every $\Lambda\in\text{Finset}(S)$.
+    A specification $\gamma$ is a \textbf{Markov specification} if $\gamma_\Lambda$ is a probability kernel for every $\Lambda \in \Finset(S)$.
 \end{definition}
 
 \begin{definition}[Proper Specification]
@@ -27,7 +29,7 @@
     \lean{Specification.IsProper}
     \leanok
 
-    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. We say that a specification $\gamma\in\Gamma_{\mathcal{E},S}$ is \textbf{proper} iff the kernel $\gamma_\Lambda$ is proper for every $\Lambda\in\text{Finset}(S)$.
+    A specification $\gamma$ is \textbf{proper} if the kernel $\gamma_\Lambda$ is proper for every $\Lambda \in \Finset(S)$.
 \end{definition}
 
 \begin{definition}[Gibbs Measures]
@@ -35,13 +37,11 @@
     \uses{def:specification}
     \lean{Specification.IsGibbsMeasure}
     \leanok
-
-    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
-    \begin{align*}
+    Given a specification $\gamma$, the set of \textbf{Gibbs measures specified by $\gamma$} is defined as
+    \begin{align}
         \mathcal{G}:\Gamma_{\mathcal{E}, S}&\to\text{Set}(\mathfrak{P}(E^S, \mathcal{E}^S))\\
-        \gamma&\mapsto\left\{\mu\in\mathfrak{M}(E^S, \mathcal{E}^S)~\middle\vert~\gamma_\Lambda(A\mid\cdot)~\text{is a conditional expectation kernel w.r.t }\mu\text{ for each } A\in\mathcal{E}^S\text{ and }\Lambda\in\text{Finset}(S)\right\}
-    \end{align*}
-    defines the set of \textbf{Gibbs measures specified by $\gamma$} (for each $\gamma\in\Gamma_{\mathcal{E}, S}$).
+        \gamma&\mapsto\left\{\nu\in\mathfrak{M}(E^S, \mathcal{E}^S)~\middle\vert~\gamma_\Lambda(A\mid\cdot)~\text{is a conditional expectation kernel w.r.t }\nu\text{ for each } A\in\mathcal{E}^S\text{ and }\Lambda\in\Finset(S)\right\}
+    \end{align}
 \end{definition}
 
 
@@ -49,11 +49,11 @@
     \label{lem:gibbs-measure-char}
     \uses{def:gibbs-measure, def:proper-specification}
 
-    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Let $\gamma$ be a \textbf{proper} specification with parameter set $S$ and state space $(E, \mathcal{E})$, and let $\mu\in\mathfrak{P}(E^S, \mathcal{E}^S)$. TFAE:
+    Let $\gamma$ be a {\it proper} specification with parameter set $S$ and state space $(E, \mathcal{E})$, and let $\nu\in\mathfrak{P}(E^S, \mathcal{E}^S)$. TFAE:
     \begin{enumerate}
-        \item $\mu\in\mathcal{G}(\gamma)$.
-        \item $\gamma_\Lambda\circ_k\mu=\mu$ for all $\Lambda\in\text{Finset}(S)$.
-        \item There is a cofinal subset $\mathcal{S}\subseteq\text{Finset}(S)$ such that $\gamma_\Lambda\circ_k\mu=\mu$ for all $\Lambda\in\mathcal{S}$.
+        \item $\nu\in\mathcal{G}(\gamma)$.
+        \item $\gamma_\Lambda\circ_k\nu=\nu$ for all $\Lambda\in\Finset(S)$.
+        \item There is a cofinal subset $\mathcal{S}\subseteq\Finset(S)$ such that $\gamma_\Lambda\circ_k\nu=\nu$ for all $\Lambda\in\mathcal{S}$.
     \end{enumerate}
 \end{lemma}
 \begin{proof}
@@ -68,11 +68,11 @@
     \lean{Specification.isssdFun}
     % \leanok
 
-    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then
-    \begin{align*}
-        \text{ISSSD}:\mathfrak{P}(E, \mathcal{E})&\to\text{Finset}(S)\to\mathcal{E}^S\times E^S\to\overline{\mathbb{R}_{\geq0}}\\
+    The \textbf{Independent Specification with Single Spin Distribution $\nu$} is
+    \begin{align}
+        \ISSSD:\mathfrak{P}(E, \mathcal{E})&\to\Finset(S)\to\mathcal{E}^S\times E^S\to\overline{\mathbb{R}_{\geq0}}\\
         \nu&\mapsto\Lambda\mapsto(A\mid\omega)\mapsto\left(\nu^\Lambda\left(\text{super}_\omega^{-1}(A)\right)\right)
-    \end{align*}
+    \end{align}
     defines the \textbf{Independent Specification with Single Spin Distribution with $\nu$} (for each $\nu\in\mathfrak{P}(E, \mathcal{E})$), where $\nu^\Lambda$ is the usual product measure.
 \end{definition}
 
@@ -82,7 +82,9 @@
     \lean{Specification.isssdFun_comp_isssdFun}
     \leanok
 
-    Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. Then, $\text{ISSSD}$ satisfies $\text{ISSSD}(\mu)_\Delta\circ_k\text{ISSSD}(\mu)_\Lambda=\text{ISSSD}(\mu)_{\Delta\cup\Lambda}$ for all $\Delta, \Lambda\in\text{Finset}(S)$ and $\mu\in\mathfrak{P}(E, \mathcal{E})$.
+    $\ISSSD(\nu)$ is {\bf strongly consistent}, in the sense that
+    $$\ISSSD(\nu)_{\Lambda_1} \circ_k \ISSSD(\nu)_{\Lambda_2} = \ISSSD(\nu)_{\Lambda_1} \cup \Lambda_2}$$
+    for all $\Lambda_1, \Lambda_2 \in \Finset(S)$.
 \end{lemma}
 \begin{proof}
     % \leanok
@@ -96,7 +98,7 @@
     \lean{Specification.isssd}
     \leanok
 
-    $\text{ISSSD}(\nu)$ is a specification.
+    $\ISSSD(\nu)$ is a specification.
 \end{definition}
 
 \begin{lemma}[ISSSDs are Proper Specifications]
@@ -105,7 +107,7 @@
     \lean{Specification.IsProper.isssd}
     \leanok
 
-    $\text{ISSSD}(\nu)$ is a proper specification.
+    $\ISSSD(\nu)$ is a proper specification.
 \end{lemma}
 \begin{proof}
     \uses{def:isssd-specification}
@@ -118,7 +120,7 @@
     \label{lem:gibbs-measure-uniqueness}
     \uses{def:gibbs-measure, def:isssd-specification}
 
-    Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\mu$ a measure on $E$. Then there is at most one $\text{ISSSD}(\mu)$-Gibbs measure.
+    There is at most one Gibbs measure specified by $\ISSSD(\nu)$.
 \end{lemma}
 \begin{proof}
     \uses{lem:isssd-proper-specification}
@@ -133,7 +135,7 @@
     \lean{Specification.isGibbsMeasure_isssd_productMeasure}
     % \leanok
 
-    Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\mu$ a measure on $E$. Then $\mu^S$ is a $\text{ISSSD}(\mu)$-Gibbs measure.
+    The product measure $\nu^S$ is a Gibbs measure specified by $\ISSSD(\nu)$.
 \end{lemma}
 \begin{proof}
     % \leanok
