@@ -51,13 +51,32 @@
     \lean{ProbabilityTheory.condexpKernel}
     \leanok
 
-    Let $(X,\mathcal{X})$ be a measurable space, let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$ and let $\mu\in\mathfrak{M}(X,\mathcal{X})$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is a \textbf{conditional expectation kernel} iff $\mu(A\mid \mathcal{B})=\pi(A\mid\cdot)$ $\mu$-a.e..
+    Let $(X,\mathcal{X})$ be a measurable space, let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$ and let $\mu\in\mathfrak{M}(X,\mathcal{X})$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is a \textbf{conditional expectation kernel with respect to $\mu$} iff $\mu(A\mid \mathcal{B})=\pi(A\mid\cdot)$ $\mu$-a.e..
 \end{definition}
 
+\begin{lemma}[Defining Characteristic of Conditional Expectation Kernels]
+    \label{lemma:def-char-cond-exp-ker}
+    \uses{def:cond-exp-ker}
+    \lean{ProbabilityTheory.condexpKernel}
+    \leanok
+
+    Let $(X,\mathcal{X})$ be a measurable space, let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$, let $\mu\in\mathfrak{M}(X,\mathcal{X})$ and let $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$. Then, $\pi$ is a conditional expectation kernel with respect to $\mu$ iff
+    \begin{equation*}
+        ergerg
+    \end{equation*}
+\end{lemma}
+
+\begin{lemma}[Equivalent Definition for Markov Conditional Expectation Kernels]
+    \label{lemma:cond-exp-ker-markov-char}
+    \uses{def:cond-exp-ker, def:markov-ker}
+    \leanok
+
+    blach
+\end{lemma}
 
 
-\begin{lemma}[Characterization of Conditional Expectation Kernels]
-    \label{lemma:cond-exp-ker-char}
+\begin{lemma}[Characterization of Proper Conditional Expectation Kernels]
+    \label{lemma:cond-exp-ker-proper-char}
     \uses{def:cond-exp-ker, def:proper-kernel}
     \lean{ProbabilityTheory.Kernel.IsProper, ProbabilityTheory.condexpKernel}
     \leanok
@@ -66,7 +85,7 @@
     \begin{enumerate}
         \item $\pi$ is a \textbf{proper} conditional expectation kernel iff $\mu\circ_k \pi=\mu$.
         \item something
-        \item $\mu\circ_k \pi=\mu$
+        \item $\mu\circ_m\pi=\mu$
     \end{enumerate}
 \end{lemma}
 
