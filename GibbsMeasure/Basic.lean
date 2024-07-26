@@ -19,6 +19,13 @@ open ProbabilityTheory Set MeasureTheory ENNReal NNReal
 
 variable {S E : Type*} [𝓔 : MeasurableSpace E] {Λ₁ Λ₂ : Finset S}
 
+/-- A family of kernels `γ` is consistent if `γ Λ₁ ∘ₖ γ Λ₂ = γ Λ₂` for all `Λ₁ ⊆ Λ₂`.
+
+Morally, the LHS should be thought of as discovering `Λ₁` then `Λ₂`, while the RHS should be
+thought of as discovering `Λ₂` straight away. -/
+def IsConsistent (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) : Prop :=
+  ∀ ⦃Λ₁ Λ₂⦄, Λ₁ ⊆ Λ₂ → (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ toFun Λ₂ = toFun Λ₂
+
 variable (S E) in
 /-- A specification from `S` to `E` is a collection of "marginal kernels" on the complement of
 finite sets, compatible under restriction.
@@ -36,10 +43,8 @@ structure Specification where
   Morally, the LHS should be thought of as discovering `Λ₁` then `Λ₂`, while the RHS should be
   thought of as discovering `Λ₂`.
 
-  DO NOT USE. Instead use the coercion to function `⇑γ`. Lean should insert it automatically in most
-  cases. -/
-  comp_of_subset' (Λ₁ Λ₂) :
-    Λ₁ ⊆ Λ₂ → (toFun Λ₁).comap id cylinderEvents_le_pi ∘ₖ toFun Λ₂ = toFun Λ₂
+  DO NOT USE. Instead use `Specification.isConsistent`. -/
+  isConsistent' : IsConsistent toFun
 
 namespace Specification
 
@@ -49,12 +54,9 @@ instance instDFunLike :
   coe := toFun
   coe_injective' γ₁ γ₂ h := by cases γ₁; cases γ₂; congr
 
-/-- The marginal kernels of a specification are compatible under restriction.
-
-Morally, the LHS should be thought of as discovering `Λ₁` then `Λ₂`, while the RHS should be
-thought of as discovering `Λ₂`. -/
-lemma comp_of_subset (γ : Specification S E) (hΛ : Λ₁ ⊆ Λ₂) :
-  (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂ := γ.comp_of_subset' _ _ hΛ
+/-- The marginal kernels of a specification are consistent. -/
+lemma isConsistent (γ : Specification S E) (hΛ : Λ₁ ⊆ Λ₂) :
+  (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂ := γ.isConsistent' _ _ hΛ
 
 /-- A specification is proper if all its marginal kernels are. -/
 def IsProper (γ : Specification S E) : Prop := ∀ Λ : Finset S, (γ Λ).IsProper
@@ -112,7 +114,7 @@ This is the specification corresponding to the product measure -/
 @[simps]
 def isssd : Specification S E where
   toFun := isssdFun ν
-  comp_of_subset' Λ₁ Λ₂ hΛ := by
+  isConsistent' Λ₁ Λ₂ hΛ := by
     classical
     rw [isssdFun_comp_isssdFun]
     ext a s _
