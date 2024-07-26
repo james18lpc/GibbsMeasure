@@ -3,13 +3,13 @@
     "scope": "latex",
 		"prefix": "dfn",
 		"body": [
-      "\\begin{definition}",
-      "  \\label{$1}",
-      "  \\uses{$2}",
-      "  \\lean{$3}",
+      "\\begin{definition}[$1]",
+      "  \\label{$2}",
+      "  \\uses{$3}",
+      "  \\lean{$4}",
       "  % \\leanok",
       "",
-      "  $4",
+      "  $5",
       "\\end{definition}"
 		],
 		"description": "Definition"
@@ -18,13 +18,13 @@
     "scope": "latex",
 		"prefix": "thm",
 		"body": [
-      "\\begin{theorem}",
-      "  \\label{$1}",
-      "  \\uses{$2}",
-      "  \\lean{$3}",
+      "\\begin{theorem}[$1]",
+      "  \\label{$2}",
+      "  \\uses{$3}",
+      "  \\lean{$4}",
       "  % \\leanok",
       "",
-      "  $4",
+      "  $5",
       "\\end{theorem}"
 		],
 		"description": "Theorem"
@@ -33,13 +33,13 @@
     "scope": "latex",
 		"prefix": "lem",
 		"body": [
-      "\\begin{lemma}",
-      "  \\label{$1}",
-      "  \\uses{$2}",
-      "  \\lean{$3}",
+      "\\begin{lemma}[$1]",
+      "  \\label{$2}",
+      "  \\uses{$3}",
+      "  \\lean{$4}",
       "  % \\leanok",
       "",
-      "  $4",
+      "  $5",
       "\\end{lemma}"
 		],
 		"description": "Lemma"
@@ -48,12 +48,13 @@
     "scope": "latex",
 		"prefix": "prop",
 		"body": [
-      "\\begin{proposition}",
-      "  \\label{$1}",
-      "  \\uses{$2}",
-      "  \\lean{$3}",
+      "\\begin{proposition}[$1]",
+      "  \\label{$2}",
+      "  \\uses{$3}",
+      "  \\lean{$4}",
       "  % \\leanok",
-      "  $4",
+      "",
+      "  $5",
       "\\end{proposition}",
 		],
 		"description": "Proposition"
@@ -65,6 +66,7 @@
       "\\begin{proof}",
       "  \\uses{$1}",
       "  % \\leanok",
+      "",
       "  $2",
       "\\end{proof}",
 		],
