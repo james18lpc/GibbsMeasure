@@ -1,5 +1,4 @@
 \chapter{Intro}
-
 \begin{definition}[Specification]
     \label{def:specification}
     \uses{def:cylinder-event, def:kernel}
@@ -11,8 +10,6 @@
         \Gamma_{\mathcal{E}, S}:=\left\{\gamma\in\prod_{\Lambda\in\text{Finset}(S)}\text{Ker}_{\mathcal{F}_{S\setminus\Lambda}, \mathcal{E}^S}~\middle\vert~ \forall \Lambda, \Delta\in\text{Finset}(S), \Lambda\subseteq\Delta\implies\gamma_\Lambda\circ_k\gamma_\Delta=\gamma_\Delta\right\}
     \end{equation*}
     defines the set of \textbf{specifications with parameter set $S$ and state space $(E, \mathcal{E})$}, i.e.\ it is the set of indexed collections of probability kernels that satisfy a consistency criterion.
-
-
 \end{definition}
 
 \begin{definition}[Markov Specification]
@@ -32,15 +29,6 @@
 
     Let $(E, \mathcal{E})$ be a measurable space, and let $S$ be a set. We say that a specification $\gamma\in\Gamma_{\mathcal{E},S}$ is \textbf{proper} iff the kernel $\gamma_\Lambda$ is proper for every $\Lambda\in\text{Finset}(S)$.
 \end{definition}
-
-\begin{lemma}[Characterization of Conditional Expectation Kernels]
-    \label{def:cond-exp-ker-char}
-    \uses{def:cond-exp-ker, def:proper-kernel}
-    \lean{ProbabilityTheory.Kernel.IsProper, ProbabilityTheory.Kernel.Condexp}
-    \leanok
-
-    Let $(X,\mathcal{X})$ be a measurable space, let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$ and let $\mu\in\mathfrak{M}(X,\mathcal{X})$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is a proper conditional expectation kernel iff $\mu\circ_k \pi=\mu$.
-\end{lemma}
 
 \begin{definition}[Gibbs Measures]
     \label{def:gibbs-measure}
