@@ -71,7 +71,7 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
     The \textbf{Independent Specification with Single Spin Distribution $\nu$} is
     \begin{align}
         \ISSSD:\mathfrak{P}(E, \mathcal{E})&\to\Finset(S)\to\mathcal{E}^S\times E^S\to\overline{\mathbb{R}_{\geq0}}\\
-        \nu&\mapsto\Lambda\mapsto(A\mid\omega)\mapsto\left(\nu^\Lambda\left(\text{super}_\omega^{-1}(A)\right)\right)
+        \nu&\mapsto\Lambda\mapsto(A\mid\omega)\mapsto\left(\nu^\Lambda\left(\juxtBy{\omega}^{-1}(A)\right)\right)
     \end{align}
     defines the \textbf{Independent Specification with Single Spin Distribution with $\nu$} (for each $\nu\in\mathfrak{P}(E, \mathcal{E})$), where $\nu^\Lambda$ is the usual product measure.
 \end{definition}
@@ -117,7 +117,7 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
 \end{proof}
 
 \begin{lemma}[Uniqueness of a Gibbs Measure Specified by an ISSSD]
-    \label{lem:gibbs-measure-uniqueness}
+    \label{lem:isssd-gibbs-measure-uniqueness}
     \uses{def:gibbs-measure, def:isssd-specification}
 
     There is at most one Gibbs measure specified by $\ISSSD(\nu)$.
@@ -130,7 +130,7 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
 \end{proof}
 
 \begin{lemma}[Existence of a Gibbs Measure Specified by an ISSSD]
-    \label{lem:gibbs-measure-existence}
+    \label{lem:isssd-gibbs-measure-existence}
     \uses{def:gibbs-measure, def:product-probability-measure, def:isssd-specification}
     \lean{Specification.isGibbsMeasure_isssd_productMeasure}
     % \leanok

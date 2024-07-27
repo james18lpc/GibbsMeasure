@@ -7,10 +7,11 @@
 
     Let $(E,\mathcal{E})$ be a measurable space, and let $S$ be a set. Then,
     \begin{align}
-        \mathcal{F}:\mathcal{P}(S)&\to\mathcal{P}(E)\\
+        \mathcal{F}:\mathcal{P}(S)&\to \set{\text{sigma algebras on } E^S}\\
         \Delta&\mapsto \sigma(\{\text{proj}_\delta:E^S\to E\mid \delta\in \Delta\})
     \end{align}
-    defines the \textbf{cylinder events in }$\Delta$ (for each $\Delta\in\mathcal{P}(S)$), where each $\text{proj}_\delta$ is precisely the canonical projection map.
+    defines the \textbf{cylinder events in }$\Delta$ (for each $\Delta\in\mathcal{P}(S)$),
+    where each $\text{proj}_\delta$ is the coordinate projection at coordinate $\delta$.
 \end{definition}
 
 \begin{definition}[Kernel]
@@ -24,13 +25,13 @@
     \end{equation*}
     defines the set of \textbf{kernels from $\mathcal{Y}$ to $\mathcal{X}$}, where $\mathfrak{M}(X,\mathcal{X})$ is the space of measures on $X$.
 
-    We say that $\pi\in\text{Ker}_{\mathcal{Y},\mathcal{X}}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
+    %We say that $\pi\in\text{Ker}_{\mathcal{Y},\mathcal{X}}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
 \end{definition}
 
 \begin{definition}[Markov Kernel]
     \label{def:markov-kernel}
     \uses{def:kernel}
-    \lean{ProbabilityTheory.Kernel}
+    \lean{ProbabilityTheory.IsMarkovKernel}
     \leanok
 
     Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. We say that $\pi\in\text{Ker}_{\mathcal{Y},\mathcal{X}}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
@@ -126,7 +127,7 @@
 
     Let $E$ and $S$ be sets. Let $\Delta\in\mathcal{P}(S)$, and let $\omega\in E^S$. We define
     \begin{align}
-        \text{super}_\omega:E^\Delta&\to E^S\\
+        \juxtBy{\omega} : E^\Delta&\to E^S\\
         \zeta&\mapsto \delta\mapsto\begin{cases}
             \zeta_\delta & \delta\in\Delta\\
             \omega_\delta & \delta\notin\Delta
