@@ -4,6 +4,7 @@ import Mathlib.Order.Ideal
 import Mathlib.Probability.Independence.Basic
 import Mathlib.Probability.Kernel.Composition
 import GibbsMeasure.Mathlib.Data.Finset.Basic
+import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.Proper
@@ -17,7 +18,7 @@ This file defines Gibbs measures.
 open ProbabilityTheory Set MeasureTheory ENNReal NNReal
 
 
-variable {S E : Type*} [𝓔 : MeasurableSpace E] {Λ₁ Λ₂ : Finset S}
+variable {S E : Type*} {mE : MeasurableSpace E} {Λ₁ Λ₂ : Finset S}
 
 /-- A family of kernels `γ` is consistent if `γ Λ₁ ∘ₖ γ Λ₂ = γ Λ₂` for all `Λ₁ ⊆ Λ₂`.
 
@@ -32,7 +33,7 @@ finite sets, compatible under restriction.
 
 The name "marginal kernels" comes from the fact that the marginals of a Gibbs measure following a
 specification precisely are the marginal kernels of that specification. -/
-structure Specification where
+structure Specification [MeasurableSpace E] where
   /-- The marginal kernels of a specification.
 
   DO NOT USE. Instead use the coercion to function `⇑γ`. Lean should insert it automatically in most
@@ -54,10 +55,14 @@ instance instDFunLike :
 /-- The marginal kernels of a specification are consistent. -/
 lemma isConsistent (γ : Specification S E) : IsConsistent γ := γ.isConsistent'
 
+initialize_simps_projections Specification (toFun → apply)
+
+variable {γ γ₁ γ₂ : Specification S E}
+
+@[ext] lemma ext : (∀ Λ, γ₁ Λ = γ₂ Λ) → γ₁ = γ₂ := DFunLike.ext _ _
+
 /-- A specification is proper if all its marginal kernels are. -/
 def IsProper (γ : Specification S E) : Prop := ∀ Λ : Finset S, (γ Λ).IsProper
-
-variable {γ : Specification S E}
 
 lemma isProper_iff_restrict_eq_indicator_smul :
     γ.IsProper ↔
@@ -114,7 +119,7 @@ def isssd : Specification S E where
     classical
     rw [isssdFun_comp_isssdFun]
     ext a s _
-    simp only [Kernel.comap_apply, id_eq, isssdFun_toFun, Finset.coe_sort_coe]
+    simp only [Kernel.comap_apply, id_eq, isssdFun_apply, Finset.coe_sort_coe]
     rw [Finset.union_eq_right.2 hΛ]
 
 /-- The ISSSD of a measure is strongly consistent. -/
@@ -127,7 +132,7 @@ protected lemma IsProper.isssd : (isssd (S := S) ν).IsProper := by
   rw [isProper_iff_restrict_eq_indicator_mul]
   rintro Λ A hA B hB x
   rw [Kernel.restrict_apply, Measure.restrict_apply hA]
-  simp only [isssd_toFun, isssdFun_toFun, Finset.coe_sort_coe]
+  simp only [isssd_apply, isssdFun_apply, Finset.coe_sort_coe]
   sorry
 
 end ISSSD
@@ -141,6 +146,90 @@ lemma isGibbsMeasure_isssd_productMeasure (ν : Measure E) [IsProbabilityMeasure
   sorry
 
 end ProductMeasure
+
+section Modification
+variable {ρ : Finset S → (S → E) → ℝ≥0∞}
+
+/-- The kernel of a modified specification.
+
+Modifying the specification `γ` by a family indexed by finsets `Λ : Finset S` of densities
+`ρ Λ : (S → E) → ℝ≥0∞` results in a family of kernels `γ.modifiedKer ρ _ Λ` whose density is that of
+`γ Λ` multiplied by `ρ Λ`.
+
+This is an auxiliary definition for `Specification.modified`, which you should generally use instead
+of `Specification.modifiedKer`. -/
+@[simps]
+noncomputable def modifiedKer (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E))
+    (ρ : Finset S → (S → E) → ℝ≥0∞) (hρ : ∀ Λ, Measurable (ρ Λ)) (Λ : Finset S) :
+    Kernel[cylinderEvents Λᶜ] (S → E) (S → E) :=
+  @Kernel.mk _ _ (_) _
+    (fun η ↦ (γ Λ η).withDensity (ρ Λ))
+    (@Measure.measurable_of_measurable_coe _ _ _ (_) _ fun s hs ↦ by
+      simp_rw [MeasureTheory.withDensity_apply _ hs]
+      exact (Measure.measurable_setLintegral (hρ _) hs).comp (γ Λ).measurable)
+
+@[simp] lemma modifiedKer_one' (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) :
+    modifiedKer γ (fun _Λ _η ↦ 1) (fun _Λ ↦ measurable_const) = γ := by ext Λ; simp
+
+@[simp] lemma modifiedKer_one (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) :
+    modifiedKer γ 1 (fun _Λ ↦ measurable_const) = γ := by ext Λ; simp
+
+/-- A modification of a specification `γ` is a family indexed by finsets `Λ : Finset S` of densities
+`ρ Λ : (S → E) → ℝ≥0∞` such that:
+* Each `ρ Λ` is measurable.
+* `γ.modifiedKer ρ` (informally, `ρ * γ`) is consistent. -/
+structure IsModification (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞) : Prop where
+  measurable Λ : Measurable (ρ Λ)
+  isConsistent : IsConsistent (modifiedKer γ ρ measurable)
+
+@[simp] lemma IsModification.one' : γ.IsModification (fun _Λ _η ↦ 1) where
+  measurable _ := measurable_const
+  isConsistent := by simpa using γ.isConsistent
+
+@[simp] lemma IsModification.one : γ.IsModification 1 := .one'
+
+/-- Modified specification.
+
+Modifying the specification `γ` by a family indexed by finsets `Λ : Finset S` of densities
+`ρ Λ : (S → E) → ℝ≥0∞` results in a family of kernels `γ.modifiedKer ρ _ Λ` whose density is that of
+`γ Λ` multiplied by `ρ Λ`.
+
+When the family of densities `ρ` is a modification (`Specification.IsModification`), modifying a
+specification results in a specification `γ.modified ρ _`. -/
+noncomputable def modified (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞)
+    (hρ : γ.IsModification ρ) : Specification S E where
+  toFun := modifiedKer γ ρ hρ.measurable
+  isConsistent' := hρ.isConsistent
+
+-- This is not simp as we want to keep `modifiedKer` an implementation detail
+lemma coe_modified (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞)
+    (hρ : γ.IsModification ρ) : γ.modified ρ hρ = modifiedKer γ ρ hρ.measurable := rfl
+
+@[simp]
+lemma modified_apply (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞)
+    (hρ : γ.IsModification ρ) (Λ : Finset S) (η : S → E) :
+    γ.modified ρ hρ Λ η = (γ Λ η).withDensity (ρ Λ) := rfl
+
+@[simp] lemma IsModification.mul {ρ₁ ρ₂ : Finset S → (S → E) → ℝ≥0∞}
+    (hρ₁ : γ.IsModification ρ₁) (hρ₂ : (γ.modified ρ₁ hρ₁).IsModification ρ₂) :
+    γ.IsModification (ρ₁ * ρ₂) where
+  measurable Λ := (hρ₁.measurable _).mul (hρ₂.measurable _)
+  isConsistent := sorry
+
+@[simp] lemma modified_one' (γ : Specification S E) : γ.modified (fun _Λ _η ↦ 1) .one' = γ := by
+  ext; simp
+
+@[simp] lemma modified_one (γ : Specification S E) : γ.modified 1 .one = γ := by ext; simp
+
+@[simp] lemma modified_modified (γ : Specification S E) (ρ₁ ρ₂ : Finset S → (S → E) → ℝ≥0∞)
+    (hρ₁ : γ.IsModification ρ₁) (hρ₂ : (γ.modified ρ₁ hρ₁).IsModification ρ₂) :
+    (γ.modified ρ₁ hρ₁).modified ρ₂ hρ₂ = γ.modified (ρ₁ * ρ₂) (hρ₁.mul hρ₂) := sorry
+
+protected lemma IsProper.modified (hγ : γ.IsProper) {hρ} : (γ.modified ρ hρ).IsProper := by
+  rintro Λ
+  sorry -- standard machine (for Lebesgue)
+
+end Modification
 end Specification
 
 variable (X : Type*) (f : X → ℝ)
@@ -149,7 +238,7 @@ variable (X : Type*) (f : X → ℝ)
 lemma condexp_ae_eq_kernel_apply {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X)
     --(hSub : 𝓑 ≤ 𝓧)
     (μ : @Measure X 𝓧) [IsFiniteMeasure μ]
-    (π : Kernel[𝓑, 𝓧] X X) [∀ (x : X), IsFiniteMeasure (π x)]
+    (π : Kernel[𝓑, 𝓧] X X) [∀ x, IsFiniteMeasure (π x)]
     (h : ∀ (f : X → ℝ), Bornology.IsBounded (Set.range f) → Measurable[𝓧] f →
       condexp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)))
     {A : Set X} (A_mble : MeasurableSet[𝓧] A) :

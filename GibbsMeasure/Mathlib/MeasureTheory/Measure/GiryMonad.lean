@@ -1,6 +1,8 @@
 import Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
+open scoped ENNReal
+
 namespace MeasureTheory.Measure
 variable {α β : Type*} [MeasurableSpace β]
 
@@ -18,5 +20,15 @@ theorem measurable_of_measurable_coe' (t : Set (Set α)) (f : β → Measure[.ge
     exact (hs hs'.of_compl).const_sub _
   · rintro g hg
     sorry
+
+variable {mα : MeasurableSpace α} {s : Set α}
+
+lemma measurable_restrict (hs : MeasurableSet s) : Measurable fun μ : Measure α ↦ μ.restrict s :=
+  measurable_of_measurable_coe _ fun t ht ↦ by
+    simp_rw [restrict_apply ht]; exact measurable_coe (ht.inter hs)
+
+lemma measurable_setLintegral {f : α → ℝ≥0∞} (hf : Measurable f) (hs : MeasurableSet s) :
+    Measurable fun μ : Measure α ↦ ∫⁻ x in s, f x ∂μ :=
+  (measurable_lintegral hf).comp (measurable_restrict hs)
 
 end MeasureTheory.Measure
