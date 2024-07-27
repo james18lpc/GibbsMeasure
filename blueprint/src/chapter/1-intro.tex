@@ -192,3 +192,34 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
 \end{proof}
 
 % The rest of Remark 1.28.1 is vacuous in our setup
+
+% (Yaël) Don't understand Remark 1.28.2. Can it be generalised away from ISSSD?
+
+% (Yaël) Not sure how to generalise Remark 1.28.3 away from ISSSD
+
+% We can't state Remark 1.28.4 since we don't have a characteristic for a specification to be a
+% modification of another measure
+
+% Remark 1.28.5
+\begin{lemma}[Every specification is a modification of the counting measure]
+    \label{lem:exists-modification-countable}
+    \uses{def:modification, def:ISSSD}
+    % \lean{}
+    % \leanok
+
+    If $E$ is countable, $\nu$ is the counting measure and $\gamma$ is any specification, then
+    $$\rho_\Lambda(\eta) = \gamma_\Lambda(\{\sigma_\Lambda = \eta_\Lambda\} | \eta)$$
+    is a modification from $\ISSSD(\nu)$ to $\gamma$.
+\end{lemma}
+\begin{proof}
+    % \uses{}
+    % \leanok
+
+    For all $\Lambda \in \Finset(S)$, $A$ measurable, $\eta : S \to E$, we have
+    \begin{align}
+        (\rho\ISSSD(\nu))_\Lambda(A|\eta)
+        & = \int_\zeta \rho_\Lambda(\zeta) \ISSSD(d\zeta|\eta) \\
+        & = \int_\zeta \gamma_\Lambda(\{\sigma_\Lambda = \eta_\Lambda\} | \eta) \ISSSD(d\zeta|\eta) \\
+        & = \gamma_\Lambda(A|\eta)
+    \end{align}
+\end{proof}
