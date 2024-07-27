@@ -45,6 +45,26 @@
     Let $(X,\mathcal{X})$ be a measurable space, and let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is \textbf{proper} iff $\pi(A\cap B\mid x)=\pi(A\mid x)\cdot\mathbf{1}_B(x)$ for all $A\in\mathcal{X}$, $B\in\mathcal{B}$ and $x\in X$.
 \end{definition}
 
+\begin{lemma}[Integral characterisation of proper kernels]
+    \label{lem:proper-kernel-integral}
+    \uses{def:proper-kernel}
+    \lean{ProbabilityTheory.Kernel.IsProper.lintegral_mul, ProbabilityTheory.Kernel.IsProper.integral_mul}
+    \leanok
+
+    If kernel $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is proper, then
+    $$\int_x f(x) g(x)\ d\pi(\cdot\mid x_0) = g(x_0)\int_x f(x)\ d\pi(\cdot\mid x_0)$$
+    for all $A \in \mathcal X$, $B \in \mathcal B$, $x_0 \in X$ and functions
+    \begin{enumerate}
+        \item $f, g : X \to [0, \infty[$ such that $f$ is $\mathcal X$-measurable, $g$ is $\mathcal B$-measurable.
+        \item $f, g : X \to \R$ such that $f$ is $\mathcal X$-integrable, $g$ is $\mathcal B$-integrable.
+\end{lemma}
+\begin{proof}
+    % \uses{}
+    % \leanok
+
+    Standard machine.
+\end{proof}
+
 \begin{definition}[Conditional Expectation Kernel]
     \label{def:cond-exp-kernel}
     \uses{def:kernel}

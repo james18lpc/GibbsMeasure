@@ -61,6 +61,8 @@ variable {γ γ₁ γ₂ : Specification S E}
 
 @[ext] lemma ext : (∀ Λ, γ₁ Λ = γ₂ Λ) → γ₁ = γ₂ := DFunLike.ext _ _
 
+section IsProper
+
 /-- A specification is proper if all its marginal kernels are. -/
 def IsProper (γ : Specification S E) : Prop := ∀ Λ : Finset S, (γ Λ).IsProper
 
@@ -70,12 +72,37 @@ lemma isProper_iff_restrict_eq_indicator_smul :
       (γ Λ).restrict (cylinderEvents_le_pi _ hB) x = B.indicator (1 : (S → E) → ℝ≥0∞) x • γ Λ x :=
   forall_congr' fun _ ↦ Kernel.isProper_iff_restrict_eq_indicator_smul _
 
-lemma isProper_iff_restrict_eq_indicator_mul :
+lemma isProper_iff_inter_eq_indicator_mul :
     γ.IsProper ↔
       ∀ (Λ : Finset S) ⦃A : Set (S → E)⦄ (_hA : MeasurableSet A) ⦃B : Set (S → E)⦄
-        (hB : MeasurableSet[cylinderEvents Λᶜ] B) (x : S → E),
-      (γ Λ).restrict (cylinderEvents_le_pi _ hB) x A = B.indicator 1 x * γ Λ x A :=
-  forall_congr' fun _ ↦ Kernel.isProper_iff_restrict_eq_indicator_mul _
+        (_hB : MeasurableSet[cylinderEvents Λᶜ] B) (η : S → E),
+      γ Λ η (A ∩ B) = B.indicator 1 η * γ Λ η A :=
+  forall_congr' fun _ ↦ Kernel.isProper_iff_inter_eq_indicator_mul cylinderEvents_le_pi
+
+alias ⟨IsProper.restrict_eq_indicator_smul, IsProper.of_restrict_eq_indicator_smul⟩ :=
+  isProper_iff_restrict_eq_indicator_smul
+
+alias ⟨IsProper.inter_eq_indicator_mul, IsProper.of_inter_eq_indicator_mul⟩ :=
+  isProper_iff_inter_eq_indicator_mul
+
+variable {A B : Set (S → E)} {f g : (S → E) → ℝ≥0∞} {η₀ : S → E}
+
+lemma IsProper.setLintegral_eq_indicator_mul_lintegral (hγ : γ.IsProper) (Λ : Finset S)
+    (hf : Measurable f) (hB : MeasurableSet[cylinderEvents Λᶜ] B) :
+    ∫⁻ x in B, f x ∂(γ Λ η₀) = B.indicator 1 η₀ * ∫⁻ x, f x ∂(γ Λ η₀) :=
+  (hγ Λ).setLintegral_eq_indicator_mul_lintegral cylinderEvents_le_pi hf hB _
+
+lemma IsProper.setLintegral_inter_eq_indicator_mul_setLintegral (Λ : Finset S) (hγ : γ.IsProper)
+    (hf : Measurable f) (hA : MeasurableSet A) (hB : MeasurableSet[cylinderEvents Λᶜ] B) :
+    ∫⁻ x in A ∩ B, f x ∂(γ Λ η₀) = B.indicator 1 η₀ * ∫⁻ x in A, f x ∂(γ Λ η₀) :=
+  (hγ Λ).setLintegral_inter_eq_indicator_mul_setLintegral cylinderEvents_le_pi hf hA hB _
+
+lemma IsProper.lintegral_mul (hγ : γ.IsProper) (Λ : Finset S) (hf : Measurable f)
+    (hg : Measurable[cylinderEvents Λᶜ] g) :
+    ∫⁻ x, f x * g x ∂(γ Λ η₀) = g η₀ * ∫⁻ x, f x ∂(γ Λ η₀) :=
+  (hγ _).lintegral_mul cylinderEvents_le_pi hf hg _
+
+end IsProper
 
 /-- For a specification `γ`, a Gibbs measure is a measure whose finite marginals agree with `γ`. -/
 def IsGibbsMeasure (γ : Specification S E) (μ : Measure (S → E)) : Prop :=
@@ -129,9 +156,7 @@ lemma isssd_comp_isssd [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
         (measurable_id'' $ by gcongr; exact Finset.subset_union_right) := isssdFun_comp_isssdFun ..
 
 protected lemma IsProper.isssd : (isssd (S := S) ν).IsProper := by
-  rw [isProper_iff_restrict_eq_indicator_mul]
-  rintro Λ A hA B hB x
-  rw [Kernel.restrict_apply, Measure.restrict_apply hA]
+  refine IsProper.of_inter_eq_indicator_mul fun Λ A hA B hB x ↦ ?_
   simp only [isssd_apply, isssdFun_apply, Finset.coe_sort_coe]
   sorry
 
@@ -226,8 +251,10 @@ lemma modified_apply (γ : Specification S E) (ρ : Finset S → (S → E) → �
     (γ.modified ρ₁ hρ₁).modified ρ₂ hρ₂ = γ.modified (ρ₁ * ρ₂) (hρ₁.mul hρ₂) := sorry
 
 protected lemma IsProper.modified (hγ : γ.IsProper) {hρ} : (γ.modified ρ hρ).IsProper := by
-  rintro Λ
-  sorry -- standard machine (for Lebesgue)
+  refine IsProper.of_inter_eq_indicator_mul fun Λ A hA B hB η ↦ ?_
+  rw [modified_apply, withDensity_apply _ hA,
+    withDensity_apply _ (hA.inter $ cylinderEvents_le_pi _ hB),
+    hγ.setLintegral_inter_eq_indicator_mul_setLintegral _ (hρ.measurable _) hA hB]
 
 end Modification
 end Specification
