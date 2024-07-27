@@ -28,18 +28,20 @@ def IsConsistent (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E)
   ∀ ⦃Λ₁ Λ₂⦄, Λ₁ ⊆ Λ₂ → (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂
 
 variable (S E) in
-/-- A specification from `S` to `E` is a collection of "marginal kernels" on the complement of
-finite sets, compatible under restriction.
+/-- A specification from `S` to `E` is a collection of "boundary condition kernels" on the
+complement of finite sets, compatible under restriction.
 
-The name "marginal kernels" comes from the fact that the marginals of a Gibbs measure following a
-specification precisely are the marginal kernels of that specification. -/
+The term "boundary condition kernels" is chosen because for a Gibbs measure associated to
+a specification, the kernels of the specification are precisely the regular conditional
+probabilities of the Gibbs measure conditionally on the configurations in the complements of
+finite sets (which serve as "boundary conditions"). -/
 structure Specification [MeasurableSpace E] where
-  /-- The marginal kernels of a specification.
+  /-- The boundary condition kernels of a specification.
 
   DO NOT USE. Instead use the coercion to function `⇑γ`. Lean should insert it automatically in most
   cases. -/
   toFun (Λ : Finset S) : Kernel[cylinderEvents Λᶜ] (S → E) (S → E)
-  /-- The marginal kernels of a specification are consistent.
+  /-- The boundary condition kernels of a specification are consistent.
 
   DO NOT USE. Instead use `Specification.isConsistent`. -/
   isConsistent' : IsConsistent toFun
@@ -52,7 +54,7 @@ instance instDFunLike :
   coe := toFun
   coe_injective' γ₁ γ₂ h := by cases γ₁; cases γ₂; congr
 
-/-- The marginal kernels of a specification are consistent. -/
+/-- The boundary condition kernels of a specification are consistent. -/
 lemma isConsistent (γ : Specification S E) : IsConsistent γ := γ.isConsistent'
 
 initialize_simps_projections Specification (toFun → apply)
@@ -63,14 +65,15 @@ variable {γ γ₁ γ₂ : Specification S E}
 
 section IsMarkov
 
-/-- A Markov specification is a specification whose marginal kernels are all Markov kernels. -/
+/-- A Markov specification is a specification whose boundary condition kernels are all Markov
+kernels. -/
 def IsMarkov (γ : Specification S E) : Prop := ∀ Λ, IsMarkovKernel (γ Λ)
 
 end IsMarkov
 
 section IsProper
 
-/-- A specification is proper if all its marginal kernels are. -/
+/-- A specification is proper if all its boundary condition kernels are. -/
 def IsProper (γ : Specification S E) : Prop := ∀ Λ : Finset S, (γ Λ).IsProper
 
 lemma isProper_iff_restrict_eq_indicator_smul :
@@ -111,7 +114,9 @@ lemma IsProper.lintegral_mul (hγ : γ.IsProper) (Λ : Finset S) (hf : Measurabl
 
 end IsProper
 
-/-- For a specification `γ`, a Gibbs measure is a measure whose finite marginals agree with `γ`. -/
+/-- For a specification `γ`, a Gibbs measure is a measure whose conditional expectation kernels
+conditionally on configurations exterior to finite sets agree with the boundary condition kernels
+of the specification `γ`. -/
 def IsGibbsMeasure (γ : Specification S E) (μ : Measure (S → E)) : Prop :=
   ∀ (Λ : Finset S) (A : Set (S → E)), MeasurableSet A →
     condexp (cylinderEvents Λᶜ) μ (A.indicator fun _ ↦ 1) =ᵐ[μ] fun σ ↦ (γ Λ σ A).toReal
