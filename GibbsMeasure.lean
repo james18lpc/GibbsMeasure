@@ -1,11 +1,16 @@
 import GibbsMeasure.Basic
 import GibbsMeasure.KolmogorovExtension4.ProductMeasure
+import GibbsMeasure.Mathlib.Algebra.Module.Basic
 import GibbsMeasure.Mathlib.Data.Finset.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Prod.Basic
+import GibbsMeasure.Mathlib.MeasureTheory.Function.L1Space
+import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
+import GibbsMeasure.Mathlib.MeasureTheory.Integral.Lebesgue
 import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import GibbsMeasure.Mathlib.Probability.Kernel.Basic
+import GibbsMeasure.Mathlib.Probability.Kernel.Condexp
 import GibbsMeasure.Prereqs.CylinderEvent
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.Proper
