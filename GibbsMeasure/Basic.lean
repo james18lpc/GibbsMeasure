@@ -61,6 +61,13 @@ variable {γ γ₁ γ₂ : Specification S E}
 
 @[ext] lemma ext : (∀ Λ, γ₁ Λ = γ₂ Λ) → γ₁ = γ₂ := DFunLike.ext _ _
 
+section IsMarkov
+
+/-- A Markov specification is a specification whose marginal kernels are all Markov kernels. -/
+def IsMarkov (γ : Specification S E) : Prop := ∀ Λ, IsMarkovKernel (γ Λ)
+
+end IsMarkov
+
 section IsProper
 
 /-- A specification is proper if all its marginal kernels are. -/
