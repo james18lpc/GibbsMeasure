@@ -17,15 +17,34 @@ This file defines Gibbs measures.
 
 open ProbabilityTheory Set MeasureTheory ENNReal NNReal
 
-
 variable {S E : Type*} {mE : MeasurableSpace E} {Λ₁ Λ₂ : Finset S}
 
-/-- A family of kernels `γ` is consistent if `γ Λ₁ ∘ₖ γ Λ₂ = γ Λ₂` for all `Λ₁ ⊆ Λ₂`.
+/-- The exterior sigma algebras to finite subsets of `S` form a filtration indexed by the
+order dual of `Finset S`. -/
+def filtration_of_cylinderEvents_compl :
+    Filtration (Finset S)ᵒᵈ (MeasurableSpace.pi (π := fun (_ : S) ↦ E)) where
+  seq Λ := cylinderEvents (id Λ : Finset S)ᶜ
+  mono' _ _ h := cylinderEvents_mono <| compl_subset_compl_of_subset h
+  le' _  := cylinderEvents_le_pi
 
-Morally, the LHS should be thought of as discovering `Λ₁` then `Λ₂`, while the RHS should be
-thought of as discovering `Λ₂` straight away. -/
-def IsConsistent (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) : Prop :=
-  ∀ ⦃Λ₁ Λ₂⦄, Λ₁ ⊆ Λ₂ → (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂
+/-- A family of kernels `γ` on `X` indexed by a poset `P` is consistent under conditioning
+if `γ p₂ ∘ₖ γ p₁ = γ p₁` whenever `p₁ ≤ p₂`. -/
+def IsConsistentKernel {X P : Type*} [mX : MeasurableSpace X] [PartialOrder P]
+    (mXs : Filtration P mX) (γ : ∀ (p : P), Kernel[mXs p] X X) : Prop :=
+  ∀ ⦃p₁ p₂⦄, p₁ ≤ p₂ → (γ p₂).comap id (mXs.le p₂) ∘ₖ γ p₁ = γ p₁
+
+/-- A family of kernels `γ` on `S → E` indexed by finite subsets `Λ ⊆ S` is consistent
+if `γ Λ₁ ∘ₖ γ Λ₂ = γ Λ₂` whenever `Λ₁ ⊆ Λ₂`. (The kernel `γ Λ` is defined on the exterior
+sigma-algebra of `Λ`, i.e., the cylinder events on `Λᶜ`) -/
+def IsGibbsConsistent (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) : Prop :=
+  IsConsistentKernel filtration_of_cylinderEvents_compl γ
+
+--/-- A family of kernels `γ` is consistent if `γ Λ₁ ∘ₖ γ Λ₂ = γ Λ₂` for all `Λ₁ ⊆ Λ₂`.
+--
+--Morally, the LHS should be thought of as discovering `Λ₁` then `Λ₂`, while the RHS should be
+--thought of as discovering `Λ₂` straight away. -/
+--def IsConsistent (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) : Prop :=
+--  ∀ ⦃Λ₁ Λ₂⦄, Λ₁ ⊆ Λ₂ → (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = γ Λ₂
 
 variable (S E) in
 /-- A specification from `S` to `E` is a collection of "boundary condition kernels" on the
@@ -44,7 +63,7 @@ structure Specification [MeasurableSpace E] where
   /-- The boundary condition kernels of a specification are consistent.
 
   DO NOT USE. Instead use `Specification.isConsistent`. -/
-  isConsistent' : IsConsistent toFun
+  isConsistent' : IsGibbsConsistent toFun
 
 namespace Specification
 
@@ -55,7 +74,7 @@ instance instDFunLike :
   coe_injective' γ₁ γ₂ h := by cases γ₁; cases γ₂; congr
 
 /-- The boundary condition kernels of a specification are consistent. -/
-lemma isConsistent (γ : Specification S E) : IsConsistent γ := γ.isConsistent'
+lemma isGibbsConsistent (γ : Specification S E) : IsGibbsConsistent γ := γ.isConsistent'
 
 initialize_simps_projections Specification (toFun → apply)
 
@@ -217,11 +236,11 @@ noncomputable def modifiedKer (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λ�
 * `γ.modifiedKer ρ` (informally, `ρ * γ`) is consistent. -/
 structure IsModification (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞) : Prop where
   measurable Λ : Measurable (ρ Λ)
-  isConsistent : IsConsistent (modifiedKer γ ρ measurable)
+  isConsistent : IsGibbsConsistent (modifiedKer γ ρ measurable)
 
 @[simp] lemma IsModification.one' : γ.IsModification (fun _Λ _η ↦ 1) where
   measurable _ := measurable_const
-  isConsistent := by simpa using γ.isConsistent
+  isConsistent := by simpa using γ.isGibbsConsistent
 
 @[simp] lemma IsModification.one : γ.IsModification 1 := .one'
 
