@@ -223,3 +223,80 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
         & = \gamma_\Lambda(A|\eta)
     \end{align}
 \end{proof}
+
+% Proposition 1.30
+\begin{proposition}[Characterisation of modifications]
+    \label{prop:modification-tfae}
+    \uses{def:modification}
+    % \lean{}
+    % \leanok
+
+    If $\rho$ is a family of measurable densities, then TFAE
+    \begin{enumerate}
+        \item $\rho$ is a modification of $\gamma$
+        \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$ and all $\eta : S \to E$, we have
+        $$\rho_{\Lambda_2} = \rho_{\Lambda_1} \gamma_{\Lambda_1} \rho_{\Lambda_2} \quad \gamma_{\Lambda_2}(\cdot|\eta)\text{ae}$$
+        \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$ and all $\alpha : S \to E$, then for all $\gamma_{\Lambda_2 \setminus \Lambda_1}(\cdot|\alpha)$-almost all $\omega : S \to E$, we have
+        $$\rho_{\Lambda_2}(\zeta)\rho_{\Lambda_1}(\eta) = \rho_{\Lambda_2}(\eta) \rho_{\Lambda_1}(\zeta)$$
+        for $\nu_{\Lambda_1}(\cdot|\omega) \times \nu_{\Lambda_2}(\cdot|\omega)$-almost all $(\zeta, \lambda)$.
+    \end{enumerate}
+\end{proposition}
+\begin{proof}
+    % \uses{}
+    % \leanok
+
+    TODO
+\end{proof}
+
+% Definition 1.31
+
+\begin{definition}[Premodification]
+    \label{def:Premodification}
+    % \uses{}
+    % \lean{}
+    % \leanok
+
+    A family of functions $h_\Lambda : (S \to E) \to [0, \infty[$ is a {\bf premodification} if
+    $$h_{\Lambda_2}(\zeta)h_{\Lambda_1}(\eta) = h_{\Lambda_1}(\zeta)h_{\Lambda_2}(\eta)$$
+    for all $\Lambda_1 \subseteq \Lambda_2$ and all $\zeta, \eta : S \to E$ such that $\zeta_{\Lambda_1^c} = \eta_{\Lambda_1^c}$.
+\end{definition}
+
+% TODO: Probably split into several items
+% Note that we do not need this result. This is just for fun.
+\begin{lemma}[Modifications are premodifications]
+    \label{lem:modification-premodification}
+    \uses{def:modification, def:premodification}
+    % \lean{}
+    % \leanok
+    If $\rho$ is a modification of $\ISSSD(\nu^S)$, then it is a premodification if any of the following conditions hold:
+    \begin{enumerate}
+        \item $E$ is countable and $\nu$ is equivalent to the counting measure.
+        \item $E$ is a second countable Borel space.
+        \item $\nu$ is everywhere dense.
+        \item For all $\Lambda_1 \subseteq \Lambda_2$ and all $\eta : S \to E$, $\zeta \mapsto \rho_{\Lambda_1}(\zeta \eta_{\Lambda_1^c})$ is continuous on $E^{\Lambda_1}$.
+\end{lemma}
+\begin{proof}
+    \uses{prop:modification-tfae}
+    % \leanok
+
+    \begin{enumerate}
+        \item Use Proposition \ref{prop:modification-tfae}.
+        \item Omitted.
+        \item Omitted.
+        \item Omitted.
+\end{proof}
+
+% Remark 1.32
+\begin{lemma}[Premodifications give rise to modifications]
+    \label{lem:premodification-modification}
+    \uses{def:modification, def:premodification}
+
+    If $h$ is a premodification and $\nu$ is such that $0 < \nu_\Lambda h_\Lambda < \infty$ for all $\Lamda$, then
+    $$\rho_\Lambda := \frac{h_\Lambda}{\nu_\Lambda h_\Lambda}$$
+    is a modification of $\ISSSD(\nu)$.
+\end{lemma}
+\begin{proof}
+    \uses{prop:modification-tfae}
+
+    TODO
+\end{proof}
