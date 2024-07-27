@@ -271,7 +271,7 @@ variable (X : Type*) (f : X → ℝ)
 -- TODO: add to blueprint
 lemma condexp_ae_eq_kernel_apply {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X)
     --(hSub : 𝓑 ≤ 𝓧)
-    (μ : @Measure X 𝓧) [IsFiniteMeasure μ]
+    (μ : Measure[𝓧] X) [IsFiniteMeasure μ]
     (π : Kernel[𝓑, 𝓧] X X) [∀ x, IsFiniteMeasure (π x)]
     (h : ∀ (f : X → ℝ), Bornology.IsBounded (Set.range f) → Measurable[𝓧] f →
       condexp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)))
@@ -292,8 +292,8 @@ lemma condexp_ae_eq_kernel_apply {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : 
 lemma condexp_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X]
    (𝓑 : MeasurableSpace X)
     --(hSub : 𝓑 ≤ 𝓧)
-    (μ : @Measure X 𝓧) [IsFiniteMeasure μ]
-    (π : Kernel[𝓑, 𝓧] X X) [∀ (x : X), IsFiniteMeasure (π x)]
+    (μ : Measure[𝓧] X) [IsFiniteMeasure μ]
+    (π : Kernel[𝓑, 𝓧] X X) [∀ x, IsFiniteMeasure (π x)]
     {A : Set X} (A_mble : MeasurableSet[𝓧] A)
     (h : condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ))) =ᵐ[μ] (fun x ↦ (π x A).toReal)) :
     condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
@@ -306,7 +306,7 @@ lemma condexp_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpac
 lemma condexp_const_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X]
     (𝓑 : MeasurableSpace X)
     --(hSub : 𝓑 ≤ 𝓧)
-    (μ : @Measure X 𝓧) [IsFiniteMeasure μ]
+    (μ : Measure[𝓧] X) [IsFiniteMeasure μ]
     (π : Kernel[𝓑, 𝓧] X X) [∀ (x : X), IsFiniteMeasure (π x)]
     (c : ℝ)
     {A : Set X} (A_mble : MeasurableSet[𝓧] A)
@@ -342,7 +342,7 @@ lemma condexp_const_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : Measurab
 lemma condexp_simpleFunc_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X]
    (𝓑 : MeasurableSpace X)
     --(hSub : 𝓑 ≤ 𝓧)
-    (μ : @Measure X 𝓧) [IsFiniteMeasure μ]
+    (μ : Measure[𝓧] X) [IsFiniteMeasure μ]
     (π : Kernel[𝓑, 𝓧] X X) [∀ (x : X), IsFiniteMeasure (π x)]
     (h : ∀ (A : Set X), MeasurableSet[𝓧] A →
       condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ))) =ᵐ[μ] (fun x ↦ (π x A).toReal))
@@ -355,7 +355,7 @@ lemma condexp_simpleFunc_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpa
 
 
 lemma bind_eq_self_iff (X : Type*) [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X) (hSub : 𝓑 ≤ 𝓧)
-    (μ : @Measure X 𝓧) (π : Kernel[𝓑, 𝓧] X X) (π_proper : π.IsProper)
+    (μ : Measure[𝓧] X) (π : Kernel[𝓑, 𝓧] X X) (π_proper : π.IsProper)
     (A : Set X) (A_mble : MeasurableSet A) :
     condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
       =ᵐ[μ] (fun x ↦ (π x A).toReal) ↔ @Measure.bind X X 𝓧 𝓧 μ π A = μ A :=
