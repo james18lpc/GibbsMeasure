@@ -2,3 +2,11 @@
 /blueprint/web
 /blueprint/src/web.paux
 /blueprint/lean_decls
+
+*.aux
+*.log
+*.fdb_latexmk
+*.out
+*.pdf
+*.synctex(busy)
+*.synctex.gz
