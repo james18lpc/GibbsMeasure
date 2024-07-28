@@ -12,7 +12,9 @@ import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import GibbsMeasure.Mathlib.Probability.Kernel.Basic
 import GibbsMeasure.Mathlib.Probability.Kernel.Condexp
 import GibbsMeasure.Prereqs.CylinderEvent
+import GibbsMeasure.Prereqs.Filtration.Consistent
 import GibbsMeasure.Prereqs.Juxt
+import GibbsMeasure.Prereqs.Kernel.CondExp
 import GibbsMeasure.Prereqs.Kernel.Proper
 import GibbsMeasure.TestingLowerBounds.ForMathlib.CountableOrCountablyGenerated
 import GibbsMeasure.TestingLowerBounds.ForMathlib.KernelFstSnd
