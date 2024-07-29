@@ -128,14 +128,12 @@ variable {μ : Measure (S → E)}
 /-- For a specification `γ`, a Gibbs measure is a measure whose conditional expectation kernels
 conditionally on configurations exterior to finite sets agree with the boundary condition kernels
 of the specification `γ`. -/
-def IsGibbsMeasure (γ : Specification S E) (μ : Measure (S → E)) : Prop :=
-  ∀ (Λ : Finset S) (A : Set (S → E)), MeasurableSet A →
-    condexp (cylinderEvents Λᶜ) μ (A.indicator fun _ ↦ 1) =ᵐ[μ] fun σ ↦ (γ Λ σ A).toReal
+def IsGibbsMeasure (γ : Specification S E) (μ : Measure (S → E)) : Prop := ∀ Λ, (γ Λ).IsCondExp μ
 
 -- The following two lemmas should generalise to a family of kernels indexed by a filtration
 lemma isGibbsMeasure_iff_forall_bind_eq (hγ : γ.IsProper) [IsFiniteMeasure μ] [IsMarkov γ] :
     γ.IsGibbsMeasure μ ↔ ∀ Λ, μ.bind (γ Λ) = μ :=
-  forall_congr' fun _Λ ↦ (Kernel.bind_eq_self (hγ _) cylinderEvents_le_pi).symm
+  forall_congr' fun _Λ ↦ Kernel.isCondExp_iff_bind_eq_left (hγ _) cylinderEvents_le_pi
 
 lemma isGibbsMeasure_iff_frequently_bind_eq (hγ : γ.IsProper) [IsFiniteMeasure μ] [IsMarkov γ] :
     γ.IsGibbsMeasure μ ↔ ∃ᶠ Λ in .atTop, μ.bind (γ Λ) = μ := by

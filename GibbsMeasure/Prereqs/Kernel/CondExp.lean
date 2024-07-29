@@ -8,15 +8,20 @@ namespace ProbabilityTheory.Kernel
 variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : Kernel[𝓑, 𝓧] X X} {μ : Measure[𝓧] X}
   {A B : Set X} {f g : X → ℝ≥0∞} {x₀ : X}
 
-lemma bind_eq_self [IsFiniteMeasure μ] [IsMarkovKernel π] (hπ : π.IsProper) (h𝓑𝓧 : 𝓑 ≤ 𝓧) :
-    μ.bind π = μ ↔ ∀ A, MeasurableSet[𝓧] A → μ[A.indicator 1| 𝓑] =ᵐ[μ] fun a ↦ (π a A).toReal := by
-  simp_rw [Filter.eventuallyEq_comm, toReal_ae_eq_indicator_condexp_iff_forall_meas_inter_eq h𝓑𝓧,
-    Measure.ext_iff]
-  refine ⟨fun h A hA B hB ↦ ?_, fun h A hA ↦ ?_⟩
+@[mk_iff]
+class IsCondExp (π : Kernel[𝓑, 𝓧] X X) (μ : Measure[𝓧] X) : Prop :=
+  condexp_ae_eq_kernel_apply ⦃A⦄ : MeasurableSet[𝓧] A →
+    μ[A.indicator 1| 𝓑] =ᵐ[μ] fun a ↦ (π a A).toReal
+
+lemma isCondExp_iff_bind_eq_left [IsFiniteMeasure μ] [IsMarkovKernel π] (hπ : π.IsProper)
+    (h𝓑𝓧 : 𝓑 ≤ 𝓧) : IsCondExp π μ ↔ μ.bind π = μ := by
+  simp_rw [isCondExp_iff, Filter.eventuallyEq_comm,
+    toReal_ae_eq_indicator_condexp_iff_forall_meas_inter_eq h𝓑𝓧, Measure.ext_iff]
+  refine ⟨fun h A hA ↦ ?_, fun h A hA B hB ↦ ?_⟩
+  · rw [eq_comm, Measure.bind_apply hA (π.measurable.mono h𝓑𝓧 le_rfl)]
+    simpa using h hA _ .univ
   · rw [hπ.setLintegral_eq_bind h𝓑𝓧 hA hB, eq_comm]
     exact h _ (by measurability)
-  · rw [eq_comm, Measure.bind_apply hA (π.measurable.mono h𝓑𝓧 le_rfl)]
-    simpa using h _ hA _ .univ
 
 -- TODO: add to blueprint
 lemma condexp_ae_eq_kernel_apply {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X)
