@@ -1,73 +1,16 @@
-\chapter{Specifications of random fields}
+\section{\texorpdfstring{$\lambda$}{Lambda}-specifications}
 
 Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure on $E$.
 
-\begin{definition}[Specification]
-    \label{def:specification}
-    \uses{def:cylinder-event, def:kernel}
-    \lean{Specification}
+\begin{definition}[Product probability measure]
+    \label{def:product-probability-measure}
+    \lean{MeasureTheory.productMeasure}
     \leanok
 
-    A {\bf specification} is a family of kernels $\gamma : \Finset S \to \Ker_{\mathcal{F}_{S\setminus\Lambda}, \mathcal{E}^S}$ which is {\bf consistent}, in the sense that
-    $$\forall \Lambda_1, \Lambda_2 \in \Finset(S), \Lambda_1 \subseteq \Lambda_2 \implies \gamma_{\Lambda_1} \circ_k \gamma_{\Lambda_2} = \gamma_{\Lambda_2}$$
+    Let $I$ be a set. Suppose for each $i\in I$ that $(\Omega_i,\mathcal{B}_i,P_i)$ is a probability space. Then, $P\coloneqq\bigotimes_{i\in I}P_i$ is a well-defined product probability measure on $\prod_{i\in I}\Omega_i$.
 \end{definition}
 
-All specifications will be with parameter set $S$ and state space $(E, \mathcal{E})$ in this chapter.
-
-\begin{definition}[Markov Specification]
-    \label{def:markov-specification}
-    \lean{Specification.IsMarkov}
-    \leanok
-    \uses{def:specification}
-
-    A specification $\gamma$ is a \textbf{Markov specification} if $\gamma_\Lambda$ is a probability kernel for every $\Lambda \in \Finset(S)$.
-\end{definition}
-
-\begin{definition}[Proper Specification]
-    \label{def:proper-specification}
-    \uses{def:specification, def:proper-kernel}
-    \lean{Specification.IsProper}
-    \leanok
-
-    A specification $\gamma$ is \textbf{proper} if the kernel $\gamma_\Lambda$ is proper for every $\Lambda \in \Finset(S)$.
-\end{definition}
-
-\begin{definition}[Gibbs Measures]
-    \label{def:gibbs-meas}
-    \uses{def:specification}
-    \lean{Specification.IsGibbsMeasure}
-    \leanok
-    Given a specification $\gamma$, the set of \textbf{Gibbs measures specified by $\gamma$} is defined as
-    \begin{align}
-        \mathcal{G}:\Gamma_{\mathcal{E}, S}&\to\text{Set}(\mathfrak{P}(E^S, \mathcal{E}^S))\\
-        \gamma&\mapsto\left\{\nu\in\mathfrak{M}(E^S, \mathcal{E}^S)~\middle\vert~\gamma_\Lambda(A\mid\cdot)~\text{is a conditional expectation kernel w.r.t }\nu\text{ for each } A\in\mathcal{E}^S\text{ and }\Lambda\in\Finset(S)\right\}
-    \end{align}
-\end{definition}
-
-% Remark 1.24
-\begin{lemma}[Characterization of Gibbs Measures]
-    \label{lem:gibbs-meas-tfae}
-    \uses{def:gibbs-meas, def:proper-specification}
-    \lean{Specification.isGibbsMeasure_iff_forall_bind_eq, Specification.isGibbsMeasure_iff_frequently_bind_eq}
-    \leanok
-
-    Let $\gamma$ be a {\it proper} specification with parameter set $S$ and state space $(E, \mathcal{E})$, and let $\nu\in\mathfrak{P}(E^S, \mathcal{E}^S)$. TFAE:
-    \begin{enumerate}
-        \item $\nu\in\mathcal{G}(\gamma)$.
-        \item $\gamma_\Lambda\circ_k\nu = \nu$ for all $\Lambda\in\Finset(S)$.
-        \item $\gamma_\Lambda\circ_k\nu = \nu$ frequently as $\Lambda \to \infty$.
-    \end{enumerate}
-\end{lemma}
-\begin{proof}
-    \uses{lem:cond-exp-ker-proper-tfae}
-    \leanok
-
-    1 is equivalent to 2 by Lemma \ref{lem:cond-exp-ker-proper-tfae}. 2 trivially implies 3. Now, 3 implies 2 because for each $\Lambda$ there exists some $\Lambda' \supseteq \Lambda$ such that
-    $\gamma_{\Lambda'}\circ_k\nu = \nu$. Then
-    $$\nu\gamma_\Lambda = \nu\gamma_{\Lambda'}\gamma_\Lambda = \nu\gamma_{\Lambda'} = \nu$$
-\end{proof}
-
-\begin{definition}[Independent Specification with Single Spin Distribution [ISSSD]]
+\begin{definition}[Independent Specification with Single Spin Distribution (ISSSD)]
     \label{def:ISSSD}
     \uses{def:juxtaposition}
     \lean{Specification.isssdFun}
