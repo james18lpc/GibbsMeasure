@@ -23,12 +23,16 @@ section Lintegral
 
 open SimpleFunc
 
-variable {m : MeasurableSpace α} {μ ν : Measure α}
+variable {m : MeasurableSpace α} {μ ν : Measure α} {f : α → ℝ≥0∞} {s t : Set α}
 
-lemma setLintegral_indicator (f : α → ℝ≥0∞) {s t : Set α} (hs : MeasurableSet s)
-    (ht : MeasurableSet t) :
+lemma setLintegral_indicator (f : α → ℝ≥0∞) (hs : MeasurableSet s) (ht : MeasurableSet t) :
     ∫⁻ a in t, s.indicator f a ∂μ = ∫⁻ a in s ∩ t, f a ∂μ := by
   rw [← lintegral_indicator, ← lintegral_indicator, indicator_indicator, inter_comm] <;>
-     measurability
+    measurability
+
+lemma setLintegral_le_meas (hs : MeasurableSet s) (hf : ∀ a ∈ s, f a ≤ 1)
+    (hf' : ∀ a ∈ s \ t, f a = 0) : ∫⁻ a in s, f a ∂μ ≤ μ t := by
+  rw [← lintegral_indicator _ hs]
+  exact lintegral_le_meas (fun a ↦ by by_cases a ∈ s <;> simp [*]) (by aesop)
 
 end MeasureTheory.Lintegral

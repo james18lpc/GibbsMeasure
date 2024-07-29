@@ -1,9 +1,5 @@
-import Mathlib.Order.Ideal
-import GibbsMeasure.Mathlib.Data.Finset.Basic
-import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
-import GibbsMeasure.KolmogorovExtension4.ProductMeasure
-import GibbsMeasure.Prereqs.Juxt
-import GibbsMeasure.Prereqs.Filtration.Consistent
+import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+import GibbsMeasure.Mathlib.Order.Filter.Basic
 import GibbsMeasure.Prereqs.Kernel.Proper
 
 open MeasureTheory ENNReal NNReal Set
@@ -12,6 +8,15 @@ namespace ProbabilityTheory.Kernel
 variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : Kernel[𝓑, 𝓧] X X} {μ : Measure[𝓧] X}
   {A B : Set X} {f g : X → ℝ≥0∞} {x₀ : X}
 
+lemma bind_eq_self [IsFiniteMeasure μ] [IsMarkovKernel π] (hπ : π.IsProper) (h𝓑𝓧 : 𝓑 ≤ 𝓧) :
+    μ.bind π = μ ↔ ∀ A, MeasurableSet[𝓧] A → μ[A.indicator 1| 𝓑] =ᵐ[μ] fun a ↦ (π a A).toReal := by
+  simp_rw [Filter.eventuallyEq_comm, toReal_ae_eq_indicator_condexp_iff_forall_meas_inter_eq h𝓑𝓧,
+    Measure.ext_iff]
+  refine ⟨fun h A hA B hB ↦ ?_, fun h A hA ↦ ?_⟩
+  · rw [hπ.setLintegral_eq_bind h𝓑𝓧 hA hB, eq_comm]
+    exact h _ (by measurability)
+  · rw [eq_comm, Measure.bind_apply hA (π.measurable.mono h𝓑𝓧 le_rfl)]
+    simpa using h _ hA _ .univ
 
 -- TODO: add to blueprint
 lemma condexp_ae_eq_kernel_apply {X : Type*} [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X)
@@ -83,9 +88,6 @@ lemma condexp_const_indicator_ae_eq_integral_kernel {X : Type*} [𝓧 : Measurab
   -- change c • μ[A.indicator fun x ↦ 1|𝓑] =ᶠ[ae μ]
   --   c • (fun x₀ ↦ ∫ (a : X), A.indicator (fun x ↦ 1) a ∂π x₀)
   sorry
-
-lemma isGibbsMeasure_iff_forall_bind_eq : γ.IsGibbsMeasure μ ↔ ∀ Λ, μ.bind (γ Λ) = μ := by
-  refine forall_congr' fun Λ ↦ ?_
 
 lemma condexp_simpleFunc_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpace X]
    (𝓑 : MeasurableSpace X)

@@ -1,10 +1,10 @@
-import Mathlib.Order.Ideal
 import GibbsMeasure.Mathlib.Data.Finset.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
+import GibbsMeasure.Mathlib.Order.Filter.AtTopBot
 import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Filtration.Consistent
-import GibbsMeasure.Prereqs.Kernel.Proper
+import GibbsMeasure.Prereqs.Kernel.CondExp
 
 /-!
 # Gibbs measures
@@ -60,15 +60,22 @@ lemma isConsistent (γ : Specification S E) : IsConsistent γ := γ.isConsistent
 
 initialize_simps_projections Specification (toFun → apply)
 
-variable {γ γ₁ γ₂ : Specification S E}
+variable {γ γ₁ γ₂ : Specification S E} {Λ Λ₁ Λ₂ : Finset S}
 
 @[ext] lemma ext : (∀ Λ, γ₁ Λ = γ₂ Λ) → γ₁ = γ₂ := DFunLike.ext _ _
+
+protected lemma bind (hΛ : Λ₁ ⊆ Λ₂) (η : S → E) : (γ Λ₂ η).bind (γ Λ₁) = γ Λ₂ η :=
+  DFunLike.congr_fun (γ.isConsistent hΛ) η
 
 section IsMarkov
 
 /-- A Markov specification is a specification whose boundary condition kernels are all Markov
 kernels. -/
-def IsMarkov (γ : Specification S E) : Prop := ∀ Λ, IsMarkovKernel (γ Λ)
+class IsMarkov (γ : Specification S E) : Prop where
+  isMarkovKernel : ∀ Λ, IsMarkovKernel (γ Λ)
+
+instance IsMarkov.toIsMarkovKernel [γ.IsMarkov] {Λ : Finset S} : IsMarkovKernel (γ Λ) :=
+  isMarkovKernel _
 
 end IsMarkov
 
@@ -125,16 +132,19 @@ def IsGibbsMeasure (γ : Specification S E) (μ : Measure (S → E)) : Prop :=
   ∀ (Λ : Finset S) (A : Set (S → E)), MeasurableSet A →
     condexp (cylinderEvents Λᶜ) μ (A.indicator fun _ ↦ 1) =ᵐ[μ] fun σ ↦ (γ Λ σ A).toReal
 
-lemma isGibbsMeasure_tfae (γ : Specification S E) (μ : Measure (S → E)) :
-    List.TFAE [
-      γ.IsGibbsMeasure μ,
-      ∀ Λ, μ.bind (γ Λ) = μ,
-      ∃ 𝓢 : Order.Cofinal (Finset S), (∀ Λ ∈ 𝓢.carrier, μ.bind (γ Λ) = μ)] := by
-  tfae_have 1 ↔ 2
-  · sorry
-  tfae_have 2 → 3
-  · sorry
-  sorry
+-- The following two lemmas should generalise to a family of kernels indexed by a filtration
+lemma isGibbsMeasure_iff_forall_bind_eq (hγ : γ.IsProper) [IsFiniteMeasure μ] [IsMarkov γ] :
+    γ.IsGibbsMeasure μ ↔ ∀ Λ, μ.bind (γ Λ) = μ :=
+  forall_congr' fun _Λ ↦ (Kernel.bind_eq_self (hγ _) cylinderEvents_le_pi).symm
+
+lemma isGibbsMeasure_iff_frequently_bind_eq (hγ : γ.IsProper) [IsFiniteMeasure μ] [IsMarkov γ] :
+    γ.IsGibbsMeasure μ ↔ ∃ᶠ Λ in .atTop, μ.bind (γ Λ) = μ := by
+  classical
+  rw [isGibbsMeasure_iff_forall_bind_eq hγ]
+  refine ⟨Filter.Frequently.of_forall, fun h Λ ↦ ?_⟩
+  obtain ⟨Λ', h, hΛ'⟩ := h.forall_exists_of_atTop Λ
+  rw [← hΛ', Measure.bind_bind, funext (γ.bind h)] <;>
+    exact (γ _).measurable.mono cylinderEvents_le_pi le_rfl
 
 end IsGibbsMeasure
 
@@ -152,8 +162,7 @@ private lemma measurable_isssdFun (Λ : Finset S) :
 
 /-- Auxiliary definition for `Specification.isssd`. -/
 @[simps (config := .asFn)]
-def isssdFun (ν : Measure E) (Λ : Finset S) :
-    Kernel[cylinderEvents Λᶜ] (S → E) (S → E) :=
+def isssdFun (ν : Measure E) (Λ : Finset S) : Kernel[cylinderEvents Λᶜ] (S → E) (S → E) :=
   @Kernel.mk _ _ (_) _
     (fun η ↦ Measure.map (juxt E Λ η) (Measure.pi fun _ : Λ ↦ ν))
     (measurable_isssdFun ν Λ)

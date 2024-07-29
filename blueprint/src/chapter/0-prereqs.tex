@@ -1,3 +1,5 @@
+% !TEX root = ../print.tex
+
 \chapter{Prereqs}
 
 \begin{definition}[Cylinder Events]
@@ -29,7 +31,7 @@
 \end{definition}
 
 \begin{definition}[Markov Kernel]
-    \label{def:markov-kernel}
+    \label{def:markov-ker}
     \uses{def:kernel}
     \lean{ProbabilityTheory.IsMarkovKernel}
     \leanok
@@ -37,13 +39,15 @@
     Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. We say that $\pi\in\text{Ker}_{\mathcal{Y},\mathcal{X}}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
 \end{definition}
 
+Let $(X, \mathcal X)$ be a measurable space, let $\mathcal B$ be a sub $\sigma$-algebra of $\mathcal X$. Let $\pi \in \text{Ker}_{\mathcal B, \mathcal X}$.
+
 \begin{definition}[Proper Kernel]
     \label{def:proper-kernel}
     \uses{def:kernel}
     \lean{ProbabilityTheory.Kernel.IsProper}
     \leanok
 
-    Let $(X,\mathcal{X})$ be a measurable space, and let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is \textbf{proper} iff $\pi(A\cap B\mid x)=\pi(A\mid x)\cdot\mathbf{1}_B(x)$ for all $A\in\mathcal{X}$, $B\in\mathcal{B}$ and $x\in X$.
+    A kernel $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is \textbf{proper} iff $\pi(A\cap B\mid x)=\pi(A\mid x)\cdot\mathbf{1}_B(x)$ for all $A\in\mathcal{X}$, $B\in\mathcal{B}$ and $x\in X$.
 \end{definition}
 
 \begin{lemma}[Integral characterisation of proper kernels]
@@ -79,13 +83,11 @@
 \begin{lemma}[Defining Characteristic of Conditional Expectation Kernels]
     \label{lem:cond-exp-ker-char}
     \uses{def:cond-exp-ker}
-    \lean{ProbabilityTheory.condexpKernel}
-    \leanok
+    % \lean{}
+    % \leanok
 
-    Let $(X,\mathcal{X})$ be a measurable space, let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$, let $\mu\in\mathfrak{M}(X,\mathcal{X})$ and let $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$. Then, $\pi$ is a conditional expectation kernel with respect to $\mu$ iff
-    \begin{equation*}
-        ergerg
-    \end{equation*}
+    , let $\mu\in\mathfrak{M}(X,\mathcal{X})$ be a finite measure and let $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ be a proper Markov kernel. Then,
+    $$\pi \text{ is a conditional expectation kernel with respect to }\mu \iff \mu\pi = \mu$$
 \end{lemma}
 
 \begin{lemma}[Equivalent Definition for Markov Conditional Expectation Kernels]
@@ -96,21 +98,36 @@
     blach
 \end{lemma}
 
-
+% Remark 1.20
 \begin{lemma}[Characterization of Proper Conditional Expectation Kernels]
-    \label{lem:cond-exp-ker-proper-char}
+    \label{lem:cond-exp-ker-proper-tfae}
     \uses{def:cond-exp-ker, def:proper-kernel}
-    \lean{ProbabilityTheory.Kernel.IsProper, ProbabilityTheory.condexpKernel}
+    \lean{ProbabilityTheory.Kernel.bind_eq_self}
     \leanok
 
-    Let $(X,\mathcal{X})$ be a measurable space, let $\mathcal{B}$ be a sub $\sigma$-algebra of $\mathcal{X}$, let $\mu\in\mathfrak{M}(X,\mathcal{X})$ and let $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$. TFAE:
+    Let $\mu \in \mathfrak{M}(X, \mathcal X)$ be a finite measure and let $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ be a proper Markov kernel. TFAE:
     \begin{enumerate}
         \item $\pi$ is a \textbf{proper} conditional expectation kernel iff $\mu\circ_k \pi=\mu$.
         \item something
         \item $\mu\circ_m\pi=\mu$
     \end{enumerate}
 \end{lemma}
+\begin{proof}
+    % \uses{}
+    \leanok
 
+    By the characterisation of conditional expectation,
+    $$\pi \text{ is a cond. exp. kernel with respect to }\mu \iff \forall A \in \mathcal X, \forall B \in \mathcal B, \mu(A \inter B) = \int_B \pi(A|\cdot)\ \partial\mu$$
+    By properness of $\pi$,
+    $$\int_B \pi(A|\cdot)\ \partial\mu = \mu\pi(A \inter B)$$
+    Hence
+    \begin{align}
+        \pi \text{ is a cond. exp. kernel with respect to }\mu
+        & \iff \forall A \in \mathcal X, \forall B \in \mathcal B, \mu(A \inter B) = \mu\pi(A \inter B) \\
+        & \iff \forall A \in \mathcal X, \mu(A) = \mu\pi(A) \\
+        & \iff \mu = \mu\pi
+    \end{align}
+\end{proof}
 
 \begin{definition}[Product Probability Measure]
     \label{def:product-probability-measure}

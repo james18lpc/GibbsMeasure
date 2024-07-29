@@ -1,8 +1,10 @@
+import GibbsMeasure.Mathlib.Algebra.GroupWithZero.Indicator
 import GibbsMeasure.Mathlib.Algebra.Module.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.L1Space
 import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
 import GibbsMeasure.Mathlib.Probability.Kernel.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Integral.Lebesgue
+import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
 /-!
 # Proper kernels
@@ -45,6 +47,14 @@ alias ⟨IsProper.restrict_eq_indicator_smul, IsProper.of_restrict_eq_indicator_
 
 alias ⟨IsProper.inter_eq_indicator_mul, IsProper.of_inter_eq_indicator_mul⟩ :=
   isProper_iff_inter_eq_indicator_mul
+
+lemma IsProper.setLintegral_eq_bind (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧) {μ : Measure[𝓧] X}
+    (hA : MeasurableSet[𝓧] A) (hB : MeasurableSet[𝓑] B) :
+    ∫⁻ a in B, π a A ∂μ = μ.bind π (A ∩ B) := by
+  rw [Measure.bind_apply (by measurability) (π.measurable.mono h𝓑𝓧 le_rfl)]
+  simp only [hπ.inter_eq_indicator_mul h𝓑𝓧 hA hB, indicator_mul', Pi.one_apply, one_mul]
+  rw [← lintegral_indicator _ (h𝓑𝓧 _ hB)]
+  rfl
 
 /-- Auxiliary lemma for `IsProper.lintegral_mul` and
 `IsProper.setLintegral_eq_indicator_mul_lintegral`. -/

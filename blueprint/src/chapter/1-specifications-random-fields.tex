@@ -33,7 +33,7 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
 \end{definition}
 
 \begin{definition}[Gibbs Measures]
-    \label{def:gibbs-measure}
+    \label{def:gibbs-meas}
     \uses{def:specification}
     \lean{Specification.IsGibbsMeasure}
     \leanok
@@ -44,22 +44,27 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
     \end{align}
 \end{definition}
 
-
+% Remark 1.24
 \begin{lemma}[Characterization of Gibbs Measures]
-    \label{lem:gibbs-measure-char}
-    \uses{def:gibbs-measure, def:proper-specification}
+    \label{lem:gibbs-meas-tfae}
+    \uses{def:gibbs-meas, def:proper-specification}
+    \lean{Specification.isGibbsMeasure_iff_forall_bind_eq, Specification.isGibbsMeasure_iff_frequently_bind_eq}
+    \leanok
 
     Let $\gamma$ be a {\it proper} specification with parameter set $S$ and state space $(E, \mathcal{E})$, and let $\nu\in\mathfrak{P}(E^S, \mathcal{E}^S)$. TFAE:
     \begin{enumerate}
         \item $\nu\in\mathcal{G}(\gamma)$.
-        \item $\gamma_\Lambda\circ_k\nu=\nu$ for all $\Lambda\in\Finset(S)$.
-        \item There is a cofinal subset $\mathcal{S}\subseteq\Finset(S)$ such that $\gamma_\Lambda\circ_k\nu=\nu$ for all $\Lambda\in\mathcal{S}$.
+        \item $\gamma_\Lambda\circ_k\nu = \nu$ for all $\Lambda\in\Finset(S)$.
+        \item $\gamma_\Lambda\circ_k\nu = \nu$ frequently as $\Lambda \to \infty$.
     \end{enumerate}
 \end{lemma}
 \begin{proof}
-    % \leanok
+    \uses{lem:cond-exp-ker-proper-tfae}
+    \leanok
 
-  See book.
+    1 is equivalent to 2 by Lemma \ref{lem:cond-exp-ker-proper-tfae}. 2 trivially implies 3. Now, 3 implies 2 because for each $\Lambda$ there exists some $\Lambda' \supseteq \Lambda$ such that
+    $\gamma_{\Lambda'}\circ_k\nu = \nu$. Then
+    $$\nu\gamma_\Lambda = \nu\gamma_{\Lambda'}\gamma_\Lambda = \nu\gamma_{\Lambda'} = \nu$$
 \end{proof}
 
 \begin{definition}[Independent Specification with Single Spin Distribution [ISSSD]]
@@ -117,8 +122,8 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
 \end{proof}
 
 \begin{lemma}[Uniqueness of a Gibbs Measure Specified by an ISSSD]
-    \label{lem:isssd-gibbs-measure-uniqueness}
-    \uses{def:gibbs-measure, def:isssd-specification}
+    \label{lem:isssd-gibbs-meas-uniqueness}
+    \uses{def:gibbs-meas, def:isssd-specification}
 
     There is at most one Gibbs measure specified by $\ISSSD(\nu)$.
 \end{lemma}
@@ -130,8 +135,8 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
 \end{proof}
 
 \begin{lemma}[Existence of a Gibbs Measure Specified by an ISSSD]
-    \label{lem:isssd-gibbs-measure-existence}
-    \uses{def:gibbs-measure, def:product-probability-measure, def:isssd-specification}
+    \label{lem:isssd-gibbs-meas-existence}
+    \uses{def:gibbs-meas, def:product-probability-measure, def:isssd-specification}
     \lean{Specification.isGibbsMeasure_isssd_productMeasure}
     % \leanok
 
