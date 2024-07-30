@@ -1,12 +1,28 @@
 import Mathlib.MeasureTheory.MeasurableSpace.Basic
 
-lemma iSup_measurable_of_measurable (X Y I : Type*) (sigmaAlgebras : I → MeasurableSpace X) (i₀ : I)
-    (f : X → Y) [MeasurableSpace Y]
-    (h : @Measurable X Y (sigmaAlgebras i₀) _ f) :
-    @Measurable X Y (⨆ i, sigmaAlgebras i) _ f :=
-  h.mono (le_iSup sigmaAlgebras i₀) le_rfl
+open Set Encodable Function Equiv Filter MeasureTheory
 
-lemma sup_measurable_of_measurable (X Y : Type*) (𝓢₁ 𝓢₂ : MeasurableSpace X) (f : X → Y)
-    [MeasurableSpace Y] (h : @Measurable X Y 𝓢₁ _ f) :
-    @Measurable X Y (𝓢₁ ⊔ 𝓢₂) _ f :=
-  h.mono (SemilatticeSup.le_sup_left 𝓢₁ 𝓢₂) le_rfl
+universe uι
+
+variable {α β : Type*} {ι : Sort uι}
+
+section MeasurableFunctions
+
+open MeasurableSpace
+
+lemma Measurable.iSup' {mα : ι → MeasurableSpace α} {_ : MeasurableSpace β} {f : α → β} (i₀ : ι)
+    (h : Measurable[mα i₀] f) :
+    Measurable[⨆ i, mα i] f :=
+  h.mono (le_iSup mα i₀) le_rfl
+
+lemma Measurable.sup_of_left {mα mα' : MeasurableSpace α} {_ : MeasurableSpace β} {f : α → β}
+    (h : Measurable[mα] f) :
+    Measurable[mα ⊔ mα'] f :=
+  h.mono le_sup_left le_rfl
+
+lemma Measurable.sup_of_right {mα mα' : MeasurableSpace α} {_ : MeasurableSpace β} {f : α → β}
+    (h : Measurable[mα'] f) :
+    Measurable[mα ⊔ mα'] f :=
+  h.mono le_sup_right le_rfl
+
+end MeasurableFunctions
