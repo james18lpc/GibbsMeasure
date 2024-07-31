@@ -1,7 +1,7 @@
 \section{Prescribing conditional probabilities}
 
 \begin{definition}[Specification]
-    \label{def:specification}
+    \label{def:spec}
     \uses{def:cylinder-event, def:kernel}
     \lean{Specification}
     \leanok
@@ -13,17 +13,17 @@
 All specifications will be with parameter set $S$ and state space $(E, \mathcal{E})$ in this chapter.
 
 \begin{definition}[Markov specification]
-    \label{def:markov-specification}
+    \label{def:markov-spec}
     \lean{Specification.IsMarkov}
     \leanok
-    \uses{def:specification}
+    \uses{def:spec}
 
     A specification $\gamma$ is a \textbf{Markov specification} if $\gamma_\Lambda$ is a probability kernel for every $\Lambda \in \Finset(S)$.
 \end{definition}
 
 \begin{definition}[Proper specification]
-    \label{def:proper-specification}
-    \uses{def:specification, def:proper-kernel}
+    \label{def:proper-spec}
+    \uses{def:spec, def:proper-ker}
     \lean{Specification.IsProper}
     \leanok
 
@@ -32,7 +32,7 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
 
 \begin{definition}[Gibbs measures]
     \label{def:gibbs-meas}
-    \uses{def:specification, def:cond-exp-ker}
+    \uses{def:spec, def:cond-exp-ker}
     \lean{Specification.IsGibbsMeasure}
     \leanok
     Given a specification $\gamma$, a \textbf{Gibbs measures specified by $\gamma$} is a measure $\nu \in \mathfrak{M}(E^S, \mathcal{E}^S)$ such that $\gamma_\Lambda(A|\cdot)$ is a conditional expectation kernel for $\nu$ for all $A \in \mathcal E^S$ and $\Lambda \in \Finset(S)$.
@@ -41,7 +41,7 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
 % Remark 1.24
 \begin{lemma}[Characterisation of Gibbs measures]
     \label{lem:gibbs-meas-tfae}
-    \uses{def:gibbs-meas, def:proper-specification}
+    \uses{def:gibbs-meas, def:proper-spec}
     \lean{Specification.isGibbsMeasure_iff_forall_bind_eq, Specification.isGibbsMeasure_iff_frequently_bind_eq}
     \leanok
 

@@ -56,7 +56,7 @@
 Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $\MCX$. Let $\pi \in \text{Ker}_{\MCB, \MCX}$.
 
 \begin{definition}[Proper kernel]
-    \label{def:proper-kernel}
+    \label{def:proper-ker}
     \uses{def:kernel}
     \lean{ProbabilityTheory.Kernel.IsProper}
     \leanok
@@ -65,8 +65,8 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
 \end{definition}
 
 \begin{lemma}[Lebesgue integral characterisation of proper kernels]
-    \label{lem:proper-kernel-lintegral}
-    \uses{def:proper-kernel}
+    \label{lem:proper-ker-lintegral}
+    \uses{def:proper-ker}
     \lean{ProbabilityTheory.Kernel.IsProper.lintegral_mul}
     \leanok
 
@@ -82,8 +82,8 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
 \end{proof}
 
 \begin{lemma}[Integral characterisation of proper kernels]
-    \label{lem:proper-kernel-integral}
-    \uses{def:proper-kernel}
+    \label{lem:proper-ker-integral}
+    \uses{def:proper-ker}
     \lean{ProbabilityTheory.Kernel.IsProper.integral_mul}
     \leanok
 
@@ -109,7 +109,7 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
 
 \begin{lemma}[Lebesgue integral characterisation of proper conditional expectation kernels]
     \label{lem:cond-exp-proper-ker-lintegral}
-    \uses{def:cond-exp-ker, def:proper-kernel}
+    \uses{def:cond-exp-ker, def:proper-ker}
     % \lean{}
     % \leanok
 
@@ -126,7 +126,7 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
 
 \begin{lemma}[Integral characterisation of proper conditional expectation kernels]
     \label{lem:cond-exp-proper-ker-integral}
-    \uses{def:cond-exp-ker, def:proper-kernel}
+    \uses{def:cond-exp-ker, def:proper-ker}
     \lean{ProbabilityTheory.Kernel.condexp_ae_eq_integral_kernel}
     \leanok
 
