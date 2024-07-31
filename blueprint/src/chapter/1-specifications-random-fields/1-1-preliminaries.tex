@@ -64,18 +64,32 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
     A kernel $\pi\in\text{Ker}_{\MCB,\MCX}$ is \textbf{proper} iff $\pi(A\cap B\mid x)=\pi(A\mid x)\cdot\mathbf{1}_B(x)$ for all $A\in\MCX$, $B\in\MCB$ and $x\in X$.
 \end{definition}
 
-\begin{lemma}[Integral characterisation of proper kernels]
-    \label{lem:proper-kernel-integral}
+\begin{lemma}[Lebesgue integral characterisation of proper kernels]
+    \label{lem:proper-kernel-lintegral}
     \uses{def:proper-kernel}
-    \lean{ProbabilityTheory.Kernel.IsProper.lintegral_mul, ProbabilityTheory.Kernel.IsProper.integral_mul}
+    \lean{ProbabilityTheory.Kernel.IsProper.lintegral_mul}
     \leanok
 
     If kernel $\pi\in\text{Ker}_{\MCB,\MCX}$ is proper, then
     $$\int_x f(x) g(x)\ d\pi(\cdot\mid x_0) = g(x_0)\int_x f(x)\ d\pi(\cdot\mid x_0)$$
-    for all $A \in \MCX$, $B \in \MCB$, $x_0 \in X$ and functions
-    \begin{enumerate}
-        \item $f, g : X \to [0, \infty[$ such that $f$ is $\MCX$-measurable, $g$ is $\MCB$-measurable.
-        \item $f, g : X \to \R$ such that $f$ is $\MCX$-integrable, $g$ is $\MCB$-integrable.
+    for all $A \in \MCX$, $B \in \MCB$, $x_0 \in X$ and functions $f, g : X \to [0, \infty]$ such that $f$ is $\MCX$-measurable, $g$ is $\MCB$-measurable.
+\end{lemma}
+\begin{proof}
+    % \uses{}
+    \leanok
+
+    Standard machine.
+\end{proof}
+
+\begin{lemma}[Integral characterisation of proper kernels]
+    \label{lem:proper-kernel-integral}
+    \uses{def:proper-kernel}
+    \lean{ProbabilityTheory.Kernel.IsProper.integral_mul}
+    \leanok
+
+    If $\mu$ is a probability measure, $\pi\in\text{Ker}_{\MCB,\MCX}$ is a proper Markov kernel, then
+    $$\int_x f(x) g(x)\ d\pi(\cdot\mid x_0) = g(x_0)\int_x f(x)\ d\pi(\cdot\mid x_0)$$
+    for all $A \in \MCX$, $B \in \MCB$, $x_0 \in X$ and functions $f, g : X \to \R$ such that $f$ is $\mu$-integrable, $g$ is bounded $\MCB$-measurable.
     \end{enumerate}
 \end{lemma}
 \begin{proof}
@@ -94,14 +108,32 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
     Let $\mu\in\mathfrak{M}(X,\MCX)$. Then, $\pi\in\text{Ker}_{\MCB,\MCX}$ is a \textbf{conditional expectation kernel for $\mu$} if $\mu(A\mid \MCB)=\pi(A\mid\cdot)$ $\mu$-a.e.
 \end{definition}
 
-\begin{lemma}[Integral characterisation of proper conditional expectation kernels]
-    \label{lem:cond-exp-proper-ker-integral}
+\begin{lemma}[Lebesgue integral characterisation of proper conditional expectation kernels]
+    \label{lem:cond-exp-proper-ker-lintegral}
     \uses{def:cond-exp-ker, def:proper-kernel}
     % \lean{}
     % \leanok
 
     If $\pi \in \text{Ker}_{\MCB, \MCX}$ is a conditional expectation kernel for $\mu$, then
     $$\mu(f\mid \MCB) = \int f(x)\ \pi(\partial x\mid\cdot)\ \mu\text{-a.e.}$$
+    for all $\MCX$-measurable functions $f : X \to [0, \infty]$.
+\end{lemma}
+\begin{proof}
+    \uses{lem:lebesgue-cond-exp-char}
+    % \leanok
+
+    Standard machine.
+\end{proof}
+
+\begin{lemma}[Integral characterisation of proper conditional expectation kernels]
+    \label{lem:cond-exp-proper-ker-integral}
+    \uses{def:cond-exp-ker, def:proper-kernel}
+    \lean{ProbabilityTheory.Kernel.condexp_ae_eq_integral_kernel}
+    \leanok
+
+    If $\pi \in \text{Ker}_{\MCB, \MCX}$ is a conditional expectation kernel for $\mu$, then
+    $$\mu(f\mid \MCB) = \int f(x)\ \pi(\partial x\mid\cdot)\ \mu\text{-a.e.}$$
+    for all bounded $\MCX$-measurable functions $f : X \to \R$.
 \end{lemma}
 \begin{proof}
     \uses{lem:lebesgue-cond-exp-char}

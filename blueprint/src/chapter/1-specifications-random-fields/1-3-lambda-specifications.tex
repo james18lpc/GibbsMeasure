@@ -129,14 +129,14 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     If $\gamma$ is a specification and $\rho$ a modification of $\gamma$, then $\rho\gamma$ is a proper specification.
 \end{lemma}
 \begin{proof}
-    \uses{lem:proper-kernel-integral}
+    \uses{lem:proper-kernel-lintegral}
     \leanok
 
     For all $\Lambda \in \Finset(S)$, $A \in \mathcal E^S$, $B \in \mathcal{F}_{S\setminus\Lambda}$, $\eta : S \to E$, we want to prove
     $$(\rho\gamma)_\Lambda(A \inter B | \eta) = 1_B(\eta) (\rho\gamma)_\Lambda(A B | \eta)$$
     Expanding out, this is equivalent to
     $$\int_{\zeta \in A \inter B} \rho_\Lambda(\zeta)\ d(\gamma_\Lambda(\eta)) = 1_B(\eta) \int_{\zeta \in A} \rho_\Lambda(\zeta)\ d(\gamma_\Lambda(\eta))$$
-    which is true by Lemma \ref{lem:proper-kernel-integral} with $f = 1_A\rho_\Lambda$, $g = 1_B$.
+    which is true by Lemma \ref{lem:proper-kernel-lintegral} with $f = 1_A\rho_\Lambda$, $g = 1_B$.
 \end{proof}
 
 % The rest of Remark 1.28.1 is vacuous in our setup
