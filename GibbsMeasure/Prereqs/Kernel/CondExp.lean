@@ -13,8 +13,8 @@ class IsCondExp (π : Kernel[𝓑, 𝓧] X X) (μ : Measure[𝓧] X) : Prop :=
   condexp_ae_eq_kernel_apply ⦃A⦄ : MeasurableSet[𝓧] A →
     μ[A.indicator 1| 𝓑] =ᵐ[μ] fun a ↦ (π a A).toReal
 
-lemma isCondExp_iff_bind_eq_left [IsFiniteMeasure μ] [IsMarkovKernel π] (hπ : π.IsProper)
-    (h𝓑𝓧 : 𝓑 ≤ 𝓧) : IsCondExp π μ ↔ μ.bind π = μ := by
+lemma isCondExp_iff_bind_eq_left (hπ : π.IsProper) (h𝓑𝓧 : 𝓑 ≤ 𝓧) [SigmaFinite (μ.trim h𝓑𝓧)] :
+    IsCondExp π μ ↔ μ.bind π = μ := by
   simp_rw [isCondExp_iff, Filter.eventuallyEq_comm,
     toReal_ae_eq_indicator_condexp_iff_forall_meas_inter_eq h𝓑𝓧, Measure.ext_iff]
   refine ⟨fun h A hA ↦ ?_, fun h A hA B hB ↦ ?_⟩

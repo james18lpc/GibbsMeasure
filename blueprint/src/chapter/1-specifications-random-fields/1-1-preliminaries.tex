@@ -35,13 +35,13 @@
     \lean{ProbabilityTheory.Kernel}
     \leanok
 
-    Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. Then,
+    Let $(X,\MCX)$ and $(Y,\mathcal{Y})$ be measurable spaces. Then,
     \begin{equation*}
-        \text{Ker}_{\mathcal{Y},\mathcal{X}}:=\left\{\pi:\mathcal{X}\times Y\to\overline{\mathbb{R}}_{\geq0}~\middle\vert~ \forall y\in Y,\pi(\cdot\mid y)\in\mathfrak{M}(X,\mathcal{X});~\forall A\in\mathcal{X},\pi(A\mid\cdot)\text{ is }\mathcal{Y}\text{-measurable}\right\}
+        \text{Ker}_{\mathcal{Y},\MCX}:=\left\{\pi:\MCX\times Y\to\overline{\mathbb{R}}_{\geq0}~\middle\vert~ \forall y\in Y,\pi(\cdot\mid y)\in\mathfrak{M}(X,\MCX);~\forall A\in\MCX,\pi(A\mid\cdot)\text{ is }\mathcal{Y}\text{-measurable}\right\}
     \end{equation*}
-    defines the set of \textbf{kernels from $\mathcal{Y}$ to $\mathcal{X}$}, where $\mathfrak{M}(X,\mathcal{X})$ is the space of measures on $X$.
+    defines the set of \textbf{kernels from $\mathcal{Y}$ to $\MCX$}, where $\mathfrak{M}(X,\MCX)$ is the space of measures on $X$.
 
-    %We say that $\pi\in\text{Ker}_{\mathcal{Y},\mathcal{X}}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
+    %We say that $\pi\in\text{Ker}_{\mathcal{Y},\MCX}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
 \end{definition}
 
 \begin{definition}[Markov kernel]
@@ -50,10 +50,10 @@
     \lean{ProbabilityTheory.IsMarkovKernel}
     \leanok
 
-    Let $(X,\mathcal{X})$ and $(Y,\mathcal{Y})$ be measurable spaces. We say that $\pi\in\text{Ker}_{\mathcal{Y},\mathcal{X}}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
+    Let $(X,\MCX)$ and $(Y,\mathcal{Y})$ be measurable spaces. We say that $\pi\in\text{Ker}_{\mathcal{Y},\MCX}$ is a \textbf{probability} or \textbf{Markov kernel} iff $\pi(X\mid \cdot)=1$.
 \end{definition}
 
-Let $(X, \mathcal X)$ be a measurable space, let $\mathcal B$ be a sub $\sigma$-algebra of $\mathcal X$. Let $\pi \in \text{Ker}_{\mathcal B, \mathcal X}$.
+Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $\MCX$. Let $\pi \in \text{Ker}_{\MCB, \MCX}$.
 
 \begin{definition}[Proper kernel]
     \label{def:proper-kernel}
@@ -61,7 +61,7 @@ Let $(X, \mathcal X)$ be a measurable space, let $\mathcal B$ be a sub $\sigma$-
     \lean{ProbabilityTheory.Kernel.IsProper}
     \leanok
 
-    A kernel $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is \textbf{proper} iff $\pi(A\cap B\mid x)=\pi(A\mid x)\cdot\mathbf{1}_B(x)$ for all $A\in\mathcal{X}$, $B\in\mathcal{B}$ and $x\in X$.
+    A kernel $\pi\in\text{Ker}_{\MCB,\MCX}$ is \textbf{proper} iff $\pi(A\cap B\mid x)=\pi(A\mid x)\cdot\mathbf{1}_B(x)$ for all $A\in\MCX$, $B\in\MCB$ and $x\in X$.
 \end{definition}
 
 \begin{lemma}[Integral characterisation of proper kernels]
@@ -70,12 +70,12 @@ Let $(X, \mathcal X)$ be a measurable space, let $\mathcal B$ be a sub $\sigma$-
     \lean{ProbabilityTheory.Kernel.IsProper.lintegral_mul, ProbabilityTheory.Kernel.IsProper.integral_mul}
     \leanok
 
-    If kernel $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is proper, then
+    If kernel $\pi\in\text{Ker}_{\MCB,\MCX}$ is proper, then
     $$\int_x f(x) g(x)\ d\pi(\cdot\mid x_0) = g(x_0)\int_x f(x)\ d\pi(\cdot\mid x_0)$$
-    for all $A \in \mathcal X$, $B \in \mathcal B$, $x_0 \in X$ and functions
+    for all $A \in \MCX$, $B \in \MCB$, $x_0 \in X$ and functions
     \begin{enumerate}
-        \item $f, g : X \to [0, \infty[$ such that $f$ is $\mathcal X$-measurable, $g$ is $\mathcal B$-measurable.
-        \item $f, g : X \to \R$ such that $f$ is $\mathcal X$-integrable, $g$ is $\mathcal B$-integrable.
+        \item $f, g : X \to [0, \infty[$ such that $f$ is $\MCX$-measurable, $g$ is $\MCB$-measurable.
+        \item $f, g : X \to \R$ such that $f$ is $\MCX$-integrable, $g$ is $\MCB$-integrable.
     \end{enumerate}
 \end{lemma}
 \begin{proof}
@@ -91,54 +91,49 @@ Let $(X, \mathcal X)$ be a measurable space, let $\mathcal B$ be a sub $\sigma$-
     \lean{ProbabilityTheory.condexpKernel, ProbabilityTheory.Kernel.IsCondExp}
     \leanok
 
-    let $\mu\in\mathfrak{M}(X,\mathcal{X})$. Then, $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ is a \textbf{conditional expectation kernel with respect to $\mu$} iff $\mu(A\mid \mathcal{B})=\pi(A\mid\cdot)$ $\mu$-a.e..
+    Let $\mu\in\mathfrak{M}(X,\MCX)$. Then, $\pi\in\text{Ker}_{\MCB,\MCX}$ is a \textbf{conditional expectation kernel for $\mu$} if $\mu(A\mid \MCB)=\pi(A\mid\cdot)$ $\mu$-a.e.
 \end{definition}
 
-\begin{lemma}[Characterisation of conditional expectation kernels]
-    \label{lem:cond-exp-ker-char}
-    \uses{def:cond-exp-ker}
+\begin{lemma}[Integral characterisation of proper conditional expectation kernels]
+    \label{lem:cond-exp-ker-proper-tfae}
+    \uses{def:cond-exp-ker, def:proper-kernel}
     % \lean{}
     % \leanok
 
-    Let $\mu\in\mathfrak{M}(X,\mathcal{X})$ be a finite measure and let $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ be a proper Markov kernel. Then,
-    $$\pi \text{ is a conditional expectation kernel for }\mu \iff \mu\pi = \mu$$
+    If $\pi \in \text{Ker}_{\MCB, \MCX}$ is a conditional expectation kernel for $\mu$, then
+    $$\mu(f\mid \MCB) = \int_\pi(A\mid\cdot)\ \mu\text{-a.e.}$$
 \end{lemma}
+\begin{proof}
+    \uses{lem:lebesgue-cond-exp-char}
+    % \leanok
 
-\begin{lemma}[Equivalent definition for Markov conditional expectation kernels]
-    \label{lem:cond-exp-ker-markov-char}
-    \uses{def:cond-exp-ker, def:markov-ker}
-    \leanok
-
-    blach
-\end{lemma}
+    Standard machine.
+\end{proof}
 
 % Remark 1.20
-\begin{lemma}[Characterisation of proper conditional expectation kernels]
-    \label{lem:cond-exp-ker-proper-tfae}
-    \uses{def:cond-exp-ker, def:proper-kernel}
+\begin{lemma}[Characterisation of proper conditional expectation kernels, Remark 1.20]
+    \label{lem:cond-exp-ker-char}
+    \uses{def:cond-exp-ker}
     \lean{ProbabilityTheory.Kernel.isCondExp_iff_bind_eq_left}
-    \leanok
+    % \lean{}
+    % \leanok
 
-    Let $\mu \in \mathfrak{M}(X, \mathcal X)$ be a finite measure and let $\pi\in\text{Ker}_{\mathcal{B},\mathcal{X}}$ be a proper Markov kernel. TFAE:
-    \begin{enumerate}
-        \item $\pi$ is a conditional expectation kernel for $\mu$.
-        \item something
-        \item $\mu\circ_m\pi=\mu$.
-    \end{enumerate}
+    Let $\mu\in\mathfrak{M}(X,\MCX)$ be a finite measure and let $\pi\in\text{Ker}_{\MCB,\MCX}$ be a proper kernel. Then,
+    $$\pi \text{ is a conditional expectation kernel for }\mu \iff \mu\pi = \mu$$
 \end{lemma}
 \begin{proof}
     % \uses{}
     \leanok
 
     By the characterisation of conditional expectation,
-    $$\pi \text{ is a conditional expectation kernel for }\mu \iff \forall A \in \mathcal X, \forall B \in \mathcal B, \mu(A \inter B) = \int_B \pi(A|\cdot)\ \partial\mu$$
+    $$\pi \text{ is a conditional expectation kernel for }\mu \iff \forall A \in \MCX, \forall B \in \MCB, \mu(A \inter B) = \int_B \pi(A|\cdot)\ \partial\mu$$
     By properness of $\pi$,
     $$\int_B \pi(A|\cdot)\ \partial\mu = \mu\pi(A \inter B)$$
     Hence
     \begin{align}
         \pi \text{ is a cond. exp. kernel with respect to }\mu
-        & \iff \forall A \in \mathcal X, \forall B \in \mathcal B, \mu(A \inter B) = \mu\pi(A \inter B) \\
-        & \iff \forall A \in \mathcal X, \mu(A) = \mu\pi(A) \\
+        & \iff \forall A \in \MCX, \forall B \in \MCB, \mu(A \inter B) = \mu\pi(A \inter B) \\
+        & \iff \forall A \in \MCX, \mu(A) = \mu\pi(A) \\
         & \iff \mu = \mu\pi
     \end{align}
 \end{proof}

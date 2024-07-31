@@ -1,0 +1,32 @@
+\section{Lebesgue conditional expectation}
+
+Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $\MCX$.
+
+% Not in the book
+\begin{definition}[Lebesgue conditional expectation]
+  \label{def:lebesgue-cond-exp}
+  % \uses{}
+  % \lean{}
+  % \leanok
+
+  The {\bf conditional expectation} of a $\MCX$-measurable function $f : X \to [0, \infty]$ is
+  $$\mu[f | \MCB] = ??$$
+\end{definition}
+
+% Not in the book
+\begin{lemma}[Characterisation of the Lebesgue conditional expectation]
+  \label{lem:lebesgue-cond-exp-char}
+  \uses{def:lebesgue-cond-exp}
+  % \lean{}
+  % \leanok
+
+  If $f : X \to [0, \infty]$ is a $\MCX$-measurable function, then $\mu[f | \MCB]$ is the $\mu$-ae unique $\MCB$-measurable function $X \to [0, \infty]$ such that
+  $$\int_B \mu[f | \MCB]\ \partial\mu = \int_B f\ \partial\mu$$
+  for all $B \in \MCB$.
+\end{lemma}
+\begin{proof}
+  % \uses{}
+  % \leanok
+
+  Standard machine.
+\end{proof}
