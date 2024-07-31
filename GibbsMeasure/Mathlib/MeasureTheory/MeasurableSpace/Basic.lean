@@ -1,5 +1,12 @@
 import Mathlib.MeasureTheory.MeasurableSpace.Basic
 
+/-!
+# TODO
+
+Make the `MeasurableSpace` arguments implicit (instead of instance) in:
+* `measurable_zero`
+-/
+
 open Set Encodable Function Equiv Filter MeasureTheory
 
 universe uι
