@@ -107,16 +107,3 @@ lemma condexp_simpleFunc_ae_eq_integral_kernel {X : Type*} [𝓧 : MeasurableSpa
   case h_ind =>
     sorry
   case h_add => sorry
-
-
-lemma bind_eq_self_iff (X : Type*) [𝓧 : MeasurableSpace X] (𝓑 : MeasurableSpace X) (hSub : 𝓑 ≤ 𝓧)
-    (μ : Measure[𝓧] X) (π : Kernel[𝓑, 𝓧] X X) (π_proper : π.IsProper)
-    (A : Set X) (A_mble : MeasurableSet A) :
-    condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
-      =ᵐ[μ] (fun x ↦ (π x A).toReal) ↔ @Measure.bind X X 𝓧 𝓧 μ π A = μ A :=
-  ⟨by
-  intro h
-  have : μ A = μ A := by
-    sorry
-  sorry,
-  by sorry⟩

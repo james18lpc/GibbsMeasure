@@ -95,13 +95,13 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
 \end{definition}
 
 \begin{lemma}[Integral characterisation of proper conditional expectation kernels]
-    \label{lem:cond-exp-ker-proper-tfae}
+    \label{lem:cond-exp-proper-ker-integral}
     \uses{def:cond-exp-ker, def:proper-kernel}
     % \lean{}
     % \leanok
 
     If $\pi \in \text{Ker}_{\MCB, \MCX}$ is a conditional expectation kernel for $\mu$, then
-    $$\mu(f\mid \MCB) = \int_\pi(A\mid\cdot)\ \mu\text{-a.e.}$$
+    $$\mu(f\mid \MCB) = \int f(x)\ \pi(\partial x\mid\cdot)\ \mu\text{-a.e.}$$
 \end{lemma}
 \begin{proof}
     \uses{lem:lebesgue-cond-exp-char}
@@ -112,17 +112,16 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
 
 % Remark 1.20
 \begin{lemma}[Characterisation of proper conditional expectation kernels, Remark 1.20]
-    \label{lem:cond-exp-ker-char}
+    \label{lem:cond-exp-proper-ker-bind}
     \uses{def:cond-exp-ker}
     \lean{ProbabilityTheory.Kernel.isCondExp_iff_bind_eq_left}
-    % \lean{}
-    % \leanok
+    \leanok
 
     Let $\mu\in\mathfrak{M}(X,\MCX)$ be a finite measure and let $\pi\in\text{Ker}_{\MCB,\MCX}$ be a proper kernel. Then,
     $$\pi \text{ is a conditional expectation kernel for }\mu \iff \mu\pi = \mu$$
 \end{lemma}
 \begin{proof}
-    % \uses{}
+    \uses{lem:lebesgue-cond-exp-char}
     \leanok
 
     By the characterisation of conditional expectation,
