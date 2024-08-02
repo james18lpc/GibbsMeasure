@@ -25,10 +25,14 @@ open SimpleFunc
 
 variable {m : MeasurableSpace α} {μ ν : Measure α} {f : α → ℝ≥0∞} {s t : Set α}
 
-lemma setLintegral_indicator (f : α → ℝ≥0∞) (hs : MeasurableSet s) (ht : MeasurableSet t) :
+lemma setLintegral_indicator (f : α → ℝ≥0∞) {s t : Set α} (hs : MeasurableSet s) :
     ∫⁻ a in t, s.indicator f a ∂μ = ∫⁻ a in s ∩ t, f a ∂μ := by
-  rw [← lintegral_indicator, ← lintegral_indicator, indicator_indicator, inter_comm] <;>
-    measurability
+  rw [lintegral_indicator _ hs, Measure.restrict_restrict hs]
+
+lemma setLintegral_indicator₀ (f : α → ℝ≥0∞) {s t : Set α}
+    (hs : NullMeasurableSet s (μ.restrict t)) :
+    ∫⁻ a in t, s.indicator f a ∂μ = ∫⁻ a in s ∩ t, f a ∂μ := by
+  rw [lintegral_indicator₀ _ hs, Measure.restrict_restrict₀ hs]
 
 lemma setLintegral_le_meas (hs : MeasurableSet s) (hf : ∀ a ∈ s, f a ≤ 1)
     (hf' : ∀ a ∈ s \ t, f a = 0) : ∫⁻ a in s, f a ∂μ ≤ μ t := by
