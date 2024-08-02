@@ -12,7 +12,6 @@ import GibbsMeasure.Mathlib.MeasureTheory.Integral.SetIntegral
 import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-import GibbsMeasure.Mathlib.Order.Filter.AtTopBot
 import GibbsMeasure.Mathlib.Order.Filter.Basic
 import GibbsMeasure.Mathlib.Probability.Kernel.Basic
 import GibbsMeasure.Mathlib.Probability.Kernel.Condexp

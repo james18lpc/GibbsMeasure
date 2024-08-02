@@ -91,21 +91,21 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
    Immediate.
 \end{proof}
 
-\begin{definition}[Modification]
+\begin{definition}[Modifier]
     \label{def:modif}
     \uses{def:spec}
-    \lean{Specification.IsModification, Specification.modified}
+    \lean{Specification.IsModifier, Specification.modification}
     \leanok
 
-    A {\bf modification of $\gamma$} is a family
+    A {\bf modifier of $\gamma$} is a family
     $$\rho : \Finset(S) \to \Omega \to [0, \infty[$$
     such that the corresponding family of kernels $\rho\nu$ is a specification.
 \end{definition}
 
-\begin{lemma}[Modification of a modification]
+\begin{lemma}[Modifier of a modifier]
     \label{lem:modif-modif}
     \uses{def:modif}
-    \lean{Specification.modified_modified}
+    \lean{Specification.modification_modification}
     \leanok
 
     Modifying a specification $\gamma$ by $\rho_1$ then $\rho_2$ is the same as modifying it by their product.
@@ -117,16 +117,16 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     TODO for James ;)
 \end{proof}
 
-% Currently skipping the definition of positive modifications because it looks a bit dumb
+% Currently skipping the definition of positive modifiers because it looks a bit dumb
 
 % Start of Remark 1.28.1
-\begin{lemma}[A modification of a proper specification is proper]
+\begin{lemma}[A modifier of a proper specification is proper]
     \label{lem:modif-proper}
     \uses{def:modif, def:proper-spec}
-    \lean{Specification.IsProper.modified}
+    \lean{Specification.IsProper.modification}
     \leanok
 
-    If $\gamma$ is a specification and $\rho$ a modification of $\gamma$, then $\rho\gamma$ is a proper specification.
+    If $\gamma$ is a specification and $\rho$ a modifier of $\gamma$, then $\rho\gamma$ is a proper specification.
 \end{lemma}
 \begin{proof}
     \uses{lem:proper-ker-lintegral}
@@ -146,10 +146,10 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 % (Yaël) Not sure how to generalise Remark 1.28.3 away from ISSSD
 
 % We can't state Remark 1.28.4 since we don't have a characteristic for a specification to be a
-% modification of another measure
+% modifier of another measure
 
 % Remark 1.28.5
-\begin{lemma}[Every specification is a modification of the counting measure]
+\begin{lemma}[Every specification is a modifier of the counting measure]
     \label{lem:exists-modif-countable}
     \uses{def:modif, def:isssd}
     % \lean{}
@@ -157,7 +157,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 
     If $E$ is countable, $\nu$ is the counting measure and $\gamma$ is any specification, then
     $$\rho_\Lambda(\eta) = \gamma_\Lambda(\{\sigma_\Lambda = \eta_\Lambda\} | \eta)$$
-    is a modification from $\ISSSD(\nu)$ to $\gamma$.
+    is a modifier from $\ISSSD(\nu)$ to $\gamma$.
 \end{lemma}
 \begin{proof}
     % \uses{}
@@ -173,7 +173,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 \end{proof}
 
 % Proposition 1.30
-\begin{proposition}[Characterisation of modifications]
+\begin{proposition}[Characterisation of modifiers]
     \label{prop:modif-tfae}
     \uses{def:modif}
     % \lean{}
@@ -181,7 +181,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 
     If $\rho$ is a family of measurable densities, then TFAE
     \begin{enumerate}
-        \item $\rho$ is a modification of $\gamma$
+        \item $\rho$ is a modifier of $\gamma$
         \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$ and all $\eta : S \to E$, we have
         $$\rho_{\Lambda_2} = \rho_{\Lambda_1} \gamma_{\Lambda_1} \rho_{\Lambda_2} \quad \gamma_{\Lambda_2}(\cdot|\eta)\text{ae}$$
         \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$ and all $\alpha : S \to E$, then for all $\gamma_{\Lambda_2 \setminus \Lambda_1}(\cdot|\alpha)$-almost all $\omega : S \to E$, we have
@@ -198,25 +198,25 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 
 % Definition 1.31
 
-\begin{definition}[Premodification]
+\begin{definition}[Premodifier]
     \label{def:premodif}
     % \uses{}
     % \lean{}
     % \leanok
 
-    A family of functions $h_\Lambda : (S \to E) \to [0, \infty[$ is a {\bf premodification} if
+    A family of functions $h_\Lambda : (S \to E) \to [0, \infty[$ is a {\bf premodifier} if
     $$h_{\Lambda_2}(\zeta)h_{\Lambda_1}(\eta) = h_{\Lambda_1}(\zeta)h_{\Lambda_2}(\eta)$$
     for all $\Lambda_1 \subseteq \Lambda_2$ and all $\zeta, \eta : S \to E$ such that $\zeta_{\Lambda_1^c} = \eta_{\Lambda_1^c}$.
 \end{definition}
 
 % TODO: Probably split into several items
 % Note that we do not need this result. This is just for fun.
-\begin{lemma}[Modifications are premodifications]
+\begin{lemma}[Modifiers are premodifiers]
     \label{lem:modif-premodif}
     \uses{def:modif, def:premodif}
     % \lean{}
     % \leanok
-    If $\rho$ is a modification of $\ISSSD(\nu^S)$, then it is a premodification if any of the following conditions hold:
+    If $\rho$ is a modifier of $\ISSSD(\nu^S)$, then it is a premodifier if any of the following conditions hold:
     \begin{enumerate}
         \item $E$ is countable and $\nu$ is equivalent to the counting measure.
         \item $E$ is a second countable Borel space.
@@ -237,13 +237,13 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 \end{proof}
 
 % Remark 1.32
-\begin{lemma}[Premodifications give rise to modifications]
+\begin{lemma}[Premodifiers give rise to modifiers]
     \label{lem:premodif-modif}
     \uses{def:modif, def:premodif}
 
-    If $h$ is a premodification and $\nu$ is such that $0 < \nu_\Lambda h_\Lambda < \infty$ for all $\Lambda$, then
+    If $h$ is a premodifier and $\nu$ is such that $0 < \nu_\Lambda h_\Lambda < \infty$ for all $\Lambda$, then
     $$\rho_\Lambda := \frac{h_\Lambda}{\nu_\Lambda h_\Lambda}$$
-    is a modification of $\ISSSD(\nu)$.
+    is a modifier of $\ISSSD(\nu)$.
 \end{lemma}
 \begin{proof}
     \uses{prop:modif-tfae}

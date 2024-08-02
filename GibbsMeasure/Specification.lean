@@ -1,6 +1,5 @@
 import GibbsMeasure.Mathlib.Data.Finset.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
-import GibbsMeasure.Mathlib.Order.Filter.AtTopBot
 import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Filtration.Consistent
@@ -208,19 +207,19 @@ lemma isGibbsMeasure_isssd_productMeasure (ν : Measure E) [IsProbabilityMeasure
 
 end ProductMeasure
 
-section Modification
+section Modifier
 variable {ρ : Finset S → (S → E) → ℝ≥0∞}
 
-/-- The kernel of a modified specification.
+/-- The kernel of a modification specification.
 
 Modifying the specification `γ` by a family indexed by finsets `Λ : Finset S` of densities
-`ρ Λ : (S → E) → ℝ≥0∞` results in a family of kernels `γ.modifiedKer ρ _ Λ` whose density is that of
-`γ Λ` multiplied by `ρ Λ`.
+`ρ Λ : (S → E) → ℝ≥0∞` results in a family of kernels `γ.modificationKer ρ _ Λ` whose density is
+that of `γ Λ` multiplied by `ρ Λ`.
 
-This is an auxiliary definition for `Specification.modified`, which you should generally use instead
-of `Specification.modifiedKer`. -/
+This is an auxiliary definition for `Specification.modification`, which you should generally use
+instead of `Specification.modificationKer`. -/
 @[simps]
-noncomputable def modifiedKer (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E))
+noncomputable def modificationKer (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E))
     (ρ : Finset S → (S → E) → ℝ≥0∞) (hρ : ∀ Λ, Measurable (ρ Λ)) (Λ : Finset S) :
     Kernel[cylinderEvents Λᶜ] (S → E) (S → E) :=
   @Kernel.mk _ _ (_) _
@@ -229,68 +228,70 @@ noncomputable def modifiedKer (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λ�
       simp_rw [MeasureTheory.withDensity_apply _ hs]
       exact (Measure.measurable_setLintegral (hρ _) hs).comp (γ Λ).measurable)
 
-@[simp] lemma modifiedKer_one' (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) :
-    modifiedKer γ (fun _Λ _η ↦ 1) (fun _Λ ↦ measurable_const) = γ := by ext Λ; simp
+@[simp] lemma modificationKer_one' (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) :
+    modificationKer γ (fun _Λ _η ↦ 1) (fun _Λ ↦ measurable_const) = γ := by ext Λ; simp
 
-@[simp] lemma modifiedKer_one (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) :
-    modifiedKer γ 1 (fun _Λ ↦ measurable_const) = γ := by ext Λ; simp
+@[simp] lemma modificationKer_one (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) :
+    modificationKer γ 1 (fun _Λ ↦ measurable_const) = γ := by ext Λ; simp
 
-/-- A modification of a specification `γ` is a family indexed by finsets `Λ : Finset S` of densities
+/-- A modifier of a specification `γ` is a family indexed by finsets `Λ : Finset S` of densities
 `ρ Λ : (S → E) → ℝ≥0∞` such that:
 * Each `ρ Λ` is measurable.
-* `γ.modifiedKer ρ` (informally, `ρ * γ`) is consistent. -/
-structure IsModification (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞) : Prop where
+* `γ.modificationKer ρ` (informally, `ρ * γ`) is consistent. -/
+structure IsModifier (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞) : Prop where
   measurable Λ : Measurable (ρ Λ)
-  isConsistent : IsConsistent (modifiedKer γ ρ measurable)
+  isConsistent : IsConsistent (modificationKer γ ρ measurable)
 
-@[simp] lemma IsModification.one' : γ.IsModification (fun _Λ _η ↦ 1) where
+@[simp] lemma IsModifier.one' : γ.IsModifier (fun _Λ _η ↦ 1) where
   measurable _ := measurable_const
   isConsistent := by simpa using γ.isConsistent
 
-@[simp] lemma IsModification.one : γ.IsModification 1 := .one'
+@[simp] lemma IsModifier.one : γ.IsModifier 1 := .one'
 
-/-- Modified specification.
+/-- Modification specification.
 
 Modifying the specification `γ` by a family indexed by finsets `Λ : Finset S` of densities
-`ρ Λ : (S → E) → ℝ≥0∞` results in a family of kernels `γ.modifiedKer ρ _ Λ` whose density is that of
-`γ Λ` multiplied by `ρ Λ`.
+`ρ Λ : (S → E) → ℝ≥0∞` results in a family of kernels `γ.modificationKer ρ _ Λ` whose density is
+that of `γ Λ` multiplied by `ρ Λ`.
 
-When the family of densities `ρ` is a modification (`Specification.IsModification`), modifying a
-specification results in a specification `γ.modified ρ _`. -/
-noncomputable def modified (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞)
-    (hρ : γ.IsModification ρ) : Specification S E where
-  toFun := modifiedKer γ ρ hρ.measurable
+When the family of densities `ρ` is a modifier (`Specification.IsModifier`), modifying a
+specification results in a specification `γ.modification ρ _`. -/
+noncomputable def modification (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞)
+    (hρ : γ.IsModifier ρ) : Specification S E where
+  toFun := modificationKer γ ρ hρ.measurable
   isConsistent' := hρ.isConsistent
 
--- This is not simp as we want to keep `modifiedKer` an implementation detail
-lemma coe_modified (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞)
-    (hρ : γ.IsModification ρ) : γ.modified ρ hρ = modifiedKer γ ρ hρ.measurable := rfl
+-- This is not simp as we want to keep `modificationKer` an implementation detail
+lemma coe_modification (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞)
+    (hρ : γ.IsModifier ρ) : γ.modification ρ hρ = modificationKer γ ρ hρ.measurable := rfl
 
 @[simp]
-lemma modified_apply (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞)
-    (hρ : γ.IsModification ρ) (Λ : Finset S) (η : S → E) :
-    γ.modified ρ hρ Λ η = (γ Λ η).withDensity (ρ Λ) := rfl
+lemma modification_apply (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞)
+    (hρ : γ.IsModifier ρ) (Λ : Finset S) (η : S → E) :
+    γ.modification ρ hρ Λ η = (γ Λ η).withDensity (ρ Λ) := rfl
 
-@[simp] lemma IsModification.mul {ρ₁ ρ₂ : Finset S → (S → E) → ℝ≥0∞}
-    (hρ₁ : γ.IsModification ρ₁) (hρ₂ : (γ.modified ρ₁ hρ₁).IsModification ρ₂) :
-    γ.IsModification (ρ₁ * ρ₂) where
+@[simp] lemma IsModifier.mul {ρ₁ ρ₂ : Finset S → (S → E) → ℝ≥0∞}
+    (hρ₁ : γ.IsModifier ρ₁) (hρ₂ : (γ.modification ρ₁ hρ₁).IsModifier ρ₂) :
+    γ.IsModifier (ρ₁ * ρ₂) where
   measurable Λ := (hρ₁.measurable _).mul (hρ₂.measurable _)
   isConsistent := sorry
 
-@[simp] lemma modified_one' (γ : Specification S E) : γ.modified (fun _Λ _η ↦ 1) .one' = γ := by
+@[simp] lemma modification_one' (γ : Specification S E) : γ.modification (fun _Λ _η ↦ 1) .one' = γ
+    := by
   ext; simp
 
-@[simp] lemma modified_one (γ : Specification S E) : γ.modified 1 .one = γ := by ext; simp
+@[simp] lemma modification_one (γ : Specification S E) : γ.modification 1 .one = γ := by ext; simp
 
-@[simp] lemma modified_modified (γ : Specification S E) (ρ₁ ρ₂ : Finset S → (S → E) → ℝ≥0∞)
-    (hρ₁ : γ.IsModification ρ₁) (hρ₂ : (γ.modified ρ₁ hρ₁).IsModification ρ₂) :
-    (γ.modified ρ₁ hρ₁).modified ρ₂ hρ₂ = γ.modified (ρ₁ * ρ₂) (hρ₁.mul hρ₂) := sorry
+@[simp] lemma modification_modification (γ : Specification S E) (ρ₁ ρ₂ : Finset S → (S → E) → ℝ≥0∞)
+    (hρ₁ : γ.IsModifier ρ₁) (hρ₂ : (γ.modification ρ₁ hρ₁).IsModifier ρ₂) :
+    (γ.modification ρ₁ hρ₁).modification ρ₂ hρ₂ = γ.modification (ρ₁ * ρ₂) (hρ₁.mul hρ₂) := sorry
 
-protected lemma IsProper.modified (hγ : γ.IsProper) {hρ} : (γ.modified ρ hρ).IsProper := by
+protected lemma IsProper.modification (hγ : γ.IsProper) {hρ} : (γ.modification ρ hρ).IsProper := by
   refine IsProper.of_inter_eq_indicator_mul fun Λ A hA B hB η ↦ ?_
-  rw [modified_apply, withDensity_apply _ hA,
+  rw [modification_apply, withDensity_apply _ hA,
     withDensity_apply _ (hA.inter $ cylinderEvents_le_pi _ hB),
     hγ.setLintegral_inter_eq_indicator_mul_setLintegral _ (hρ.measurable _) hA hB]
 
-end Modification
+
+end Modifier
 end Specification
