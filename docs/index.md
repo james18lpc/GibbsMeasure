@@ -48,7 +48,7 @@ how many 'sorries' (unproven statements) remain in each file.
 On top of the new developments, there are many basic lemmas needed for this project that are
 currently missing from Mathlib.
 
-Here is the list of files that do not depend on any other LeanAPAP file, indicating they are good
+Here is the list of files that do not depend on any other GibbsMeasure file, indicating they are good
 candidates for upstreaming to Mathlib:
 
 {% include files_to_upstream.md %}
@@ -60,7 +60,7 @@ See [the installation instructions](https://leanprover-community.github.io/get_s
 (under Regular install).
 Alternatively, click on the button below to open a Gitpod workspace containing the project.
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/YaelDillies/LeanAPAP)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/james18lpc/GibbsMeasure)
 
 In either case, run `lake exe cache get` and then `lake build` to build the project.
 

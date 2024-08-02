@@ -18,14 +18,14 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Arithmetic Progressions - Almost Periodicity
+title: Gibbs Measures and Phase Transitions
 #email: your-email@example.com
 description: A digitisation of the Kelley-Meka bound on Roth numbers
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://YaelDillies.github.io/LeanAPAP/" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://james18lpc.github.io/GibbsMeasure/" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
-github_username: YaelDillies
-repository: YaelDillies/LeanAPAP
+github_username: james18lpc
+repository: james18lpc/GibbsMeasure
 
 # Build settings
 remote_theme: pages-themes/cayman@v0.2.0

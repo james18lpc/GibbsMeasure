@@ -29,22 +29,10 @@ The Lean code is contained in the directory `GibbsMeasure/`. The subdirectories 
 * `Mathlib`: Material missing from existing Mathlib developments
 * `Prereqs`: New developments to be integrated to Mathlib
 
-### Current progress
-
-The project is not yet finished. The following table details live which files are unfinished, and
-how many 'sorries' (unproven statements) remain in each file.
-
-{% include sorries.md %}
-
 ## What next?
 
 On top of the new developments, there are many basic lemmas needed for this project that are
 currently missing from Mathlib.
-
-Here is the list of files that do not depend on any other LeanAPAP file, indicating they are good
-candidates for upstreaming to Mathlib:
-
-{% include files_to_upstream.md %}
 
 ## Build the Lean files
 
@@ -53,7 +41,7 @@ See [the installation instructions](https://leanprover-community.github.io/get_s
 (under Regular install).
 Alternatively, click on the button below to open a Gitpod workspace containing the project.
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/YaelDillies/LeanAPAP)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/james18lpc/GibbsMeasure)
 
 In either case, run `lake exe cache get` and then `lake build` to build the project.
 

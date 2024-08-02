@@ -38,7 +38,7 @@ jobs:
           grep -r --files-without-match 'import GibbsMeasure' GibbsMeasure | sort > 1.txt
           grep -r --files-with-match 'sorry' GibbsMeasure | sort > 2.txt
           mkdir -p docs/_includes
-          comm -23 1.txt 2.txt | sed -e 's/^\(.*\)$/- [`\1`](https:\/\/github.com\/YaelDillies\/GibbsMeasure\/blob\/master\/\1)/' > docs/_includes/files_to_upstream.md
+          comm -23 1.txt 2.txt | sed -e 's/^\(.*\)$/- [`\1`](https:\/\/github.com\/james18lpc\/GibbsMeasure\/blob\/master\/\1)/' > docs/_includes/files_to_upstream.md
           rm 1.txt 2.txt
 
       - name: Count sorries
