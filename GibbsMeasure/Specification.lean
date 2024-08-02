@@ -4,6 +4,8 @@ import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Filtration.Consistent
 import GibbsMeasure.Prereqs.Kernel.CondExp
+import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Pi
+import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpace
 
 /-!
 # Gibbs measures
@@ -151,17 +153,33 @@ variable (ν : Measure E) (η : S → E)
 -- TODO: Use `measurable_of_measurable_coe'` + measurable rectangles here
 private lemma measurable_isssdFun (Λ : Finset S) :
     Measurable[cylinderEvents Λᶜ]
-      fun η : S → E ↦ (Measure.pi fun _ : Λ ↦ ν).map (juxt E Λ η) := by
+      fun η : S → E ↦ (Measure.pi fun _ : Λ ↦ ν).map (juxt Λ η) := by
   refine @Measure.measurable_of_measurable_coe _ _ _ (_) _ ?_
-  rintro A hA
-  simp
-  sorry
+  simp_rw [MeasurableSpace.pi_eq_generateFrom_projections]
+  refine @MeasurableSpace.generateFrom_induction _ _ _ ?_ ?_ ?_ ?_
+  · rintro _ ⟨s, A, hA, rfl⟩
+    have hA' : MeasurableSet (Function.eval s ⁻¹' A : Set (S → E)) := sorry
+    have come_on η := Measure.map_apply' (α := ((Λ : Set S)) → E) (β := S → E)
+      (f := juxt (Λ : Set S) η) (μ := Measure.pi fun _ : Λ ↦ ν) Measurable.juxt hA'
+    simp only [come_on, ← preimage_comp, Function.comp, Function.eval]
+    by_cases hs : s ∈ Λ
+    · simpa only [juxt_apply_of_mem (Finset.mem_coe.2 hs)] using measurable_const
+    · classical
+      simp only [Finset.coe_sort_coe, juxt_apply_of_not_mem (Finset.mem_coe.not.2 hs),
+        preimage_const, apply_ite, measure_empty]
+      refine measurable_const.ite ?_ measurable_const
+      sorry
+      -- refine measurable_id.eval hA
+  · simp
+  · rintro A hA
+    sorry
+  · sorry
 
 /-- Auxiliary definition for `Specification.isssd`. -/
 @[simps (config := .asFn)]
 def isssdFun (ν : Measure E) (Λ : Finset S) : Kernel[cylinderEvents Λᶜ] (S → E) (S → E) :=
   @Kernel.mk _ _ (_) _
-    (fun η ↦ Measure.map (juxt E Λ η) (Measure.pi fun _ : Λ ↦ ν))
+    (fun η ↦ Measure.map (juxt Λ η) (Measure.pi fun _ : Λ ↦ ν))
     (measurable_isssdFun ν Λ)
 
 /-- The ISSSD of a measure is strongly consistent. -/
