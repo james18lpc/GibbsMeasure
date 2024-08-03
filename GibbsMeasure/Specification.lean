@@ -1,11 +1,12 @@
 import GibbsMeasure.Mathlib.Data.Finset.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.KolmogorovExtension4.ProductMeasure
-import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Filtration.Consistent
+import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.CondExp
 import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Pi
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpace
+import GibbsMeasure.Mathlib.Probability.Kernel.Composition
 
 /-!
 # Gibbs measures
@@ -259,6 +260,7 @@ noncomputable def modificationKer (γ : ∀ Λ : Finset S, Kernel[cylinderEvents
 `ρ Λ : (S → E) → ℝ≥0∞` such that:
 * Each `ρ Λ` is measurable.
 * `γ.modificationKer ρ` (informally, `ρ * γ`) is consistent. -/
+@[mk_iff]
 structure IsModifier (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞) : Prop where
   measurable Λ : Measurable (ρ Λ)
   isConsistent : IsConsistent (modificationKer γ ρ measurable)
@@ -268,6 +270,23 @@ structure IsModifier (γ : Specification S E) (ρ : Finset S → (S → E) → �
   isConsistent := by simpa using γ.isConsistent
 
 @[simp] lemma IsModifier.one : γ.IsModifier 1 := .one'
+
+lemma isModifier_iff_ae_eq :
+    γ.IsModifier ρ ↔ (∀ Λ, Measurable (ρ Λ)) ∧ ∀ ⦃Λ₁ Λ₂⦄, Λ₁ ⊆ Λ₂ → ∀ η,
+      ρ Λ₂ =ᵐ[γ Λ₂ η] fun η ↦ ∫⁻ ζ, ρ Λ₂ ζ ∂(γ Λ₁ η).withDensity (ρ Λ₁) := by
+  simp only [isModifier_iff, IsConsistent, modificationKer, Kernel.ext_iff, Kernel.comp_apply,
+    Kernel.coe_mk, Kernel.coe_comap, CompTriple.comp_eq, Measure.ext_iff, exists_prop,
+    and_congr_right_iff]
+  refine fun hρ ↦ forall₄_congr fun Λ₁ Λ₂ hΛ η ↦ ?_
+  sorry
+
+lemma isModifier_iff_ae_comm [DecidableEq S] :
+    γ.IsModifier ρ ↔ (∀ Λ, Measurable (ρ Λ)) ∧
+    ∀ ⦃Λ₁ Λ₂⦄, Λ₁ ⊆ Λ₂ → ∀ η₁, ∀ᵐ η₂ ∂γ (Λ₂ \ Λ₁) η₁, ∀ᵐ ζ ∂(γ Λ₁ η₂).prod (γ Λ₂ η₂),
+      ρ Λ₂ ζ.1 * ρ Λ₁ ζ.2 = ρ Λ₂ ζ.2 * ρ Λ₁ ζ.1 := by
+  simp only [isModifier_iff_ae_eq, and_congr_right_iff]
+  refine fun hρ ↦ forall₄_congr fun Λ₁ Λ₂ hΛ η ↦ ?_
+  sorry
 
 /-- Modification specification.
 
@@ -297,9 +316,8 @@ lemma modification_apply (γ : Specification S E) (ρ : Finset S → (S → E) �
   measurable Λ := (hρ₁.measurable _).mul (hρ₂.measurable _)
   isConsistent := sorry
 
-@[simp] lemma modification_one' (γ : Specification S E) : γ.modification (fun _Λ _η ↦ 1) .one' = γ
-    := by
-  ext; simp
+@[simp] lemma modification_one' (γ : Specification S E) :
+    γ.modification (fun _Λ _η ↦ 1) .one' = γ := by ext; simp
 
 @[simp] lemma modification_one (γ : Specification S E) : γ.modification 1 .one = γ := by ext; simp
 

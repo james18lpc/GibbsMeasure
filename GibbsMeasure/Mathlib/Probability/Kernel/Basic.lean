@@ -1,5 +1,7 @@
 import Mathlib.Probability.Kernel.Basic
 
+open MeasureTheory
+
 namespace ProbabilityTheory
 
 /-- Notation for `Kernel` with respect to a non-standard σ-algebra in the domain. -/
@@ -13,4 +15,9 @@ example {α β : Type} {mα : MeasurableSpace α} {mβ : MeasurableSpace β} :
 
 initialize_simps_projections Kernel (toFun → apply)
 
-end ProbabilityTheory
+namespace Kernel
+variable {α β : Type*} {mα : MeasurableSpace α} {mβ : MeasurableSpace β}
+
+@[simp, norm_cast] lemma coe_mk (f : α → Measure β) (hf) : mk f hf = f := rfl
+
+end ProbabilityTheory.Kernel

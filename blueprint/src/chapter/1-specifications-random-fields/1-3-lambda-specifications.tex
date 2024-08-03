@@ -149,8 +149,8 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 % modifier of another measure
 
 % We don't need this. This is just for fun.
-\begin{lemma}[Every specification is a modifier of the counting measure, Remark 1.28.5]
-    \label{lem:exists-modif-countable}
+\begin{lemma}[Every specification is a modification of some ISSSB, Remark 1.28.5]
+    \label{lem:exists-modif-isssd}
     \uses{def:modif, def:isssd}
     % \lean{}
     % \leanok
@@ -175,17 +175,17 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 \begin{proposition}[Characterisation of modifiers, Proposition 1.30]
     \label{prop:modif-tfae}
     \uses{def:modif}
-    % \lean{}
-    % \leanok
+    \lean{Specification.isModifier_iff_ae_eq, Specification.isModifier_iff_ae_comm}
+    \leanok
 
     If $\rho$ is a family of measurable densities, then TFAE
     \begin{enumerate}
         \item $\rho$ is a modifier of $\gamma$
         \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$ and all $\eta : S \to E$, we have
         $$\rho_{\Lambda_2} = \rho_{\Lambda_1} \gamma_{\Lambda_1} \rho_{\Lambda_2} \quad \gamma_{\Lambda_2}(\cdot|\eta)\text{ae}$$
-        \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$ and all $\alpha : S \to E$, then for all $\gamma_{\Lambda_2 \setminus \Lambda_1}(\cdot|\alpha)$-almost all $\omega : S \to E$, we have
-        $$\rho_{\Lambda_2}(\zeta)\rho_{\Lambda_1}(\eta) = \rho_{\Lambda_2}(\eta) \rho_{\Lambda_1}(\zeta)$$
-        for $\nu_{\Lambda_1}(\cdot|\omega) \times \nu_{\Lambda_2}(\cdot|\omega)$-almost all $(\zeta, \lambda)$.
+        \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$ and all $\eta\_1 : S \to E$, then for all $\gamma_{\Lambda_2 \setminus \Lambda_1}(\cdot|\alpha)$-almost all $\eta_2 : S \to E$, we have
+        $$\rho_{\Lambda_2}(\zeta_1)\rho_{\Lambda_1}(\zeta_1) = \rho_{\Lambda_2}(\zeta_1) \rho_{\Lambda_1}(\zeta_2)$$
+        for $\gamma_{\Lambda_1}(\cdot|\eta_2) \times \gamma_{\Lambda_2}(\cdot|\eta_2)$-almost all $(\zeta_1, \zeta_2)$.
     \end{enumerate}
 \end{proposition}
 \begin{proof}

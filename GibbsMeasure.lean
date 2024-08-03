@@ -23,6 +23,7 @@ import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.Typeclasses
 import GibbsMeasure.Mathlib.Order.Filter.Basic
 import GibbsMeasure.Mathlib.Probability.Kernel.Basic
+import GibbsMeasure.Mathlib.Probability.Kernel.Composition
 import GibbsMeasure.Mathlib.Probability.Kernel.Condexp
 import GibbsMeasure.Prereqs.CylinderEvent
 import GibbsMeasure.Prereqs.Filtration.Consistent
