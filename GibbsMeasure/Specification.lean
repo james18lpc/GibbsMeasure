@@ -213,6 +213,9 @@ protected lemma IsProper.isssd : (isssd (S := S) ν).IsProper := by
   simp only [isssd_apply, isssdFun_apply, Finset.coe_sort_coe]
   sorry
 
+instance isssd.instIsMarkov : (isssd (S := S) ν).IsMarkov where
+  isMarkovKernel := sorry
+
 end ISSSD
 
 section ProductMeasure
@@ -315,11 +318,17 @@ protected lemma IsProper.modification (hγ : γ.IsProper) {hρ} : (γ.modificati
 * Each `ρ Λ` is measurable.
 * `ρ Λ₂ ζ * ρ Λ₁ η = ρ Λ₁ ζ * ρ Λ₂ η` for all `Λ₁ Λ₂ : Finset S` and `ζ η : S → E` such that
   `Λ₁ ⊆ Λ₂` and `∀ (s : Λ₁ᶜ), ζ s = η s`-/
-structure IsPremodifier (γ : Specification S E) (ρ : Finset S → (S → E) → ℝ≥0∞) : Prop where
+structure IsPremodifier [MeasurableSpace E] (ρ : Finset S → (S → E) → ℝ≥0∞) : Prop where
   measurable Λ : Measurable (ρ Λ)
   comm_of_subset ⦃Λ₁ Λ₂ : Finset S⦄ ⦃ζ η : S → E⦄ (hΛ : Λ₁ ⊆ Λ₂)
     (hrestrict : ∀ s ∉ Λ₁, ζ s = η s) : ρ Λ₂ ζ * ρ Λ₁ η = ρ Λ₁ ζ * ρ Λ₂ η
 
+lemma IsPremodifier.isModifier_div (hρ : IsPremodifier ρ) (ν : Measure E) [IsProbabilityMeasure ν]:
+    (isssd ν).IsModifier fun Λ σ ↦ ρ Λ σ / ∫⁻ x, ρ Λ x ∂(isssd ν Λ σ) where
+  measurable Λ :=
+    (hρ.measurable Λ).div ((hρ.measurable Λ).lintegral_kernel.mono cylinderEvents_le_pi le_rfl)
+  isConsistent Λ₁ Λ₂ hΛ := by
+    sorry
 
 end Modifier
 end Specification

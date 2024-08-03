@@ -201,8 +201,8 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 \begin{definition}[Premodifier]
     \label{def:premodif}
     % \uses{}
-    % \lean{}
-    % \leanok
+    \lean{Specification.IsPremodifier}
+    \leanok
 
     A family of measurable functions $h_\Lambda : (S \to E) \to [0, \infty[$ is a {\bf premodifier} if
     $$h_{\Lambda_2}(\zeta)h_{\Lambda_1}(\eta) = h_{\Lambda_1}(\zeta)h_{\Lambda_2}(\eta)$$
@@ -240,9 +240,10 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 \begin{lemma}[Premodifiers give rise to modifiers]
     \label{lem:premodif-modif}
     \uses{def:modif, def:premodif}
-
+    \lean{Specification.IsPremodifier.isModifier_div}
+    \leanok
     If $h$ is a premodifier and $\nu$ is such that $0 < \nu_\Lambda h_\Lambda < \infty$ for all $\Lambda$, then
-    $$\rho_\Lambda := \frac{h_\Lambda}{\nu_\Lambda h_\Lambda}$$
+    $$\rho_\Lambda := \frac{h_\Lambda}{\ISSSD(\nu)_\Lambda h_\Lambda}$$
     is a modifier of $\ISSSD(\nu)$.
 \end{lemma}
 \begin{proof}
