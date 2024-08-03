@@ -2,7 +2,9 @@ import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Mathlib.Algebra.GroupWithZero.Defs
 import GibbsMeasure.Mathlib.Algebra.GroupWithZero.Indicator
 import GibbsMeasure.Mathlib.Algebra.Module.Basic
+import GibbsMeasure.Mathlib.Algebra.Order.Group.Indicator
 import GibbsMeasure.Mathlib.Data.Finset.Basic
+import GibbsMeasure.Mathlib.Data.Set.Function
 import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Pi
 import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Prod.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
@@ -15,6 +17,7 @@ import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Defs
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpace
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+import GibbsMeasure.Mathlib.MeasureTheory.Measure.Typeclasses
 import GibbsMeasure.Mathlib.Order.Filter.Basic
 import GibbsMeasure.Mathlib.Probability.Kernel.Basic
 import GibbsMeasure.Mathlib.Probability.Kernel.Condexp
