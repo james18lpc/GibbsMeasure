@@ -38,8 +38,7 @@ All specifications will be with parameter set $S$ and state space $(E, \mathcal{
     Given a specification $\gamma$, a \textbf{Gibbs measures specified by $\gamma$} is a measure $\nu \in \mathfrak{M}(E^S, \mathcal{E}^S)$ such that $\gamma_\Lambda(A|\cdot)$ is a conditional expectation kernel for $\nu$ for all $A \in \mathcal E^S$ and $\Lambda \in \Finset(S)$.
 \end{definition}
 
-% Remark 1.24
-\begin{lemma}[Characterisation of Gibbs measures]
+\begin{lemma}[Characterisation of Gibbs measures, Remark 1.24]
     \label{lem:gibbs-meas-tfae}
     \uses{def:gibbs-meas, def:proper-spec}
     \lean{Specification.isGibbsMeasure_iff_forall_bind_eq, Specification.isGibbsMeasure_iff_frequently_bind_eq}

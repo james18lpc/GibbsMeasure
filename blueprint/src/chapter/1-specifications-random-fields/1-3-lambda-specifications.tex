@@ -24,7 +24,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     defines the \textbf{Independent Specification with Single Spin Distribution with $\nu$} (for each $\nu\in\mathfrak{P}(E, \mathcal{E})$), where $\nu^\Lambda$ is the usual product measure.
 \end{definition}
 
-\begin{lemma}[Strong Consistency of ISSSDs]
+\begin{lemma}[Strong consistency of ISSSDs]
     \label{lem:isssd-strong-consistency}
     \uses{def:isssd}
     \lean{Specification.isssdFun_comp_isssdFun}
@@ -40,7 +40,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
   Immediate.
 \end{proof}
 
-\begin{definition}[ISSSDs are Specifications]
+\begin{definition}[ISSSDs are specifications]
     \label{def:isssd-spec}
     \uses{lem:isssd-strong-consistency, def:spec}
     \lean{Specification.isssd}
@@ -49,7 +49,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     $\ISSSD(\nu)$ is a specification.
 \end{definition}
 
-\begin{lemma}[ISSSDs are Proper Specifications]
+\begin{lemma}[ISSSDs are proper specifications]
     \label{lem:isssd-proper-spec}
     \uses{def:isssd, def:proper-spec}
     \lean{Specification.IsProper.isssd}
@@ -64,7 +64,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     We already know it's a specification. Properness is immediate.
 \end{proof}
 
-\begin{lemma}[Uniqueness of a Gibbs Measure Specified by an ISSSD]
+\begin{lemma}[Uniqueness of a Gibbs measure specified by an ISSSD]
     \label{lem:isssd-gibbs-meas-uniqueness}
     \uses{def:gibbs-meas, def:isssd-spec}
 
@@ -77,11 +77,11 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     See book.
 \end{proof}
 
-\begin{lemma}[Existence of a Gibbs Measure Specified by an ISSSD]
+\begin{lemma}[Existence of a Gibbs measure specified by an ISSSD]
     \label{lem:isssd-gibbs-meas-existence}
     \uses{def:gibbs-meas, def:product-probability-measure, def:isssd-spec}
     \lean{Specification.isGibbsMeasure_isssd_productMeasure}
-    % \leanok
+    \leanok
 
     The product measure $\nu^S$ is a Gibbs measure specified by $\ISSSD(\nu)$.
 \end{lemma}
@@ -148,8 +148,8 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 % We can't state Remark 1.28.4 since we don't have a characteristic for a specification to be a
 % modifier of another measure
 
-% Remark 1.28.5
-\begin{lemma}[Every specification is a modifier of the counting measure]
+% We don't need this. This is just for fun.
+\begin{lemma}[Every specification is a modifier of the counting measure, Remark 1.28.5]
     \label{lem:exists-modif-countable}
     \uses{def:modif, def:isssd}
     % \lean{}
@@ -172,8 +172,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     \end{align}
 \end{proof}
 
-% Proposition 1.30
-\begin{proposition}[Characterisation of modifiers]
+\begin{proposition}[Characterisation of modifiers, Proposition 1.30]
     \label{prop:modif-tfae}
     \uses{def:modif}
     % \lean{}
@@ -196,11 +195,9 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     TODO
 \end{proof}
 
-% Definition 1.31
-
-\begin{definition}[Premodifier]
+\begin{definition}[Premodifier, Definition 1.31]
     \label{def:premodif}
-    % \uses{}
+    \uses{}
     \lean{Specification.IsPremodifier}
     \leanok
 
@@ -210,7 +207,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 \end{definition}
 
 % TODO: Probably split into several items
-% Note that we do not need this result. This is just for fun.
+% We don't need this. This is just for fun.
 \begin{lemma}[Modifiers are premodifiers]
     \label{lem:modif-premodif}
     \uses{def:modif, def:premodif}
@@ -236,8 +233,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     \end{enumerate}
 \end{proof}
 
-% Remark 1.32
-\begin{lemma}[Premodifiers give rise to modifiers]
+\begin{lemma}[Premodifiers give rise to modifiers, Remark 1.32]
     \label{lem:premodif-modif}
     \uses{def:modif, def:premodif}
     \lean{Specification.IsPremodifier.isModifier_div}
