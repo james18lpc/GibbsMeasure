@@ -1,22 +1,29 @@
+import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import Mathlib.MeasureTheory.Integral.Lebesgue
+import GibbsMeasure.Mathlib.MeasureTheory.Constructions.BorelSpace.Order
+import GibbsMeasure.Mathlib.MeasureTheory.Constructions.BorelSpace.Real
+import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
+import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
 open ENNReal NNReal Filter
 open scoped Classical Topology
 
 namespace MeasureTheory
-variable {α : Type*} {m m₀ : MeasurableSpace α} {μ : Measure[m₀] α} {f g : α → ℝ≥0∞} {s : Set α}
+variable {α : Type*} {m m₀ : MeasurableSpace α} {μ : Measure[m₀] α} [SigmaFinite μ] {f g : α → ℝ≥0∞}
+  {s : Set α}
 
+variable (m μ f) in
 /-- Lebesgue conditional expectation of an `ℝ≥0∞`-valued function. It is defined as `0` if any of
 the following conditions holds:
 * `m` is not a sub-σ-algebra of `m₀`,
 * `μ` is not σ-finite with respect to `m`,
-* `f` is not `μ`integrable. -/
-noncomputable def lcondexp (m : MeasurableSpace α) (μ : Measure[m₀] α) (f : α → ℝ≥0∞) : α → ℝ≥0∞ :=
+* `f` is not `μ`-integrable. -/
+noncomputable def lcondexp : α → ℝ≥0∞ :=
   if hm : m ≤ m₀ then
-    if h : SigmaFinite (μ.trim hm) then
+    if _h : SigmaFinite (μ.trim hm) then
       if Measurable[m] f then f
-      else sorry
+      else ENNReal.ofReal ∘ ⨆ n, (μ[ENNReal.toReal ∘ SimpleFunc.eapproxSigmaFinite μ f n | m])
     else 0
   else 0
 
@@ -32,7 +39,8 @@ lemma lcondexp_of_not_sigmaFinite (hm : m ≤ m₀) (hμm_not : ¬SigmaFinite (�
     μ⁻[f|m] = 0 := by rw [lcondexp, dif_pos hm, dif_neg hμm_not]
 
 lemma lcondexp_of_sigmaFinite (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm)] :
-    μ⁻[f|m] = if Measurable[m] f then f else sorry := by
+    μ⁻[f|m] = if Measurable[m] f then f else
+      ENNReal.ofReal ∘ ⨆ n, (μ[ENNReal.toReal ∘ SimpleFunc.eapproxSigmaFinite μ f n | m]) := by
   simp [lcondexp, dif_pos hm, hμm, true_and_iff]
 
 lemma lcondexp_of_measurable (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm)] {f : α → ℝ≥0∞}
@@ -41,22 +49,6 @@ lemma lcondexp_of_measurable (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm)]
 
 lemma lcondexp_const (hm : m ≤ m₀) (c : ℝ≥0∞) [IsFiniteMeasure μ] :
     μ⁻[fun _ : α => c|m] = fun _ => c := lcondexp_of_measurable hm measurable_const
-
-lemma lcondexp_ae_eq_lcondexpL1 (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm)] (f : α → ℝ≥0∞) :
-    μ⁻[f|m] =ᵐ[μ] sorry := by
-  rw [lcondexp_of_sigmaFinite hm]
-  sorry
-  -- by_cases hfm : Measurable[m] f
-  -- · rw [if_pos hfm]
-  --   exact (lcondexpL1_of_aemeasurable' (Measurable.aemeasurable' hfm)
-  --     hfi).symm
-  -- · rw [if_neg hfm]
-  --   exact (AEMeasurable'.ae_eq_mk aemeasurable'_lcondexpL1).symm
-
-lemma lcondexp_ae_eq_lcondexpL1CLM (hm : m ≤ m₀) [SigmaFinite (μ.trim hm)] :
-    μ⁻[f|m] =ᵐ[μ] sorry := by sorry
-  -- refine (lcondexp_ae_eq_lcondexpL1 hm f).trans (eventually_of_forall fun x => ?_)
-  -- rw [lcondexpL1_eq hf]
 
 @[simp]
 lemma lcondexp_zero : μ⁻[(0 : α → ℝ≥0∞)|m] = 0 := by
@@ -76,8 +68,8 @@ lemma measurable_lcondexp : Measurable[m] (μ⁻[f|m]) := by
   rw [lcondexp_of_sigmaFinite hm]
   split_ifs with hfm
   · exact hfm
-  sorry
-  -- · exact measurable_zero
+  · simp only [Function.comp, iSup_apply]
+    exact Measurable.ennreal_ofReal' $ Measurable.iSup fun n ↦ stronglyMeasurable_condexp.measurable
 
 lemma lcondexp_congr_ae (h : f =ᵐ[μ] g) : μ⁻[f|m] =ᵐ[μ] μ⁻[g|m] := by
   by_cases hm : m ≤ m₀
@@ -118,17 +110,16 @@ lemma lintegral_lcondexp_indicator {Y : α → ℝ≥0∞} (hY : Measurable Y)
   rw [lintegral_lcondexp, lintegral_indicator _ hA, setLIntegral_const, one_mul]
 
 /-- **Uniqueness of the conditional expectation**
+
 If a function is a.e. `m`-measurable, verifies an integrability condition and has same lintegral
 as `f` on all `m`-measurable sets, then it is a.e. equal to `μ⁻[f|hm]`. -/
 lemma ae_eq_lcondexp_of_forall_setLintegral_eq (hm : m ≤ m₀) [SigmaFinite (μ.trim hm)]
     {f g : α → ℝ≥0∞}
     (hg_eq : ∀ s : Set α, MeasurableSet[m] s → μ s < ∞ → ∫⁻ x in s, g x ∂μ = ∫⁻ x in s, f x ∂μ)
-    (hgm : AEMeasurable g μ) : g =ᵐ[μ] μ⁻[f|m] := by
-  sorry
-  -- refine ae_eq_of_forall_setLintegral_eq_of_sigmaFinite' hm hg_int_finite
-  --   (fun s _ _ => integrable_lcondexp.integrableOn) (fun s hs hμs => ?_) hgm
-  --   (Measurable.aemeasurable' measurable_lcondexp)
-  -- rw [hg_eq s hs hμs, setLintegral_lcondexp hm hf hs]
+    (hgm : AEStronglyMeasurable' m g μ) : g =ᵐ[μ] μ⁻[f|m] := by
+  refine ae_eq_of_forall_setLintegral_eq_of_sigmaFinite' hm (fun s hs hμs => ?_) hgm sorry
+    -- measurable_lcondexp.aestronglyMeasurable'
+  rw [hg_eq s hs hμs, setLintegral_lcondexp hm hs]
 
 lemma lcondexp_bot' [hμ : NeZero μ] (f : α → ℝ≥0∞) :
     μ⁻[f|⊥] = fun _ => (μ Set.univ).toNNReal⁻¹ • ∫⁻ x, f x ∂μ := by
@@ -164,8 +155,8 @@ lemma lcondexp_add : μ⁻[f + g|m] =ᵐ[μ] μ⁻[f|m] + μ⁻[g|m] := by
   by_cases hμm : SigmaFinite (μ.trim hm)
   swap; · simp_rw [lcondexp_of_not_sigmaFinite hm hμm]; simp
   haveI : SigmaFinite (μ.trim hm) := hμm
-  refine (lcondexp_ae_eq_lcondexpL1 hm _).trans ?_
   sorry
+  -- refine (lcondexp_ae_eq_lcondexpL1 hm _).trans ?_
   -- rw [lcondexpL1_add hf hg]
   -- exact (coeFn_add _ _).trans
   --   ((lcondexp_ae_eq_lcondexpL1 hm _).symm.add (lcondexp_ae_eq_lcondexpL1 hm _).symm)
@@ -183,8 +174,8 @@ lemma lcondexp_smul (c : ℝ≥0) (f : α → ℝ≥0∞) : μ⁻[c • f|m] =�
   by_cases hμm : SigmaFinite (μ.trim hm)
   swap; · simp_rw [lcondexp_of_not_sigmaFinite hm hμm]; simp
   haveI : SigmaFinite (μ.trim hm) := hμm
-  refine (lcondexp_ae_eq_lcondexpL1 hm _).trans ?_
   sorry
+  -- refine (lcondexp_ae_eq_lcondexpL1 hm _).trans ?_
   -- rw [lcondexpL1_smul c f]
   -- refine (@lcondexp_ae_eq_lcondexpL1 _ _ _ _ _ m _ _ hm _ f).mp ?_
   -- refine (coeFn_smul c (lcondexpL1 hm μ f)).mono fun x hx1 hx2 => ?_
@@ -195,8 +186,9 @@ lemma lcondexp_sub : μ⁻[f - g|m] =ᵐ[μ] μ⁻[f|m] - μ⁻[g|m] := by
   -- simp_rw [sub_eq_add_neg]
   -- exact (lcondexp_add hf hg.neg).trans (EventuallyEq.rfl.add (lcondexp_neg g))
 
-lemma lcondexp_lcondexp_of_le {m₁ m₂ m₀ : MeasurableSpace α} {μ : Measure α} (hm₁₂ : m₁ ≤ m₂)
-    (hm₂ : m₂ ≤ m₀) [SigmaFinite (μ.trim hm₂)] : μ⁻[μ⁻[f|m₂]|m₁] =ᵐ[μ] μ⁻[f|m₁] := by
+lemma lcondexp_lcondexp_of_le {m₁ m₂ m₀ : MeasurableSpace α} {μ : Measure α} [SigmaFinite μ]
+    (hm₁₂ : m₁ ≤ m₂) (hm₂ : m₂ ≤ m₀) [SigmaFinite (μ.trim hm₂)] :
+    μ⁻[μ⁻[f|m₂]|m₁] =ᵐ[μ] μ⁻[f|m₁] := by
   by_cases hμm₁ : SigmaFinite (μ.trim (hm₁₂.trans hm₂))
   swap; · simp_rw [lcondexp_of_not_sigmaFinite (hm₁₂.trans hm₂) hμm₁]; rfl
   haveI : SigmaFinite (μ.trim (hm₁₂.trans hm₂)) := hμm₁

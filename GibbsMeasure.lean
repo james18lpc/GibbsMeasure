@@ -5,9 +5,12 @@ import GibbsMeasure.Mathlib.Algebra.Module.Basic
 import GibbsMeasure.Mathlib.Algebra.Order.Group.Indicator
 import GibbsMeasure.Mathlib.Data.Finset.Basic
 import GibbsMeasure.Mathlib.Data.Set.Function
+import GibbsMeasure.Mathlib.MeasureTheory.Constructions.BorelSpace.Order
+import GibbsMeasure.Mathlib.MeasureTheory.Constructions.BorelSpace.Real
 import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Pi
 import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Prod.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique
 import GibbsMeasure.Mathlib.MeasureTheory.Function.L1Space
 import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
 import GibbsMeasure.Mathlib.MeasureTheory.Integral.Lebesgue
