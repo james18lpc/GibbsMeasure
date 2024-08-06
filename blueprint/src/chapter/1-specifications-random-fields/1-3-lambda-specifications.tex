@@ -5,9 +5,9 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 \begin{definition}[Product probability measure]
     \label{def:product-probability-measure}
     \lean{MeasureTheory.productMeasure}
-    \leanok
+    \leanok{}
 
-    Let $I$ be a set. Suppose for each $i\in I$ that $(\Omega_i,\MCB_i,P_i)$ is a probability space. Then, $P\coloneqq\bigotimes_{i\in I}P_i$ is a well-defined product probability measure on $\prod_{i\in I}\Omega_i$.
+    Let $I$ be a set. Suppose for each $i\in I$ that $(\Omega_i,\MCB_i,P_i)$ is a probability space. Then, $P:=\bigotimes_{i\in I}P_i$ is a well-defined product probability measure on $\prod_{i\in I}\Omega_i$.
 \end{definition}
 
 \begin{definition}[Independent Specification with Single Spin Distribution (ISSSD)]
@@ -28,10 +28,10 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     \label{lem:isssd-strong-consistency}
     \uses{def:isssd}
     \lean{Specification.isssdFun_comp_isssdFun}
-    \leanok
+    \leanok{}
 
     $\ISSSD(\nu)$ is {\bf strongly consistent}, in the sense that
-    $$\ISSSD(\nu)_{\Lambda_1} \circ_k \ISSSD(\nu)_{\Lambda_2} = \ISSSD(\nu)_{\Lambda_1 \cup \Lambda_2}$$
+    \[\ISSSD(\nu)_{\Lambda_1} \circ_k \ISSSD(\nu)_{\Lambda_2} = \ISSSD(\nu)_{\Lambda_1 \cup \Lambda_2}\]
     for all $\Lambda_1, \Lambda_2 \in \Finset(S)$.
 \end{lemma}
 \begin{proof}
@@ -81,7 +81,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     \label{lem:isssd-gibbs-meas-existence}
     \uses{def:gibbs-meas, def:product-probability-measure, def:isssd-spec}
     \lean{Specification.isGibbsMeasure_isssd_productMeasure}
-    \leanok
+    \leanok{}
 
     The product measure $\nu^S$ is a Gibbs measure specified by $\ISSSD(\nu)$.
 \end{lemma}
@@ -95,10 +95,10 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     \label{def:modif}
     \uses{def:spec}
     \lean{Specification.IsModifier, Specification.modification}
-    \leanok
+    \leanok{}
 
     A {\bf modifier of $\gamma$} is a family
-    $$\rho : \Finset(S) \to \Omega \to [0, \infty[$$
+    \[\rho : \Finset(S) \to \Omega \to [0, \infty[\]
     such that the corresponding family of kernels $\rho\gamma$ is a specification.
 \end{definition}
 
@@ -106,7 +106,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     \label{lem:modif-modif}
     \uses{def:modif}
     \lean{Specification.modification_modification}
-    \leanok
+    \leanok{}
 
     Modifying a specification $\gamma$ by $\rho_1$ then $\rho_2$ is the same as modifying it by their product.
 \end{lemma}
@@ -124,7 +124,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     \label{lem:modif-proper}
     \uses{def:modif, def:proper-spec}
     \lean{Specification.IsProper.modification}
-    \leanok
+    \leanok{}
 
     If $\gamma$ is a specification and $\rho$ a modifier of $\gamma$, then $\rho\gamma$ is a proper specification.
 \end{lemma}
@@ -149,7 +149,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
 % modifier of another measure
 
 % We don't need this. This is just for fun.
-\begin{lemma}[Every specification is a modification of some ISSSB, Remark 1.28.5]
+\begin{lemma}[Every specification is a modification of some ISSSD, Remark 1.28.5]
     \label{lem:exists-modif-isssd}
     \uses{def:modif, def:isssd}
     % \lean{}
@@ -166,8 +166,8 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     For all $\Lambda \in \Finset(S)$, $A$ measurable, $\eta : S \to E$, we have
     \begin{align}
         (\rho\ISSSD(\nu))_\Lambda(A|\eta)
-        & = \int_\zeta \rho_\Lambda(\zeta) \ISSSD(d\zeta|\eta) \\
-        & = \int_\zeta \gamma_\Lambda(\{\sigma_\Lambda = \eta_\Lambda\} | \eta) \ISSSD(d\zeta|\eta) \\
+        & = \int_\zeta \rho_\Lambda(\zeta) \ISSSD(\nu)(d\zeta|\eta) \\
+        & = \int_\zeta \gamma_\Lambda(\{\sigma_\Lambda = \eta_\Lambda\} | \eta) \ISSSD(\nu)(d\zeta|\eta) \\
         & = \gamma_\Lambda(A|\eta)
     \end{align}
 \end{proof}
@@ -176,15 +176,15 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     \label{prop:modif-tfae}
     \uses{def:modif}
     \lean{Specification.isModifier_iff_ae_eq, Specification.isModifier_iff_ae_comm}
-    \leanok
+    \leanok{}
 
-    If $\rho$ is a family of measurable densities, then TFAE
+    If $\rho$ is a family of measurable densities and $\gamma$ is a proper specification, then TFAE
     \begin{enumerate}
         \item $\rho$ is a modifier of $\gamma$
         \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$ and all $\eta : S \to E$, we have
-        $$\rho_{\Lambda_2} = \rho_{\Lambda_1} \gamma_{\Lambda_1} \rho_{\Lambda_2} \quad \gamma_{\Lambda_2}(\cdot|\eta)\text{ae}$$
+        $$\rho_{\Lambda_2} = \rho_{\Lambda_1}\cdot (\gamma_{\Lambda_1} \rho_{\Lambda_2}) \quad \gamma_{\Lambda_2}(\cdot|\eta)\text{-a.e.}$$
         \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$ and all $\eta\_1 : S \to E$, then for all $\gamma_{\Lambda_2 \setminus \Lambda_1}(\cdot|\alpha)$-almost all $\eta_2 : S \to E$, we have
-        $$\rho_{\Lambda_2}(\zeta_1)\rho_{\Lambda_1}(\zeta_1) = \rho_{\Lambda_2}(\zeta_1) \rho_{\Lambda_1}(\zeta_2)$$
+        $$\rho_{\Lambda_2}(\zeta_1)\rho_{\Lambda_1}(\zeta_2) = \rho_{\Lambda_2}(\zeta_1) \rho_{\Lambda_1}(\zeta_2)$$
         for $\gamma_{\Lambda_1}(\cdot|\eta_2) \times \gamma_{\Lambda_2}(\cdot|\eta_2)$-almost all $(\zeta_1, \zeta_2)$.
     \end{enumerate}
 \end{proposition}
@@ -192,7 +192,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     % \uses{}
     % \leanok
 
-    TODO
+
 \end{proof}
 
 \begin{definition}[Premodifier, Definition 1.31]

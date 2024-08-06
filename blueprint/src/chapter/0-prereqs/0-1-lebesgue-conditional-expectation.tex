@@ -7,10 +7,10 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
   \label{def:lebesgue-cond-exp}
   \uses{}
   \lean{MeasureTheory.lcondexp}
-  \leanok
+  \leanok{}
 
   The {\bf conditional expectation} of a $\MCX$-measurable function $f : X \to [0, \infty]$ is
-  $$\mu[f | \MCB] = ??$$
+  \[\mu[f | \MCB] = ??\]
 \end{definition}
 
 % Not in the book
@@ -18,10 +18,10 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
   \label{lem:lebesgue-cond-exp-char}
   \uses{def:lebesgue-cond-exp}
   \lean{MeasureTheory.ae_eq_lcondexp_of_forall_setLintegral_eq}
-  \leanok
+  \leanok{}
 
   If $f : X \to [0, \infty]$ is a $\MCX$-measurable function, then $\mu[f | \MCB]$ is the $\mu$-ae unique $\MCB$-measurable function $X \to [0, \infty]$ such that
-  $$\int_B \mu[f | \MCB]\ \partial\mu = \int_B f\ \partial\mu$$
+  \[\int_B \mu[f | \MCB]\ \partial\mu = \int_B f\ \partial\mu\]
   for all $B \in \MCB$.
 \end{lemma}
 \begin{proof}
