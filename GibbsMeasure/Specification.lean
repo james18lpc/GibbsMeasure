@@ -271,7 +271,7 @@ structure IsModifier (γ : Specification S E) (ρ : Finset S → (S → E) → �
 
 @[simp] lemma IsModifier.one : γ.IsModifier 1 := .one'
 
-lemma isModifier_iff_ae_eq :
+lemma isModifier_iff_ae_eq (hγ : γ.IsProper) :
     γ.IsModifier ρ ↔ (∀ Λ, Measurable (ρ Λ)) ∧ ∀ ⦃Λ₁ Λ₂⦄, Λ₁ ⊆ Λ₂ → ∀ η,
       ρ Λ₂ =ᵐ[γ Λ₂ η] fun η ↦ ∫⁻ ζ, ρ Λ₂ ζ ∂(γ Λ₁ η).withDensity (ρ Λ₁) := by
   simp only [isModifier_iff, IsConsistent, modificationKer, Kernel.ext_iff, Kernel.comp_apply,
