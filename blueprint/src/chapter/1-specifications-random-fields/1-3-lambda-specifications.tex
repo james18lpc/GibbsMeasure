@@ -24,15 +24,13 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     defines the \textbf{Independent Specification with Single Spin Distribution with $\nu$} (for each $\nu\in\mathfrak{P}(E, \mathcal{E})$), where $\nu^\Lambda$ is the usual product measure.
 \end{definition}
 
-\begin{lemma}[Strong consistency of ISSSDs]
-    \label{lem:isssd-strong-consistency}
-    \uses{def:isssd}
+\begin{lemma}[Independence of ISSSDs]
+    \label{lem:isssd-isIndep}
+    \uses{def:isssd, def:indep-spec}
     \lean{Specification.isssdFun_comp_isssdFun}
     \leanok{}
 
-    $\ISSSD(\nu)$ is {\bf strongly consistent}, in the sense that
-    \[\ISSSD(\nu)_{\Lambda_1} \circ_k \ISSSD(\nu)_{\Lambda_2} = \ISSSD(\nu)_{\Lambda_1 \cup \Lambda_2}\]
-    for all $\Lambda_1, \Lambda_2 \in \Finset(S)$.
+    $\ISSSD(\nu)$ is independent.
 \end{lemma}
 \begin{proof}
     % \leanok
@@ -40,6 +38,8 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
   Immediate.
 \end{proof}
 
+
+%TODO: change strong consistency to independent
 \begin{definition}[ISSSDs are specifications]
     \label{def:isssd-spec}
     \uses{lem:isssd-strong-consistency, def:spec}
@@ -172,20 +172,17 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     \end{align}
 \end{proof}
 
-\begin{proposition}[Characterisation of modifiers, Proposition 1.30]
-    \label{prop:modif-tfae}
+\begin{proposition}[Characterisation of modifiers, Proposition 1.30.1]
+    \label{prop:modif-char}
     \uses{def:modif}
-    \lean{Specification.isModifier_iff_ae_eq, Specification.isModifier_iff_ae_comm}
+    \lean{Specification.isModifier_iff_ae_eq}
     \leanok{}
 
     If $\rho$ is a family of measurable densities and $\gamma$ is a proper specification, then TFAE
     \begin{enumerate}
         \item $\rho$ is a modifier of $\gamma$
         \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$ and all $\eta : S \to E$, we have
-        $$\rho_{\Lambda_2} = \rho_{\Lambda_1}\cdot (\gamma_{\Lambda_1} \rho_{\Lambda_2}) \quad \gamma_{\Lambda_2}(\cdot|\eta)\text{-a.e.}$$
-        \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$, $\eta : S \to E$ and $\gamma_{\Lambda_2 \setminus \Lambda_1}(\cdot|\alpha)$-almost all $\eta_2 : S \to E$, we have
-        $$\rho_{\Lambda_2}(\zeta_1)\rho_{\Lambda_1}(\zeta_2) = \rho_{\Lambda_2}(\zeta_1) \rho_{\Lambda_1}(\zeta_2)$$
-        for $\gamma_{\Lambda_1}(\cdot|\eta_2) \times \gamma_{\Lambda_2}(\cdot|\eta_2)$-almost all $(\zeta_1, \zeta_2)$.
+        \[\rho_{\Lambda_2} = \rho_{\Lambda_1}\cdot (\gamma_{\Lambda_1} \rho_{\Lambda_2}) \quad \gamma_{\Lambda_2}(\cdot|\eta)\text{-a.e.}\]
     \end{enumerate}
 \end{proposition}
 \begin{proof}
@@ -193,11 +190,31 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     % \leanok
 
     \begin{itemize}
-        \item ((2)$\implies$(1)) $\rho_{\Lambda_2} = \rho_{\Lambda_1}\cdot (\gamma_{\Lambda_1} \rho_{\Lambda_2}) \quad \gamma_{\Lambda_2}(\cdot|\eta)\text{-a.e.}$
+        \item ($\implies$) $\rho_{\Lambda_2} = \rho_{\Lambda_1}\cdot (\gamma_{\Lambda_1} \rho_{\Lambda_2}) \quad \gamma_{\Lambda_2}(\cdot|\eta)\text{-a.e.}$
         \begin{itemize}
             \item $\implies \rho_{\Lambda_2}\gamma_{\Lambda_2} = $
         \end{itemize}
     \end{itemize}
+
+\end{proof}
+
+\begin{proposition}[Characterisation of modifiers of independent specifications, Proposition 1.30.2]
+    \label{prop:modif-indep-char}
+    \uses{def:modif, def:indep-spec}
+    \lean{Specification.isModifier_iff_ae_comm}
+    \leanok{}
+
+    If $\rho$ is a family of measurable densities and $\gamma$ is a proper independent specification, then TFAE
+    \begin{enumerate}
+        \item $\rho$ is a modifier of $\gamma$
+        \item For all $\Lambda_1, \Lambda_2$ with $\Lambda_1 \subseteq \Lambda_2$, $\eta : S \to E$ and $\gamma_{\Lambda_2 \setminus \Lambda_1}(\cdot|\alpha)$-almost all $\eta_2 : S \to E$, we have
+        \[\rho_{\Lambda_2}(\zeta_1)\rho_{\Lambda_1}(\zeta_2) = \rho_{\Lambda_2}(\zeta_2) \rho_{\Lambda_1}(\zeta_1)\]
+        for $\gamma_{\Lambda_1}(\cdot|\eta_2) \times \gamma_{\Lambda_2}(\cdot|\eta_2)$-almost all $(\zeta_1, \zeta_2)$.
+    \end{enumerate}
+\end{proposition}
+\begin{proof}
+    % \uses{}
+    % \leanok
 
 \end{proof}
 
@@ -228,7 +245,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     \end{enumerate}
 \end{lemma}
 \begin{proof}
-    \uses{prop:modif-tfae}
+    \uses{prop:modif-char}
     % \leanok
 
     \begin{enumerate}
@@ -249,7 +266,7 @@ Let $S$ be a set, $(E, \mathcal{E})$ be a measurable space and $\nu$ a measure o
     is a modifier of $\ISSSD(\nu)$.
 \end{lemma}
 \begin{proof}
-    \uses{prop:modif-tfae}
+    \uses{prop:modif-indep-char}
 
     TODO
 \end{proof}

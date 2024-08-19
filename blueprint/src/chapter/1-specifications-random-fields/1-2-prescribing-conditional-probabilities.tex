@@ -4,30 +4,40 @@
     \label{def:spec}
     \uses{def:cylinder-event, def:kernel}
     \lean{Specification}
-    \leanok
+    \leanok{}
 
     A {\bf specification} is a family of kernels $\gamma : \Finset S \to \Ker_{\mathcal{F}_{S\setminus\Lambda}, \mathcal{E}^S}$ which is {\bf consistent}, in the sense that
-    $$\forall \Lambda_1, \Lambda_2 \in \Finset(S), \Lambda_1 \subseteq \Lambda_2 \implies \gamma_{\Lambda_1} \circ_k \gamma_{\Lambda_2} = \gamma_{\Lambda_2}$$
+    \[\forall \Lambda_1, \Lambda_2 \in \Finset(S), \Lambda_1 \subseteq \Lambda_2 \implies \gamma_{\Lambda_1} \circ_k \gamma_{\Lambda_2} = \gamma_{\Lambda_2}\]
 \end{definition}
 
 All specifications will be with parameter set $S$ and state space $(E, \mathcal{E})$ in this chapter.
 
+\begin{definition}[Independent specification]
+    \label{def:indep-spec}
+    \uses{def:spec}
+    \lean{Specification.IsIndep}
+    \leanok{}
+
+    A specification $\gamma$ is \textbf{independent} iff
+    \[\forall \Lambda_1, \Lambda_2 \in \Finset(S), \gamma_{\Lambda_1} \circ_k \gamma_{\Lambda_2} = \gamma_{\Lambda_1\cup\Lambda_2}\]
+\end{definition}
+
 \begin{definition}[Markov specification]
     \label{def:markov-spec}
     \lean{Specification.IsMarkov}
-    \leanok
+    \leanok{}
     \uses{def:spec}
 
-    A specification $\gamma$ is a \textbf{Markov specification} if $\gamma_\Lambda$ is a probability kernel for every $\Lambda \in \Finset(S)$.
+    A specification $\gamma$ is a \textbf{Markov specification} iff $\gamma_\Lambda$ is a probability kernel for every $\Lambda \in \Finset(S)$.
 \end{definition}
 
 \begin{definition}[Proper specification]
     \label{def:proper-spec}
     \uses{def:spec, def:proper-ker}
     \lean{Specification.IsProper}
-    \leanok
+    \leanok{}
 
-    A specification $\gamma$ is \textbf{proper} if the kernel $\gamma_\Lambda$ is proper for every $\Lambda \in \Finset(S)$.
+    A specification $\gamma$ is \textbf{proper} iff the kernel $\gamma_\Lambda$ is proper for every $\Lambda \in \Finset(S)$.
 \end{definition}
 
 \begin{definition}[Gibbs measures]

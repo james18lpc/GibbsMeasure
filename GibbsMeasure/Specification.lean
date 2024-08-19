@@ -69,6 +69,16 @@ variable {γ γ₁ γ₂ : Specification S E} {Λ Λ₁ Λ₂ : Finset S}
 protected lemma bind (hΛ : Λ₁ ⊆ Λ₂) (η : S → E) : (γ Λ₂ η).bind (γ Λ₁) = γ Λ₂ η :=
   DFunLike.congr_fun (γ.isConsistent hΛ) η
 
+section IsIndep
+
+/-- An Independent specfication is a specification `γ` where `γ Λ₁ ∘ₖ γ Λ₂ = γ (Λ₁ ∪ Λ₂)` for all
+`Λ₁ Λ₂`. -/
+def IsIndep (γ : Specification S E) : Prop :=
+  ∀ ⦃Λ₁ Λ₂⦄ [DecidableEq S] , (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = (γ (Λ₁ ∪ Λ₂)).comap id
+      (measurable_id'' $ by gcongr; exact Finset.subset_union_right)
+
+end IsIndep
+
 section IsMarkov
 
 /-- A Markov specification is a specification whose boundary condition kernels are all Markov
