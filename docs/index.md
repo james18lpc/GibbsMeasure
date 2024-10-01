@@ -56,8 +56,7 @@ candidates for upstreaming to Mathlib:
 ## Build the Lean files
 
 To build the Lean files of this project, you need to have a working version of Lean.
-See [the installation instructions](https://leanprover-community.github.io/get_started.html)
-(under Regular install).
+See [the installation instructions](https://leanprover-community.github.io/get_started.html) (under Regular install).
 Alternatively, click on the button below to open a Gitpod workspace containing the project.
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/james18lpc/GibbsMeasure)
@@ -66,19 +65,7 @@ In either case, run `lake exe cache get` and then `lake build` to build the proj
 
 ## Build the blueprint
 
-To build the web version of the blueprint, you need a working LaTeX installation.
-Furthermore, you need some packages:
-```
-sudo apt install graphviz libgraphviz-dev
-pip install -r blueprint/requirements.txt
-```
-
-To actually build the blueprint, run
-```
-lake exe cache get
-lake build
-inv all
-```
+See instructions at https://github.com/PatrickMassot/leanblueprint/.
 
 ## Acknowledgements
 
