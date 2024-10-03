@@ -294,8 +294,8 @@ lemma isModifier_iff_ae_comm [DecidableEq S] :
     γ.IsModifier ρ ↔ (∀ Λ, Measurable (ρ Λ)) ∧
     ∀ ⦃Λ₁ Λ₂⦄, Λ₁ ⊆ Λ₂ → ∀ η₁, ∀ᵐ η₂ ∂γ (Λ₂ \ Λ₁) η₁, ∀ᵐ ζ ∂(γ Λ₁ η₂).prod (γ Λ₂ η₂),
       ρ Λ₂ ζ.1 * ρ Λ₁ ζ.2 = ρ Λ₂ ζ.2 * ρ Λ₁ ζ.1 := by
-  simp only [isModifier_iff_ae_eq, and_congr_right_iff]
-  refine fun hρ ↦ forall₄_congr fun Λ₁ Λ₂ hΛ η ↦ ?_
+  -- simp only [isModifier_iff_ae_eq, and_congr_right_iff]
+  -- refine fun hρ ↦ forall₄_congr fun Λ₁ Λ₂ hΛ η ↦ ?_
   sorry
 
 /-- Modification specification.
