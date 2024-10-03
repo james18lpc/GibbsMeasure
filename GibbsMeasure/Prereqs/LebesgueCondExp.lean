@@ -4,7 +4,6 @@ import GibbsMeasure.Mathlib.MeasureTheory.Constructions.BorelSpace.Order
 import GibbsMeasure.Mathlib.MeasureTheory.Constructions.BorelSpace.Real
 import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique
-import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
 open ENNReal NNReal Filter
 open scoped Classical Topology
@@ -68,7 +67,7 @@ lemma measurable_lcondexp : Measurable[m] (μ⁻[f|m]) := by
   rw [lcondexp_of_sigmaFinite hm]
   split_ifs with hfm
   · exact hfm
-  · simp only [Function.comp, iSup_apply]
+  · simp only [Function.comp_def, iSup_apply]
     exact Measurable.ennreal_ofReal' $ Measurable.iSup fun n ↦ stronglyMeasurable_condexp.measurable
 
 lemma lcondexp_congr_ae (h : f =ᵐ[μ] g) : μ⁻[f|m] =ᵐ[μ] μ⁻[g|m] := by
@@ -144,7 +143,7 @@ lemma lcondexp_bot_ae_eq (f : α → ℝ≥0∞) :
     μ⁻[f|⊥] =ᵐ[μ] fun _ => (μ Set.univ).toNNReal⁻¹ • ∫⁻ x, f x ∂μ := by
   rcases eq_zero_or_neZero μ with rfl | hμ
   · rw [ae_zero]; exact eventually_bot
-  · exact eventually_of_forall <| congr_fun (lcondexp_bot' f)
+  · exact .of_forall <| congr_fun (lcondexp_bot' f)
 
 lemma lcondexp_bot [IsProbabilityMeasure μ] (f : α → ℝ≥0∞) : μ⁻[f|⊥] = fun _ => ∫⁻ x, f x ∂μ := by
   refine (lcondexp_bot' f).trans ?_; rw [measure_univ, ENNReal.one_toNNReal, inv_one, one_smul]
@@ -240,6 +239,6 @@ lemma lcondexp_mono (f g : α → ℝ≥0∞) : μ⁻[f|m] ≤ᵐ[μ] μ⁻[g|m]
 --   have hcond_gs : Tendsto (fun n => lcondexpL1 hm μ (gs n)) atTop (𝓝 (lcondexpL1 hm μ g)) :=
 --     tendsto_lcondexpL1_of_dominated_convergence hm _ (fun n => (hgs_int n).1) h_int_bound_gs
 --       hgs_bound hgs
---   exact tendsto_nhds_unique_of_eventuallyEq hcond_gs hcond_fs (eventually_of_forall hn_eq)
+--   exact tendsto_nhds_unique_of_eventuallyEq hcond_gs hcond_fs (.of_forall hn_eq)
 
 end MeasureTheory

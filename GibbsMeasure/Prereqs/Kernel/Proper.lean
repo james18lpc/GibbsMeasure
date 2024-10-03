@@ -1,10 +1,8 @@
+import Mathlib.MeasureTheory.Integral.Bochner
+import Mathlib.Probability.Kernel.Basic
 import GibbsMeasure.Mathlib.Algebra.GroupWithZero.Indicator
-import GibbsMeasure.Mathlib.Algebra.Module.Basic
-import GibbsMeasure.Mathlib.MeasureTheory.Function.L1Space
 import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
-import GibbsMeasure.Mathlib.Probability.Kernel.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Integral.Lebesgue
-import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
 /-!
 # Proper kernels
@@ -13,6 +11,7 @@ We define the notion of properness for measure kernels and highlight important c
 -/
 
 open MeasureTheory ENNReal NNReal Set
+open scoped ProbabilityTheory
 
 namespace ProbabilityTheory.Kernel
 variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : Kernel[𝓑, 𝓧] X X} {A B : Set X}

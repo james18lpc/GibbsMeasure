@@ -26,7 +26,7 @@ lemma cylinderEvents_le_pi : cylinderEvents (π := π) Δ ≤ MeasurableSpace.pi
 lemma measurable_cylinderEvents_iff {g : α → ∀ i, π i} :
     @Measurable _ _ _ (cylinderEvents Δ) g ↔ ∀ ⦃i⦄, i ∈ Δ → Measurable fun a ↦ g a i := by
   simp_rw [measurable_iff_comap_le, cylinderEvents, MeasurableSpace.comap_iSup,
-    MeasurableSpace.comap_comp, Function.comp, iSup_le_iff]
+    MeasurableSpace.comap_comp, Function.comp_def, iSup_le_iff]
 
 @[fun_prop, aesop safe 100 apply (rule_sets := [Measurable])]
 lemma measurable_cylinderEvent_apply (hi : i ∈ Δ) :

@@ -1,6 +1,5 @@
 import Mathlib.Probability.Kernel.Composition
 import Mathlib.Probability.Process.Filtration
-import GibbsMeasure.Mathlib.Probability.Kernel.Basic
 import GibbsMeasure.Prereqs.CylinderEvent
 
 open ProbabilityTheory Set MeasureTheory ENNReal NNReal
