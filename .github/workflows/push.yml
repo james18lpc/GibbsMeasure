@@ -97,13 +97,13 @@ jobs:
       - name: Bundle dependencies
         uses: ruby/setup-ruby@v1
         with:
-          working-directory: home_page
+          working-directory: docs
           ruby-version: "3.0"  # Specify Ruby version
           bundler-cache: true  # Enable caching for bundler
 
       - name: Build website using Jekyll
-        working-directory: home_page
-        run: JEKYLL_ENV=production bundle exec jekyll build  # Note this will also copy the blueprint and API doc into home_page/_site
+        working-directory: docs
+        run: JEKYLL_ENV=production bundle exec jekyll build  # Note this will also copy the blueprint and API doc into docs/_site
 
       - name: Upload docs & blueprint artifact
         uses: actions/upload-pages-artifact@v1
