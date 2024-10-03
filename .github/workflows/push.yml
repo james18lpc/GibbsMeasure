@@ -92,13 +92,23 @@ jobs:
 
       - name: Move documentation to `docs/docs`
         run: |
-          sudo chown -R runner docs
-          cp -r .lake/build/doc docs/docs
+          mv .lake/build/doc docs/docs
+
+      - name: Bundle dependencies
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: home_page
+          ruby-version: "3.0"  # Specify Ruby version
+          bundler-cache: true  # Enable caching for bundler
+
+      - name: Build website using Jekyll
+        working-directory: home_page
+        run: JEKYLL_ENV=production bundle exec jekyll build  # Note this will also copy the blueprint and API doc into home_page/_site
 
       - name: Upload docs & blueprint artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: docs/
+          path: docs/_site
 
       - name: Deploy to GitHub Pages
         id: deployment
