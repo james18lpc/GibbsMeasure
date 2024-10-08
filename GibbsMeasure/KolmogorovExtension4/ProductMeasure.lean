@@ -61,11 +61,11 @@ instance {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y] {μ : Measure X} 
 theorem Measure.map_bind {X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y]
     [MeasurableSpace Z]
     (μ : Measure X) (κ : Kernel X Y) (f : Y → Z) (mf : Measurable f) :
-    (μ.bind κ).map f = μ.bind (Kernel.map κ f mf) := by
+    (μ.bind κ).map f = μ.bind (Kernel.map κ f) := by
   ext s ms
   rw [Measure.map_apply mf ms, Measure.bind_apply ms (Kernel.measurable _),
     Measure.bind_apply (mf ms) (Kernel.measurable _)]
-  simp_rw [Kernel.map_apply' _ _ _ ms]
+  simp_rw [Kernel.map_apply' _ mf _ ms]
 
 theorem map_bind_eq_bind_comap {X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y]
     [MeasurableSpace Z]
@@ -83,14 +83,15 @@ end Nat
 section ProductMeasure
 
 universe u
-variable {ι : Type*}
-variable {X : ι → Type*} [hX : ∀ i, MeasurableSpace (X i)]
-variable (μ : (i : ι) → Measure (X i)) [hμ : ∀ i, IsProbabilityMeasure (μ i)]
+variable {ι : Type*} {X : ι → Type*}
 
 lemma cast_pi_eval (s : Set ι) (x : (i : s) → X i) (i j : s) (h : i = j) (h' : X i = X j) :
     cast h' (x i) = x j := by
   subst h
   rfl
+
+variable [hX : ∀ i, MeasurableSpace (X i)] 
+variable (μ : (i : ι) → Measure (X i)) [hμ : ∀ i, IsProbabilityMeasure (μ i)]
 
 lemma cast_mem_cast (α β : Type u) (h : α = β) (a : α) (s : Set α) (h' : Set α = Set β) :
     (cast h a ∈ cast h' s) = (a ∈ s) := by

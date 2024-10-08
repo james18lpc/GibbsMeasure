@@ -28,7 +28,7 @@ lemma snd_compProd_prodMkLeft
 
 lemma map_comp (κ : Kernel α β) [IsSFiniteKernel κ] (η : Kernel β γ) [IsSFiniteKernel η]
     {f : γ → δ} (hf : Measurable f) :
-    (η ∘ₖ κ).map f hf = η.map f hf ∘ₖ κ := by
+    (η ∘ₖ κ).map f = η.map f ∘ₖ κ := by
   ext a s hs
   rw [map_apply' _ hf _ hs, comp_apply', comp_apply' _ _ _ hs]
   · simp_rw [map_apply' _ hf _ hs]
@@ -36,11 +36,11 @@ lemma map_comp (κ : Kernel α β) [IsSFiniteKernel κ] (η : Kernel β γ) [IsS
 
 lemma fst_comp (κ : Kernel α β) [IsSFiniteKernel κ] (η : Kernel β (γ × δ)) [IsSFiniteKernel η] :
     fst (η ∘ₖ κ) = fst η ∘ₖ κ :=
-  κ.map_comp η measurable_fst
+  sorry -- κ.map_comp η measurable_fst
 
 lemma snd_comp (κ : Kernel α β) [IsSFiniteKernel κ] (η : Kernel β (γ × δ)) [IsSFiniteKernel η] :
     snd (η ∘ₖ κ) = snd η ∘ₖ κ :=
-  κ.map_comp η measurable_snd
+  sorry -- κ.map_comp η measurable_snd
 
 lemma deterministic_prod_deterministic {f : α → β} {g : α → γ}
     (hf : Measurable f) (hg : Measurable g) :

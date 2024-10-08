@@ -1,4 +1,3 @@
-import GibbsMeasure.Mathlib.Data.Finset.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Prereqs.Filtration.Consistent
@@ -174,13 +173,12 @@ private lemma measurable_isssdFun (Λ : Finset S) :
       (f := juxt (Λ : Set S) η) (μ := Measure.pi fun _ : Λ ↦ ν) Measurable.juxt hA'
     simp only [come_on, ← preimage_comp, Function.comp, Function.eval]
     by_cases hs : s ∈ Λ
-    · simpa only [juxt_apply_of_mem (Finset.mem_coe.2 hs)] using measurable_const
+    · simp [Function.comp_def, juxt_apply_of_mem (Finset.mem_coe.2 hs)]
     · classical
-      simp only [Finset.coe_sort_coe, juxt_apply_of_not_mem (Finset.mem_coe.not.2 hs),
-        preimage_const, apply_ite, measure_empty]
+      simp only [Function.comp_def, Finset.coe_sort_coe,
+        juxt_apply_of_not_mem (Finset.mem_coe.not.2 hs), preimage_const, apply_ite, measure_empty]
       refine measurable_const.ite ?_ measurable_const
       sorry
-      -- refine measurable_id.eval hA
   · simp
   · rintro A hA
     sorry

@@ -1,5 +1,4 @@
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
-import GibbsMeasure.Mathlib.Order.Filter.Basic
 import GibbsMeasure.Prereqs.Kernel.Proper
 
 open MeasureTheory ENNReal NNReal Set

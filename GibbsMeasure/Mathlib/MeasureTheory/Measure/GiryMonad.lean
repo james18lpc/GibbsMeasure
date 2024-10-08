@@ -1,5 +1,4 @@
 import Mathlib.MeasureTheory.Measure.GiryMonad
-import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Defs
 
 open scoped ENNReal
