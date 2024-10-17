@@ -1,4 +1,3 @@
-import GibbsMeasure.Mathlib.Data.Finset.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Prereqs.Filtration.Consistent
@@ -6,7 +5,6 @@ import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.CondExp
 import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Pi
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpace
-import GibbsMeasure.Mathlib.Probability.Kernel.Composition
 
 /-!
 # Gibbs measures
@@ -117,15 +115,15 @@ alias ⟨IsProper.inter_eq_indicator_mul, IsProper.of_inter_eq_indicator_mul⟩ 
 
 variable {A B : Set (S → E)} {f g : (S → E) → ℝ≥0∞} {η₀ : S → E}
 
-lemma IsProper.setLintegral_eq_indicator_mul_lintegral (hγ : γ.IsProper) (Λ : Finset S)
+lemma IsProper.setLIntegral_eq_indicator_mul_lintegral (hγ : γ.IsProper) (Λ : Finset S)
     (hf : Measurable f) (hB : MeasurableSet[cylinderEvents Λᶜ] B) :
     ∫⁻ x in B, f x ∂(γ Λ η₀) = B.indicator 1 η₀ * ∫⁻ x, f x ∂(γ Λ η₀) :=
-  (hγ Λ).setLintegral_eq_indicator_mul_lintegral cylinderEvents_le_pi hf hB _
+  (hγ Λ).setLIntegral_eq_indicator_mul_lintegral cylinderEvents_le_pi hf hB _
 
-lemma IsProper.setLintegral_inter_eq_indicator_mul_setLintegral (Λ : Finset S) (hγ : γ.IsProper)
+lemma IsProper.setLIntegral_inter_eq_indicator_mul_setLIntegral (Λ : Finset S) (hγ : γ.IsProper)
     (hf : Measurable f) (hA : MeasurableSet A) (hB : MeasurableSet[cylinderEvents Λᶜ] B) :
     ∫⁻ x in A ∩ B, f x ∂(γ Λ η₀) = B.indicator 1 η₀ * ∫⁻ x in A, f x ∂(γ Λ η₀) :=
-  (hγ Λ).setLintegral_inter_eq_indicator_mul_setLintegral cylinderEvents_le_pi hf hA hB _
+  (hγ Λ).setLIntegral_inter_eq_indicator_mul_setLIntegral cylinderEvents_le_pi hf hA hB _
 
 lemma IsProper.lintegral_mul (hγ : γ.IsProper) (Λ : Finset S) (hf : Measurable f)
     (hg : Measurable[cylinderEvents Λᶜ] g) :
@@ -174,13 +172,12 @@ private lemma measurable_isssdFun (Λ : Finset S) :
       (f := juxt (Λ : Set S) η) (μ := Measure.pi fun _ : Λ ↦ ν) Measurable.juxt hA'
     simp only [come_on, ← preimage_comp, Function.comp, Function.eval]
     by_cases hs : s ∈ Λ
-    · simpa only [juxt_apply_of_mem (Finset.mem_coe.2 hs)] using measurable_const
+    · simp [Function.comp_def, juxt_apply_of_mem (Finset.mem_coe.2 hs)]
     · classical
-      simp only [Finset.coe_sort_coe, juxt_apply_of_not_mem (Finset.mem_coe.not.2 hs),
-        preimage_const, apply_ite, measure_empty]
+      simp only [Function.comp_def, Finset.coe_sort_coe,
+        juxt_apply_of_not_mem (Finset.mem_coe.not.2 hs), preimage_const, apply_ite, measure_empty]
       refine measurable_const.ite ?_ measurable_const
       sorry
-      -- refine measurable_id.eval hA
   · simp
   · rintro A hA
     sorry
@@ -258,7 +255,7 @@ noncomputable def modificationKer (γ : ∀ Λ : Finset S, Kernel[cylinderEvents
     (fun η ↦ (γ Λ η).withDensity (ρ Λ))
     (@Measure.measurable_of_measurable_coe _ _ _ (_) _ fun s hs ↦ by
       simp_rw [MeasureTheory.withDensity_apply _ hs]
-      exact (Measure.measurable_setLintegral (hρ _) hs).comp (γ Λ).measurable)
+      exact (Measure.measurable_setLIntegral (hρ _) hs).comp (γ Λ).measurable)
 
 @[simp] lemma modificationKer_one' (γ : ∀ Λ : Finset S, Kernel[cylinderEvents Λᶜ] (S → E) (S → E)) :
     modificationKer γ (fun _Λ _η ↦ 1) (fun _Λ ↦ measurable_const) = γ := by ext Λ; simp
@@ -339,7 +336,7 @@ protected lemma IsProper.modification (hγ : γ.IsProper) {hρ} : (γ.modificati
   refine IsProper.of_inter_eq_indicator_mul fun Λ A hA B hB η ↦ ?_
   rw [modification_apply, withDensity_apply _ hA,
     withDensity_apply _ (hA.inter $ cylinderEvents_le_pi _ hB),
-    hγ.setLintegral_inter_eq_indicator_mul_setLintegral _ (hρ.measurable _) hA hB]
+    hγ.setLIntegral_inter_eq_indicator_mul_setLIntegral _ (hρ.measurable _) hA hB]
 
 /-- A premodifier is a family indexed by finsets `Λ : Finset S` of densities
 `ρ Λ : (S → E) → ℝ≥0∞` such that:

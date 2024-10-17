@@ -1,10 +1,6 @@
-import GibbsMeasure.Mathlib.Algebra.GroupWithZero.Indicator
-import GibbsMeasure.Mathlib.Algebra.Module.Basic
-import GibbsMeasure.Mathlib.MeasureTheory.Function.L1Space
+import Mathlib.MeasureTheory.Integral.Bochner
+import Mathlib.Probability.Kernel.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
-import GibbsMeasure.Mathlib.Probability.Kernel.Basic
-import GibbsMeasure.Mathlib.MeasureTheory.Integral.Lebesgue
-import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
 /-!
 # Proper kernels
@@ -13,6 +9,7 @@ We define the notion of properness for measure kernels and highlight important c
 -/
 
 open MeasureTheory ENNReal NNReal Set
+open scoped ProbabilityTheory
 
 namespace ProbabilityTheory.Kernel
 variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : Kernel[𝓑, 𝓧] X X} {A B : Set X}
@@ -48,28 +45,28 @@ alias ⟨IsProper.restrict_eq_indicator_smul, IsProper.of_restrict_eq_indicator_
 alias ⟨IsProper.inter_eq_indicator_mul, IsProper.of_inter_eq_indicator_mul⟩ :=
   isProper_iff_inter_eq_indicator_mul
 
-lemma IsProper.setLintegral_eq_bind (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧) {μ : Measure[𝓧] X}
+lemma IsProper.setLIntegral_eq_bind (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧) {μ : Measure[𝓧] X}
     (hA : MeasurableSet[𝓧] A) (hB : MeasurableSet[𝓑] B) :
     ∫⁻ a in B, π a A ∂μ = μ.bind π (A ∩ B) := by
   rw [Measure.bind_apply (by measurability) (π.measurable.mono h𝓑𝓧 le_rfl)]
-  simp only [hπ.inter_eq_indicator_mul h𝓑𝓧 hA hB, indicator_mul', Pi.one_apply, one_mul]
-  rw [← lintegral_indicator _ (h𝓑𝓧 _ hB)]
+  simp only [hπ.inter_eq_indicator_mul h𝓑𝓧 hA hB, ← indicator_mul_const, Pi.one_apply, one_mul]
+  rw [← lintegral_indicator (h𝓑𝓧 _ hB)]
   rfl
 
 /-- Auxiliary lemma for `IsProper.lintegral_mul` and
-`IsProper.setLintegral_eq_indicator_mul_lintegral`. -/
+`IsProper.setLIntegral_eq_indicator_mul_lintegral`. -/
 private lemma IsProper.lintegral_indicator_mul_indicator (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
     (hA : MeasurableSet[𝓧] A) (hB : MeasurableSet[𝓑] B) :
     ∫⁻ x, B.indicator 1 x * A.indicator 1 x ∂(π x₀) =
       B.indicator 1 x₀ * ∫⁻ x, A.indicator 1 x ∂(π x₀) := by
   simp_rw [← inter_indicator_mul]
-  rw [lintegral_indicator _ ((h𝓑𝓧 _ hB).inter hA), lintegral_indicator _ hA]
+  rw [lintegral_indicator ((h𝓑𝓧 _ hB).inter hA), lintegral_indicator hA]
   simp only [MeasureTheory.lintegral_const, MeasurableSet.univ, Measure.restrict_apply, univ_inter,
     Pi.one_apply, one_mul]
   rw [← hπ.inter_eq_indicator_mul h𝓑𝓧 hA hB, inter_comm]
 
 /-- Auxiliary lemma for `IsProper.lintegral_mul` and
-`IsProper.setLintegral_eq_indicator_mul_lintegral`. -/
+`IsProper.setLIntegral_eq_indicator_mul_lintegral`. -/
 private lemma IsProper.lintegral_mul_indicator (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
     (hf : Measurable[𝓧] f) (hB : MeasurableSet[𝓑] B) :
     ∫⁻ x, f x * B.indicator 1 x ∂(π x₀) = B.indicator 1 x₀ * ∫⁻ x, f x ∂(π x₀) := by
@@ -88,17 +85,17 @@ private lemma IsProper.lintegral_mul_indicator (hπ : IsProper π) (h𝓑𝓧 : 
     · measurability
     · exact hf'_mono.mul_const (zero_le _)
 
-lemma IsProper.setLintegral_eq_indicator_mul_lintegral (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
+lemma IsProper.setLIntegral_eq_indicator_mul_lintegral (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
     (hf : Measurable[𝓧] f) (hB : MeasurableSet[𝓑] B) (x₀ : X) :
     ∫⁻ x in B, f x ∂(π x₀) = B.indicator 1 x₀ * ∫⁻ x, f x ∂(π x₀) := by
   simp [← hπ.lintegral_mul_indicator h𝓑𝓧 hf hB, ← indicator_mul_right,
-    lintegral_indicator _ (h𝓑𝓧 _ hB)]
+    lintegral_indicator (h𝓑𝓧 _ hB)]
 
-lemma IsProper.setLintegral_inter_eq_indicator_mul_setLintegral (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
+lemma IsProper.setLIntegral_inter_eq_indicator_mul_setLIntegral (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
     (hf : Measurable[𝓧] f) (hA : MeasurableSet[𝓧] A) (hB : MeasurableSet[𝓑] B) (x₀ : X) :
     ∫⁻ x in A ∩ B, f x ∂(π x₀) = B.indicator 1 x₀ * ∫⁻ x in A, f x ∂(π x₀) := by
-  rw [← lintegral_indicator _ hA, ← hπ.setLintegral_eq_indicator_mul_lintegral h𝓑𝓧 _ hB,
-    setLintegral_indicator] <;> measurability
+  rw [← lintegral_indicator hA, ← hπ.setLIntegral_eq_indicator_mul_lintegral h𝓑𝓧 _ hB,
+    setLIntegral_indicator] <;> measurability
 
 lemma IsProper.lintegral_mul (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧) (hf : Measurable[𝓧] f)
     (hg : Measurable[𝓑] g) (x₀ : X) :

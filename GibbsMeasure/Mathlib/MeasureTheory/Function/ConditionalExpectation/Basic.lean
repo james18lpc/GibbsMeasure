@@ -17,7 +17,7 @@ variable {m m0 : MeasurableSpace α} {μ : Measure α} {f g : α → F'} {s : Se
 -- /-- **Uniqueness of the conditional expectation**
 -- If a function is a.e. `m`-measurable, verifies an integrability condition and has same integral
 -- as `f` on all `m`-measurable sets, then it is a.e. equal to `μ[f|hm]`. -/
--- theorem toReal_ae_eq_condexp_toReal_of_forall_setLintegral_eq (hm : m ≤ m0)
+-- theorem toReal_ae_eq_condexp_toReal_of_forall_setLIntegral_eq (hm : m ≤ m0)
 --     [SigmaFinite (μ.trim hm)] {f g : α → ℝ≥0∞} (hf_meas : AEMeasurable f μ)
 --     (hf : ∫⁻ a, f a ∂μ ≠ ⊤)
 --     (hg_int_finite : ∀ s, MeasurableSet[m] s → μ s < ∞ → ∫⁻ a in s, g a ∂μ ≠ ⊤)
@@ -31,7 +31,7 @@ variable {m m0 : MeasurableSpace α} {μ : Measure α} {f g : α → F'} {s : Se
 /-- **Uniqueness of the conditional expectation**
 If a function is a.e. `m`-measurable, verifies an integrability condition and has same integral
 as `f` on all `m`-measurable sets, then it is a.e. equal to `μ[f|hm]`. -/
-theorem toReal_ae_eq_indicator_condexp_of_forall_setLintegral_eq (hm : m ≤ m0)
+theorem toReal_ae_eq_indicator_condexp_of_forall_setLIntegral_eq (hm : m ≤ m0)
     [SigmaFinite (μ.trim hm)] {g : α → ℝ≥0∞} {s : Set α} (hs : μ s ≠ ⊤)
     (hg_int_finite : ∀ t, MeasurableSet[m] t → μ t < ∞ → ∫⁻ a in t, g a ∂μ ≠ ⊤)
     (hg_eq : ∀ t : Set α, MeasurableSet[m] t → μ t < ∞ → ∫⁻ a in t, g a ∂μ = μ (s ∩ t))

@@ -1,8 +1,5 @@
 import Mathlib.MeasureTheory.MeasurableSpace.Defs
 
-/-- Notation for `Measurable` with respect to non-standard σ-algebras in the domain and codomain. -/
-notation "Measurable[" mα ", " mβ "]" => @Measurable _ _ mα mβ
-
 open MeasureTheory
 
 namespace MeasurableSpace

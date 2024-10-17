@@ -1,5 +1,4 @@
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
-import GibbsMeasure.Mathlib.Order.Filter.Basic
 import GibbsMeasure.Prereqs.Kernel.Proper
 
 open MeasureTheory ENNReal NNReal Set
@@ -20,7 +19,7 @@ lemma isCondExp_iff_bind_eq_left (hπ : π.IsProper) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
   refine ⟨fun h A hA ↦ ?_, fun h A hA B hB ↦ ?_⟩
   · rw [eq_comm, Measure.bind_apply hA (π.measurable.mono h𝓑𝓧 le_rfl)]
     simpa using h hA _ .univ
-  · rw [hπ.setLintegral_eq_bind h𝓑𝓧 hA hB, eq_comm]
+  · rw [hπ.setLIntegral_eq_bind h𝓑𝓧 hA hB, eq_comm]
     exact h _ (by measurability)
 
 lemma condexp_ae_eq_kernel_apply [IsFiniteMeasure μ] [IsFiniteKernel π]

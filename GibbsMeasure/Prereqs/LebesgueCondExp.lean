@@ -1,10 +1,5 @@
 import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
-import Mathlib.MeasureTheory.Integral.Lebesgue
-import GibbsMeasure.Mathlib.MeasureTheory.Constructions.BorelSpace.Order
-import GibbsMeasure.Mathlib.MeasureTheory.Constructions.BorelSpace.Real
-import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique
-import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
 open ENNReal NNReal Filter
 open scoped Classical Topology
@@ -41,7 +36,7 @@ lemma lcondexp_of_not_sigmaFinite (hm : m ≤ m₀) (hμm_not : ¬SigmaFinite (�
 lemma lcondexp_of_sigmaFinite (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm)] :
     μ⁻[f|m] = if Measurable[m] f then f else
       ENNReal.ofReal ∘ ⨆ n, (μ[ENNReal.toReal ∘ SimpleFunc.eapproxSigmaFinite μ f n | m]) := by
-  simp [lcondexp, dif_pos hm, hμm, true_and_iff]
+  simp [lcondexp, dif_pos hm, hμm]
 
 lemma lcondexp_of_measurable (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm)] {f : α → ℝ≥0∞}
     (hf : Measurable[m] f) : μ⁻[f|m] = f := by
@@ -68,8 +63,8 @@ lemma measurable_lcondexp : Measurable[m] (μ⁻[f|m]) := by
   rw [lcondexp_of_sigmaFinite hm]
   split_ifs with hfm
   · exact hfm
-  · simp only [Function.comp, iSup_apply]
-    exact Measurable.ennreal_ofReal' $ Measurable.iSup fun n ↦ stronglyMeasurable_condexp.measurable
+  · simp only [Function.comp_def, iSup_apply]
+    exact .ennreal_ofReal $ measurable_iSup fun n ↦ stronglyMeasurable_condexp.measurable
 
 lemma lcondexp_congr_ae (h : f =ᵐ[μ] g) : μ⁻[f|m] =ᵐ[μ] μ⁻[g|m] := by
   by_cases hm : m ≤ m₀
@@ -91,35 +86,35 @@ lemma lcondexp_of_aemeasurable (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm
 
 /-- The lintegral of the conditional expectation `μ⁻[f|hm]` over an `m`-measurable set is equal to
 the lintegral of `f` on that set. -/
-lemma setLintegral_lcondexp (hm : m ≤ m₀) [SigmaFinite (μ.trim hm)] (hs : MeasurableSet[m] s) :
+lemma setLIntegral_lcondexp (hm : m ≤ m₀) [SigmaFinite (μ.trim hm)] (hs : MeasurableSet[m] s) :
     ∫⁻ x in s, (μ⁻[f|m]) x ∂μ = ∫⁻ x in s, f x ∂μ := by
   sorry
-  -- rw [setLintegral_congr_ae (hm s hs) ((lcondexp_ae_eq_lcondexpL1 hm f).mono fun x hx _ => hx)]
-  -- exact setLintegral_lcondexpL1 hf hs
+  -- rw [setLIntegral_congr_ae (hm s hs) ((lcondexp_ae_eq_lcondexpL1 hm f).mono fun x hx _ => hx)]
+  -- exact setLIntegral_lcondexpL1 hf hs
 
 lemma lintegral_lcondexp (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm)] :
     ∫⁻ x, (μ⁻[f|m]) x ∂μ = ∫⁻ x, f x ∂μ := by
   suffices ∫⁻ x in Set.univ, (μ⁻[f|m]) x ∂μ = ∫⁻ x in Set.univ, f x ∂μ by
     simp_rw [setLIntegral_univ] at this; exact this
-  exact setLintegral_lcondexp hm MeasurableSet.univ
+  exact setLIntegral_lcondexp hm MeasurableSet.univ
 
 /-- Total probability law using `lcondexp` as conditional probability. -/
 lemma lintegral_lcondexp_indicator {Y : α → ℝ≥0∞} (hY : Measurable Y)
     [SigmaFinite (μ.trim hY.comap_le)] {A : Set α} (hA : MeasurableSet A) :
     ∫⁻ x, (μ⁻[(A.indicator fun _ ↦ 1) | MeasurableSpace.comap Y inferInstance]) x ∂μ = μ A := by
-  rw [lintegral_lcondexp, lintegral_indicator _ hA, setLIntegral_const, one_mul]
+  rw [lintegral_lcondexp, lintegral_indicator hA, setLIntegral_const, one_mul]
 
 /-- **Uniqueness of the conditional expectation**
 
 If a function is a.e. `m`-measurable, verifies an integrability condition and has same lintegral
 as `f` on all `m`-measurable sets, then it is a.e. equal to `μ⁻[f|hm]`. -/
-lemma ae_eq_lcondexp_of_forall_setLintegral_eq (hm : m ≤ m₀) [SigmaFinite (μ.trim hm)]
+lemma ae_eq_lcondexp_of_forall_setLIntegral_eq (hm : m ≤ m₀) [SigmaFinite (μ.trim hm)]
     {f g : α → ℝ≥0∞}
     (hg_eq : ∀ s : Set α, MeasurableSet[m] s → μ s < ∞ → ∫⁻ x in s, g x ∂μ = ∫⁻ x in s, f x ∂μ)
     (hgm : AEStronglyMeasurable' m g μ) : g =ᵐ[μ] μ⁻[f|m] := by
-  refine ae_eq_of_forall_setLintegral_eq_of_sigmaFinite' hm (fun s hs hμs => ?_) hgm sorry
+  refine ae_eq_of_forall_setLIntegral_eq_of_sigmaFinite' hm (fun s hs hμs => ?_) hgm sorry
     -- measurable_lcondexp.aestronglyMeasurable'
-  rw [hg_eq s hs hμs, setLintegral_lcondexp hm hs]
+  rw [hg_eq s hs hμs, setLIntegral_lcondexp hm hs]
 
 lemma lcondexp_bot' [hμ : NeZero μ] (f : α → ℝ≥0∞) :
     μ⁻[f|⊥] = fun _ => (μ Set.univ).toNNReal⁻¹ • ∫⁻ x, f x ∂μ := by
@@ -144,7 +139,7 @@ lemma lcondexp_bot_ae_eq (f : α → ℝ≥0∞) :
     μ⁻[f|⊥] =ᵐ[μ] fun _ => (μ Set.univ).toNNReal⁻¹ • ∫⁻ x, f x ∂μ := by
   rcases eq_zero_or_neZero μ with rfl | hμ
   · rw [ae_zero]; exact eventually_bot
-  · exact eventually_of_forall <| congr_fun (lcondexp_bot' f)
+  · exact .of_forall <| congr_fun (lcondexp_bot' f)
 
 lemma lcondexp_bot [IsProbabilityMeasure μ] (f : α → ℝ≥0∞) : μ⁻[f|⊥] = fun _ => ∫⁻ x, f x ∂μ := by
   refine (lcondexp_bot' f).trans ?_; rw [measure_univ, ENNReal.one_toNNReal, inv_one, one_smul]
@@ -193,14 +188,14 @@ lemma lcondexp_lcondexp_of_le {m₁ m₂ m₀ : MeasurableSpace α} {μ : Measur
   swap; · simp_rw [lcondexp_of_not_sigmaFinite (hm₁₂.trans hm₂) hμm₁]; rfl
   haveI : SigmaFinite (μ.trim (hm₁₂.trans hm₂)) := hμm₁
   sorry
-  -- refine ae_eq_of_forall_setLintegral_eq_of_sigmaFinite' (hm₁₂.trans hm₂)
+  -- refine ae_eq_of_forall_setLIntegral_eq_of_sigmaFinite' (hm₁₂.trans hm₂)
   --   (fun s _ _ => integrable_lcondexp.integrableOn)
   --   (fun s _ _ => integrable_lcondexp.integrableOn) ?_
   --   (Measurable.aemeasurable' measurable_lcondexp)
   --   (Measurable.aemeasurable' measurable_lcondexp)
   -- intro s hs _
-  -- rw [setLintegral_lcondexp (hm₁₂.trans hm₂) integrable_lcondexp hs]
-  -- rw [setLintegral_lcondexp (hm₁₂.trans hm₂) hf hs, setLintegral_lcondexp hm₂ hf (hm₁₂ s hs)]
+  -- rw [setLIntegral_lcondexp (hm₁₂.trans hm₂) integrable_lcondexp hs]
+  -- rw [setLIntegral_lcondexp (hm₁₂.trans hm₂) hf hs, setLIntegral_lcondexp hm₂ hf (hm₁₂ s hs)]
 
 lemma lcondexp_mono (f g : α → ℝ≥0∞) : μ⁻[f|m] ≤ᵐ[μ] μ⁻[g|m] := by
   by_cases hm : m ≤ m₀
@@ -240,6 +235,6 @@ lemma lcondexp_mono (f g : α → ℝ≥0∞) : μ⁻[f|m] ≤ᵐ[μ] μ⁻[g|m]
 --   have hcond_gs : Tendsto (fun n => lcondexpL1 hm μ (gs n)) atTop (𝓝 (lcondexpL1 hm μ g)) :=
 --     tendsto_lcondexpL1_of_dominated_convergence hm _ (fun n => (hgs_int n).1) h_int_bound_gs
 --       hgs_bound hgs
---   exact tendsto_nhds_unique_of_eventuallyEq hcond_gs hcond_fs (eventually_of_forall hn_eq)
+--   exact tendsto_nhds_unique_of_eventuallyEq hcond_gs hcond_fs (.of_forall hn_eq)
 
 end MeasureTheory

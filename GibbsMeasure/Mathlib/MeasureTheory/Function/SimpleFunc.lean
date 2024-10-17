@@ -1,7 +1,4 @@
 import Mathlib.MeasureTheory.Function.SimpleFunc
-import GibbsMeasure.Mathlib.Algebra.Order.Group.Indicator
-import GibbsMeasure.Mathlib.Data.Set.Function
-import GibbsMeasure.Mathlib.MeasureTheory.Measure.Typeclasses
 
 open MeasureTheory MeasureTheory.SimpleFunc Function Set
 open scoped ENNReal
@@ -13,9 +10,7 @@ variable {α β γ : Type*} {mα : MeasurableSpace α} {μ : Measure α}
 
 open scoped Classical
 
--- TODO: Rename in mathlib
-alias measurableSet_spanningSets := measurable_spanningSets
-
+namespace SimpleFunc
 section piecewise
 variable [Preorder β] {s : Set α} {f f₁ f₂ g g₁ g₂ : α →ₛ β} {hs : MeasurableSet s}
 
@@ -32,16 +27,12 @@ variable [Preorder β] {s : Set α} {f f₁ f₂ g g₁ g₂ : α →ₛ β} {hs
 @[gcongr] protected alias ⟨_, GCongr.coe_le_coe⟩ := coe_le_coe
 @[gcongr] protected alias ⟨_, GCongr.coe_lt_coe⟩ := coe_lt_coe
 
-lemma piecewise_le_piecewise (hf : ∀ a ∈ s, f₁ a ≤ f₂ a) (hg : ∀ a ∉ s, g₁ a ≤ g₂ a) :
-    piecewise s hs f₁ g₁ ≤ piecewise s hs f₂ g₂ := Set.piecewise_le_piecewise hf hg
-
 @[gcongr]
-lemma piecewise_mono (hf : f₁ ≤ f₂) (hg : g₁ ≤ g₂) : piecewise s hs f₁ g₁ ≤ piecewise s hs f₂ g₂ :=
-  Set.piecewise_mono hf hg
+lemma piecewise_mono (hf : ∀ a ∈ s, f₁ a ≤ f₂ a) (hg : ∀ a ∉ s, g₁ a ≤ g₂ a) :
+    piecewise s hs f₁ g₁ ≤ piecewise s hs f₂ g₂ := Set.piecewise_mono hf hg
 
 end piecewise
 
-namespace SimpleFunc
 variable [SigmaFinite μ] {f : α → ℝ≥0∞} {n : ℕ} {a : α}
 
 -- TODO: Reprove `iSup_eapprox_apply` using this
@@ -74,7 +65,7 @@ lemma eapproxSigmaFinite_lt_top : eapproxSigmaFinite μ f n a < ∞ :=
 @[mono]
 lemma monotone_eapproxSigmaFinite (f : α → ℝ≥0∞) : Monotone (eapproxSigmaFinite μ f) := by
   rintro m n hmn
-  unfold eapproxSigmaFinite piecewise
+  unfold eapproxSigmaFinite SimpleFunc.piecewise
   simp only [coe_zero, piecewise_eq_indicator, mk_le_mk]
   exact (indicator_mono (by gcongr)).trans (indicator_le_indicator_of_subset (by gcongr) (by simp))
 
@@ -141,9 +132,9 @@ theorem Measurable.ennreal_sigmaFinite_induction [SigmaFinite μ] {P : (α → �
     ⦃f : α → ℝ≥0∞⦄ (hf : Measurable f) : P f := by
   refine Measurable.ennreal_induction (fun c s hs ↦ ?_) h_add h_iSup hf
   convert h_iSup (f := fun n ↦ (s ∩ spanningSets μ n).indicator fun _ ↦ c)
-    (fun n ↦ measurable_const.indicator (hs.inter (measurable_spanningSets ..)))
+    (fun n ↦ measurable_const.indicator (hs.inter (measurableSet_spanningSets ..)))
     (fun m n hmn a ↦ Set.indicator_le_indicator_of_subset (by gcongr) (by simp) _)
-    (fun n ↦ h_ind _ (hs.inter (measurable_spanningSets ..))
+    (fun n ↦ h_ind _ (hs.inter (measurableSet_spanningSets ..))
       (measure_inter_lt_top_of_right_ne_top (measure_spanningSets_lt_top ..).ne)) with a
   rw [← Set.indicator_iUnion_apply (M := ℝ≥0∞) rfl, ← Set.inter_iUnion]
   simp
