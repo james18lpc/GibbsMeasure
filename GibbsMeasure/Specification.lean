@@ -3,7 +3,6 @@ import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Prereqs.Filtration.Consistent
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.CondExp
-import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Pi
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpace
 
 /-!

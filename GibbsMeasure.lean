@@ -1,5 +1,4 @@
 import GibbsMeasure.KolmogorovExtension4.ProductMeasure
-import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Pi
 import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Prod.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique

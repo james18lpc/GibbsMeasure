@@ -1,4 +1,3 @@
-import Mathlib.MeasureTheory.Constructions.Cylinders
 import Mathlib.Probability.Kernel.Composition
 import Mathlib.Probability.Process.Filtration
 
@@ -11,12 +10,5 @@ variable {X P S E : Type*} {mX : MeasurableSpace X} {mE : MeasurableSpace E} [Pa
 if `γ p₂ ∘ₖ γ p₁ = γ p₁` whenever `p₁ ≤ p₂`. -/
 def IsConsistentKernel (mXs : Filtration P mX) (γ : ∀ p, Kernel[mXs p] X X) : Prop :=
   ∀ ⦃p₁ p₂⦄, p₁ ≤ p₂ → (γ p₂).comap id (mXs.le p₂) ∘ₖ γ p₁ = γ p₁
-
-/-- The exterior sigma algebras to finite subsets of `S` form a filtration indexed by the
-order dual of `Finset S`. -/
-def cylinderEventsCompl : Filtration (Finset S)ᵒᵈ (.pi (π := fun _ : S ↦ X)) where
-  seq Λ := cylinderEvents (↑(OrderDual.ofDual Λ))ᶜ
-  mono' _ _ h := cylinderEvents_mono <| compl_subset_compl_of_subset h
-  le' _  := cylinderEvents_le_pi
 
 end MeasureTheory.Filtration

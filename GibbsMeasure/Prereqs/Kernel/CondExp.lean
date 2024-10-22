@@ -39,7 +39,7 @@ lemma condexp_ae_eq_kernel_apply [IsFiniteMeasure μ] [IsFiniteKernel π]
   simp_rw [← Pi.one_def, @integral_indicator_one X 𝓧 _ _ A_mble]
   rfl
 
-variable [IsFiniteMeasure μ] [IsFiniteKernel π] [π.IsCondExp μ]
+variable [π.IsCondExp μ]
 
 private lemma condexp_indicator_ae_eq_integral_kernel (A_mble : MeasurableSet[𝓧] A) :
     condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
@@ -48,6 +48,7 @@ private lemma condexp_indicator_ae_eq_integral_kernel (A_mble : MeasurableSet[�
   simp_rw [← Pi.one_def, @integral_indicator_one X 𝓧 _ _ A_mble]
   rfl
 
+variable [IsFiniteMeasure μ] [IsFiniteKernel π]
 
 private lemma condexp_const_indicator_ae_eq_integral_kernel (c : ℝ) (A_mble : MeasurableSet[𝓧] A)
     (h : condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ))) =ᵐ[μ] (fun x ↦ (π x A).toReal)) :
