@@ -165,7 +165,7 @@ private lemma measurable_isssdFun (Λ : Finset S) :
   refine @Measure.measurable_of_measurable_coe _ _ _ (_) _ ?_
   simp_rw [MeasurableSpace.pi_eq_generateFrom_projections]
   refine @MeasurableSpace.generateFrom_induction _ _ _ ?_ ?_ ?_ ?_
-  · rintro _ ⟨s, A, hA, rfl⟩
+  · rintro _ ⟨s, A, hA, rfl⟩ _
     have hA' : MeasurableSet (Function.eval s ⁻¹' A : Set (S → E)) := sorry
     have come_on η := Measure.map_apply' (α := ((Λ : Set S)) → E) (β := S → E)
       (f := juxt (Λ : Set S) η) (μ := Measure.pi fun _ : Λ ↦ ν) Measurable.juxt hA'
@@ -198,7 +198,7 @@ lemma isssdFun_comp_isssdFun [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
 
 /-- The **Independent Specification with Single Spin Distribution**.
 
-This is the specification corresponding to the product measure -/
+This is the specification corresponding to the product measure. -/
 @[simps]
 def isssd : Specification S E where
   toFun := isssdFun ν

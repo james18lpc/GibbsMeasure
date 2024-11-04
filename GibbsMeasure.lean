@@ -1,11 +1,10 @@
 import GibbsMeasure.KolmogorovExtension4.ProductMeasure
-import GibbsMeasure.Mathlib.MeasureTheory.Constructions.Prod.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique
 import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
-import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Defs
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpace
+import GibbsMeasure.Mathlib.MeasureTheory.Measure.Prod
 import GibbsMeasure.Mathlib.Probability.Kernel.Condexp
 import GibbsMeasure.Prereqs.Filtration.Consistent
 import GibbsMeasure.Prereqs.Juxt

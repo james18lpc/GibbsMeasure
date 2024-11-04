@@ -1,5 +1,4 @@
 import Mathlib.MeasureTheory.Measure.GiryMonad
-import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Defs
 
 open scoped ENNReal
 
@@ -9,8 +8,8 @@ variable {α β : Type*} [MeasurableSpace β]
 theorem measurable_of_measurable_coe' (t : Set (Set α)) (μ : β → Measure[.generateFrom t] α)
     [∀ b, IsProbabilityMeasure (μ b)] (h : ∀ s ∈ t, Measurable fun b => μ b s) : Measurable μ := by
   refine @measurable_of_measurable_coe _ _ (_) _ _ fun {s} hs ↦
-    MeasurableSpace.generateFrom_induction' (p := fun s ↦ Measurable fun b ↦ μ b s) t h (by simp)
-      ?_ ?_ hs
+    MeasurableSpace.generateFrom_induction (p := fun s _ ↦ Measurable fun b ↦ μ b s) t
+      (fun s hs _ ↦ h s hs) (by simp) ?_ ?_ _ hs
   · rintro s hs_meas hs
     simp_rw [prob_compl_eq_one_sub hs_meas]
     exact hs.const_sub _

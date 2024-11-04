@@ -19,7 +19,7 @@ variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : Kernel[𝓑, 𝓧] X 
 for all `B ∈ 𝓑`, `π` restricted to is the same as `π` times the indicator of `B`.
 
 To avoid assuming `𝓑 ≤ 𝓧` in the definition, we replace `𝓑` by `𝓑 ⊓ 𝓧` in the restriction. -/
-structure IsProper (π : Kernel[𝓑, 𝓧] X X) : Prop :=
+structure IsProper (π : Kernel[𝓑, 𝓧] X X) : Prop where
   restrict_eq_indicator_smul' :
     ∀ ⦃B : Set X⦄ (hB : MeasurableSet[𝓑 ⊓ 𝓧] B) (x : X),
       π.restrict (inf_le_right (b := 𝓧) _ hB) x = B.indicator (fun _ ↦ (1 : ℝ≥0∞)) x • π x
