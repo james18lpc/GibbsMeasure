@@ -1,5 +1,5 @@
 import Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique
-import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
+import Mathlib.MeasureTheory.Function.SimpleFunc
 
 open scoped ENNReal
 

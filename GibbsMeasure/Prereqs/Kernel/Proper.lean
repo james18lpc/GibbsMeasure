@@ -1,6 +1,5 @@
 import Mathlib.MeasureTheory.Integral.Bochner
 import Mathlib.Probability.Kernel.Basic
-import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
 
 /-!
 # Proper kernels
@@ -100,7 +99,7 @@ lemma IsProper.setLIntegral_inter_eq_indicator_mul_setLIntegral (hπ : IsProper 
 lemma IsProper.lintegral_mul (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧) (hf : Measurable[𝓧] f)
     (hg : Measurable[𝓑] g) (x₀ : X) :
     ∫⁻ x, f x * g x ∂(π x₀) = g x₀ * ∫⁻ x, f x ∂(π x₀) := by
-  refine hg.ennreal_induction' ?_ ?_ ?_
+  refine hg.ennreal_induction ?_ ?_ ?_
   · rintro c A hA
     simp_rw [← smul_indicator_one_apply, mul_smul_comm, smul_eq_mul]
     rw [lintegral_const_mul, hπ.lintegral_mul_indicator h𝓑𝓧 hf hA, mul_assoc]

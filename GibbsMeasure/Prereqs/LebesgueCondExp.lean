@@ -18,7 +18,10 @@ noncomputable def lcondexp : α → ℝ≥0∞ :=
   if hm : m ≤ m₀ then
     if _h : SigmaFinite (μ.trim hm) then
       if Measurable[m] f then f
-      else ENNReal.ofReal ∘ ⨆ n, (μ[ENNReal.toReal ∘ SimpleFunc.eapproxSigmaFinite μ f n | m])
+      else if hf : Measurable[m₀] f then
+        ENNReal.ofReal ∘
+          ⨆ n, μ[ENNReal.toReal ∘ (hf.stronglyMeasurable.finStronglyMeasurable μ).approx n | m]
+      else 0
     else 0
   else 0
 
@@ -34,8 +37,10 @@ lemma lcondexp_of_not_sigmaFinite (hm : m ≤ m₀) (hμm_not : ¬SigmaFinite (�
     μ⁻[f|m] = 0 := by rw [lcondexp, dif_pos hm, dif_neg hμm_not]
 
 lemma lcondexp_of_sigmaFinite (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm)] :
-    μ⁻[f|m] = if Measurable[m] f then f else
-      ENNReal.ofReal ∘ ⨆ n, (μ[ENNReal.toReal ∘ SimpleFunc.eapproxSigmaFinite μ f n | m]) := by
+    μ⁻[f|m] = if Measurable[m] f then f else if hf : Measurable[m₀] f then
+      ENNReal.ofReal ∘
+        ⨆ n, μ[ENNReal.toReal ∘ (hf.stronglyMeasurable.finStronglyMeasurable μ).approx n | m]
+      else 0 := by
   simp [lcondexp, dif_pos hm, hμm]
 
 lemma lcondexp_of_measurable (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm)] {f : α → ℝ≥0∞}
@@ -64,7 +69,8 @@ lemma measurable_lcondexp : Measurable[m] (μ⁻[f|m]) := by
   split_ifs with hfm
   · exact hfm
   · simp only [Function.comp_def, iSup_apply]
-    exact .ennreal_ofReal $ measurable_iSup fun n ↦ stronglyMeasurable_condexp.measurable
+    exact .ennreal_ofReal <| .iSup fun n ↦ stronglyMeasurable_condexp.measurable
+  · fun_prop
 
 lemma lcondexp_congr_ae (h : f =ᵐ[μ] g) : μ⁻[f|m] =ᵐ[μ] μ⁻[g|m] := by
   by_cases hm : m ≤ m₀
