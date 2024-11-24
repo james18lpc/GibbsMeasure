@@ -3,7 +3,6 @@ import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Prereqs.Filtration.Consistent
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.CondExp
-import GibbsMeasure.Mathlib.MeasureTheory.Measure.MeasureSpace
 
 /-!
 # Gibbs measures
@@ -167,7 +166,7 @@ private lemma measurable_isssdFun (Λ : Finset S) :
   refine @MeasurableSpace.generateFrom_induction _ _ _ ?_ ?_ ?_ ?_
   · rintro _ ⟨s, A, hA, rfl⟩ _
     have hA' : MeasurableSet (Function.eval s ⁻¹' A : Set (S → E)) := sorry
-    have come_on η := Measure.map_apply' (α := ((Λ : Set S)) → E) (β := S → E)
+    have come_on η := Measure.map_apply (α := ((Λ : Set S)) → E) (β := S → E)
       (f := juxt (Λ : Set S) η) (μ := Measure.pi fun _ : Λ ↦ ν) Measurable.juxt hA'
     simp only [come_on, ← preimage_comp, Function.comp, Function.eval]
     by_cases hs : s ∈ Λ
