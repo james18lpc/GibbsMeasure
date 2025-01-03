@@ -125,7 +125,7 @@ lemma IsProper.setLIntegral_inter_eq_indicator_mul_setLIntegral (Λ : Finset S) 
 
 lemma IsProper.lintegral_mul (hγ : γ.IsProper) (Λ : Finset S) (hf : Measurable f)
     (hg : Measurable[cylinderEvents Λᶜ] g) :
-    ∫⁻ x, f x * g x ∂(γ Λ η₀) = g η₀ * ∫⁻ x, f x ∂(γ Λ η₀) :=
+    ∫⁻ x, g x * f x ∂(γ Λ η₀) = g η₀ * ∫⁻ x, f x ∂(γ Λ η₀) :=
   (hγ _).lintegral_mul cylinderEvents_le_pi hf hg _
 
 end IsProper

@@ -1,5 +1,5 @@
+import Mathlib.Probability.Kernel.Proper
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
-import GibbsMeasure.Prereqs.Kernel.Proper
 
 open MeasureTheory ENNReal NNReal Set
 
@@ -8,7 +8,7 @@ variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : Kernel[𝓑, 𝓧] X 
   {A B : Set X} {f g : X → ℝ≥0∞} {x₀ : X}
 
 @[mk_iff]
-class IsCondExp (π : Kernel[𝓑, 𝓧] X X) (μ : Measure[𝓧] X) : Prop :=
+class IsCondExp (π : Kernel[𝓑, 𝓧] X X) (μ : Measure[𝓧] X) : Prop where
   condexp_ae_eq_kernel_apply ⦃A⦄ : MeasurableSet[𝓧] A →
     μ[A.indicator 1| 𝓑] =ᵐ[μ] fun a ↦ (π a A).toReal
 

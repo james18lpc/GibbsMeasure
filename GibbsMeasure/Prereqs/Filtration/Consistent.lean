@@ -1,4 +1,4 @@
-import Mathlib.Probability.Kernel.Composition
+import Mathlib.Probability.Kernel.Composition.Basic
 import Mathlib.Probability.Process.Filtration
 
 open ProbabilityTheory Set MeasureTheory ENNReal NNReal
