@@ -1,5 +1,8 @@
 # Gibbs Measures
 
+[![.github/workflows/push.yml](https://github.com/james18lpc/GibbsMeasure/actions/workflows/push.yml/badge.svg)](https://github.com/james18lpc/GibbsMeasure/actions/workflows/push.yml)
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/james18lpc/GibbsMeasure)
+
 The purpose of this repository is to *digitise* some mathematical definitions, theorem statements
 and theorem proofs. Digitisation, or formalisation, is a process where the source material,
 typically a mathematical textbook or a pdf file or website or video, is transformed into definitions
@@ -19,7 +22,7 @@ The formal system which we are using as a target system is Lean's dependent type
 project being developed by the [Lean FRO](https://lean-fro.org/) AWS by Leonardo de Moura and his
 team.
 
-## Content of this project
+## Content
 
 This project currently contains a definition of Gibbs measures, but no construction yet.
 
@@ -34,6 +37,8 @@ The Lean code is contained in the directory `GibbsMeasure/`. The subdirectories 
 On top of the new developments, there are many basic lemmas needed for this project that are
 currently missing from Mathlib.
 
+See the [upstreaming dashboard](https://james18lpc.github.io/GibbsMeasure/upstreaming) for more information.
+
 ## Build the Lean files
 
 To build the Lean files of this project, you need to have a working version of Lean.
@@ -47,19 +52,7 @@ In either case, run `lake exe cache get` and then `lake build` to build the proj
 
 ## Build the blueprint
 
-To build the web version of the blueprint, you need a working LaTeX installation.
-Furthermore, you need some packages:
-```
-sudo apt install graphviz libgraphviz-dev
-pip install -r blueprint/requirements.txt
-```
-
-To actually build the blueprint, run
-```
-lake exe cache get
-lake build
-inv all
-```
+See instructions at https://github.com/PatrickMassot/leanblueprint/.
 
 ## Acknowledgements
 

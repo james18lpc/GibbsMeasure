@@ -4,7 +4,7 @@ import re
 
 def pretty_file(filename: str):
     prettyname = filename.replace(".lean", "").replace("/", ".")
-    url = f"https://github.com/james18lpc/GibbsMeasure/blob/master/{filename}"
+    url = f"https://github.com/james18lpc/GibbsMeasure/blob/main/{filename}"
     return f"[{filename}]({url})"
 
 files = [file for tree in os.walk("GibbsMeasure") for file in glob(os.path.join(tree[0], '*.lean'))]
