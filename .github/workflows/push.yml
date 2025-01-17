@@ -37,8 +37,8 @@ jobs:
         run: |
           grep -r --files-without-match 'import GibbsMeasure' GibbsMeasure | sort > 1.txt
           grep -r --files-with-match 'sorry' GibbsMeasure | sort > 2.txt
-          mkdir -p docs/_includes
-          comm -23 1.txt 2.txt | sed -e 's/^\(.*\)$/- [`\1`](https:\/\/github.com\/james18lpc\/GibbsMeasure\/blob\/master\/\1)/' > docs/_includes/files_to_upstream.md
+          mkdir -p website/_includes
+          comm -23 1.txt 2.txt | sed -e 's/^\(.*\)$/- [`\1`](https:\/\/github.com\/james18lpc\/GibbsMeasure\/blob\/master\/\1)/' > website/_includes/files_to_upstream.md
           rm 1.txt 2.txt
 
       - name: Count sorries
@@ -71,7 +71,7 @@ jobs:
       - name: Build documentation
         run: ~/.elan/bin/lake -R -Kenv=dev build GibbsMeasure:docs
 
-      - name: Build blueprint and copy to `docs/blueprint`
+      - name: Build blueprint and copy to `website/blueprint`
         uses: xu-cheng/texlive-action@v2
         with:
           docker_image: ghcr.io/xu-cheng/texlive-full:20231201
@@ -86,13 +86,13 @@ jobs:
             pip install pygraphviz --global-option=build_ext --global-option="-L/usr/lib/graphviz/" --global-option="-R/usr/lib/graphviz/"
             pip install leanblueprint
             leanblueprint pdf
-            cp blueprint/print/print.pdf docs/blueprint.pdf
+            cp blueprint/print/print.pdf website/blueprint.pdf
             leanblueprint web
-            cp -r blueprint/web docs/blueprint
+            cp -r blueprint/web website/blueprint
 
-      - name: Move documentation to `docs/docs`
+      - name: Move documentation to `website/docs`
         run: |
-          mv .lake/build/doc docs/docs
+          mv .lake/build/doc website/docs
 
       - name: Bundle dependencies
         uses: ruby/setup-ruby@v1
@@ -103,12 +103,12 @@ jobs:
 
       - name: Build website using Jekyll
         working-directory: docs
-        run: JEKYLL_ENV=production bundle exec jekyll build  # Note this will also copy the blueprint and API doc into docs/_site
+        run: JEKYLL_ENV=production bundle exec jekyll build  # Note this will also copy the blueprint and API doc into website/_site
 
       - name: Upload docs & blueprint artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: docs/_site
+          path: website/_site
 
       - name: Deploy to GitHub Pages
         id: deployment
@@ -120,4 +120,4 @@ jobs:
 
       - name: Make sure the cache works
         run: |
-          mv docs/docs .lake/build/doc
+          mv website/docs .lake/build/doc
