@@ -1,6 +1,13 @@
 import Mathlib.Probability.Kernel.Composition.Basic
 import Mathlib.Probability.Process.Filtration
 
+/-!
+# TODO
+
+Reopen https://github.com/leanprover-community/mathlib4/pull/17859 once we have more API depending
+on this definition.
+-/
+
 open ProbabilityTheory Set MeasureTheory ENNReal NNReal
 
 namespace MeasureTheory.Filtration
