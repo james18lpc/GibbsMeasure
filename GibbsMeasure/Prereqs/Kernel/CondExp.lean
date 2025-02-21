@@ -55,7 +55,18 @@ private lemma condexp_const_indicator_ae_eq_integral_kernel (c : ℝ) (A_mble : 
     condexp 𝓑 μ (A.indicator (fun _ ↦ (c : ℝ)))
       =ᵐ[μ] (fun x₀ ↦ ∫ x, A.indicator (fun _ ↦ (c : ℝ)) x ∂(π x₀)) := by
   have smul_eq : A.indicator (fun _ ↦ (c : ℝ)) = c • A.indicator (fun _ ↦ (1 : ℝ)) := by
-    sorry
+    apply funext
+    intro x
+    have hidentityc : (c • A.indicator (fun _ ↦ (1 : ℝ))) x = c * (A.indicator (fun _ ↦ (1 : ℝ)) x) := rfl
+    rw [hidentityc]
+    if hinA : x ∈ A then
+      rw [indicator_of_mem hinA, indicator_of_mem hinA]
+      exact Eq.symm (MulOneClass.mul_one c)
+    else
+      rw[indicator_of_not_mem hinA, indicator_of_not_mem hinA]
+      exact Eq.symm (CommMonoidWithZero.mul_zero c)
+
+
   have foo : c • condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
      =ᵐ[μ] condexp 𝓑 μ (A.indicator (fun _ ↦ (c : ℝ))) := by
     have := @condexp_smul X ℝ ℝ _ _ _ _ _ 𝓑 𝓧 μ c (A.indicator (fun _ ↦ (1 : ℝ)))
