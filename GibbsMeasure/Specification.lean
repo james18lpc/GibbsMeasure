@@ -67,7 +67,7 @@ protected lemma bind (hΛ : Λ₁ ⊆ Λ₂) (η : S → E) : (γ Λ₂ η).bind
 
 section IsIndep
 
-/-- An Independent specfication is a specification `γ` where `γ Λ₁ ∘ₖ γ Λ₂ = γ (Λ₁ ∪ Λ₂)` for all
+/-- An independent specification is a specification `γ` where `γ Λ₁ ∘ₖ γ Λ₂ = γ (Λ₁ ∪ Λ₂)` for all
 `Λ₁ Λ₂`. -/
 def IsIndep (γ : Specification S E) : Prop :=
   ∀ ⦃Λ₁ Λ₂⦄ [DecidableEq S] , (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = (γ (Λ₁ ∪ Λ₂)).comap id
@@ -346,7 +346,7 @@ structure IsPremodifier [MeasurableSpace E] (ρ : Finset S → (S → E) → ℝ
   comm_of_subset ⦃Λ₁ Λ₂ : Finset S⦄ ⦃ζ η : S → E⦄ (hΛ : Λ₁ ⊆ Λ₂)
     (hrestrict : ∀ s ∉ Λ₁, ζ s = η s) : ρ Λ₂ ζ * ρ Λ₁ η = ρ Λ₁ ζ * ρ Λ₂ η
 
-lemma IsPremodifier.isModifier_div (hρ : IsPremodifier ρ) (ν : Measure E) [IsProbabilityMeasure ν]:
+lemma IsPremodifier.isModifier_div (hρ : IsPremodifier ρ) (ν : Measure E) [IsProbabilityMeasure ν] :
     (isssd ν).IsModifier fun Λ σ ↦ ρ Λ σ / ∫⁻ x, ρ Λ x ∂(isssd ν Λ σ) where
   measurable Λ :=
     (hρ.measurable Λ).div ((hρ.measurable Λ).lintegral_kernel.mono cylinderEvents_le_pi le_rfl)
