@@ -1,4 +1,5 @@
-import Mathlib.Probability.Kernel.Composition.Basic
+import Mathlib.Probability.Kernel.Composition.Comp
+import Mathlib.Probability.Kernel.Composition.MapComap
 import Mathlib.Probability.Process.Filtration
 
 /-!

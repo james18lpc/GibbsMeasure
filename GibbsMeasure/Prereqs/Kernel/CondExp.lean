@@ -9,24 +9,24 @@ variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : Kernel[𝓑, 𝓧] X 
 
 @[mk_iff]
 class IsCondExp (π : Kernel[𝓑, 𝓧] X X) (μ : Measure[𝓧] X) : Prop where
-  condexp_ae_eq_kernel_apply ⦃A⦄ : MeasurableSet[𝓧] A →
+  condExp_ae_eq_kernel_apply ⦃A⦄ : MeasurableSet[𝓧] A →
     μ[A.indicator 1| 𝓑] =ᵐ[μ] fun a ↦ (π a A).toReal
 
 lemma isCondExp_iff_bind_eq_left (hπ : π.IsProper) (h𝓑𝓧 : 𝓑 ≤ 𝓧) [SigmaFinite (μ.trim h𝓑𝓧)] :
     IsCondExp π μ ↔ μ.bind π = μ := by
   simp_rw [isCondExp_iff, Filter.eventuallyEq_comm,
-    toReal_ae_eq_indicator_condexp_iff_forall_meas_inter_eq h𝓑𝓧, Measure.ext_iff]
+    toReal_ae_eq_indicator_condExp_iff_forall_meas_inter_eq h𝓑𝓧, Measure.ext_iff]
   refine ⟨fun h A hA ↦ ?_, fun h A hA B hB ↦ ?_⟩
   · rw [eq_comm, Measure.bind_apply hA (π.measurable.mono h𝓑𝓧 le_rfl)]
     simpa using h hA _ .univ
-  · rw [hπ.setLIntegral_eq_bind h𝓑𝓧 hA hB, eq_comm]
+  · rw [hπ.setLIntegral_eq_comp h𝓑𝓧 hA hB, eq_comm]
     exact h _ (by measurability)
 
-lemma condexp_ae_eq_kernel_apply [IsFiniteMeasure μ] [IsFiniteKernel π]
+lemma condExp_ae_eq_kernel_apply [IsFiniteMeasure μ] [IsFiniteKernel π]
     (h : ∀ (f : X → ℝ), Bornology.IsBounded (Set.range f) → Measurable[𝓧] f →
-      condexp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)))
+      condExp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)))
     {A : Set X} (A_mble : MeasurableSet[𝓧] A) :
-    condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ))) =ᵐ[μ] (fun x ↦ (π x A).toReal) := by
+    condExp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ))) =ᵐ[μ] (fun x ↦ (π x A).toReal) := by
   have ind_bdd : Bornology.IsBounded (Set.range (A.indicator (fun _ ↦ (1 : ℝ)))) := by
     apply (Metric.isBounded_Icc (0 : ℝ) 1).subset
     rw [range_subset_iff]
@@ -41,18 +41,18 @@ lemma condexp_ae_eq_kernel_apply [IsFiniteMeasure μ] [IsFiniteKernel π]
 
 variable [π.IsCondExp μ]
 
-private lemma condexp_indicator_ae_eq_integral_kernel (A_mble : MeasurableSet[𝓧] A) :
-    condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
+private lemma condExp_indicator_ae_eq_integral_kernel (A_mble : MeasurableSet[𝓧] A) :
+    condExp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
       =ᵐ[μ] (fun x₀ ↦ ∫ x, A.indicator (fun _ ↦ (1 : ℝ)) x ∂(π x₀)) := by
-  apply (IsCondExp.condexp_ae_eq_kernel_apply (π := π) A_mble).trans
+  apply (IsCondExp.condExp_ae_eq_kernel_apply (π := π) A_mble).trans
   simp_rw [← Pi.one_def, @integral_indicator_one X 𝓧 _ _ A_mble]
   rfl
 
 variable [IsFiniteMeasure μ] [IsFiniteKernel π]
 
-private lemma condexp_const_indicator_ae_eq_integral_kernel (c : ℝ) (A_mble : MeasurableSet[𝓧] A)
-    (h : condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ))) =ᵐ[μ] (fun x ↦ (π x A).toReal)) :
-    condexp 𝓑 μ (A.indicator (fun _ ↦ (c : ℝ)))
+private lemma condExp_const_indicator_ae_eq_integral_kernel (c : ℝ) (A_mble : MeasurableSet[𝓧] A)
+    (h : condExp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ))) =ᵐ[μ] (fun x ↦ (π x A).toReal)) :
+    condExp 𝓑 μ (A.indicator (fun _ ↦ (c : ℝ)))
       =ᵐ[μ] (fun x₀ ↦ ∫ x, A.indicator (fun _ ↦ (c : ℝ)) x ∂(π x₀)) := by
   have smul_eq : A.indicator (fun _ ↦ (c : ℝ)) = c • A.indicator (fun _ ↦ (1 : ℝ)) := by
     apply funext
@@ -66,13 +66,10 @@ private lemma condexp_const_indicator_ae_eq_integral_kernel (c : ℝ) (A_mble : 
     else
       rw[indicator_of_not_mem hinA, indicator_of_not_mem hinA]
       exact Eq.symm (CommMonoidWithZero.mul_zero c)
-
-
-  have foo : c • condexp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
-     =ᵐ[μ] condexp 𝓑 μ (A.indicator (fun _ ↦ (c : ℝ))) := by
-    have := @condexp_smul X ℝ ℝ _ _ _ _ _ 𝓑 𝓧 μ c (A.indicator (fun _ ↦ (1 : ℝ)))
+  have foo : c • condExp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
+     =ᵐ[μ] condExp 𝓑 μ (A.indicator (fun _ ↦ (c : ℝ))) := by
     rw [smul_eq]
-    exact Filter.EventuallyEq.symm this
+    exact (condExp_smul (μ := μ) c (A.indicator (fun _ ↦ (1 : ℝ))) 𝓑).symm
   nth_rw 2 [smul_eq]
   have int_smul (x₀ : X) := @integral_smul X ℝ _ ℝ _ _ 𝓧 (π x₀) _ _ c
     (A.indicator (fun _ ↦ (1 : ℝ)))
@@ -86,19 +83,19 @@ private lemma condexp_const_indicator_ae_eq_integral_kernel (c : ℝ) (A_mble : 
      = fun x₀ ↦ c * ∫ (a : X), A.indicator (fun x ↦ (1 : ℝ)) a ∂π x₀ := by
     sorry
   rw [← this]
-  have := condexp_indicator_ae_eq_integral_kernel (μ := μ) (π := π) A_mble
+  have := condExp_indicator_ae_eq_integral_kernel (μ := μ) (π := π) A_mble
   -- change c • μ[A.indicator fun x ↦ 1|𝓑] =ᶠ[ae μ]
   --   c • (fun x₀ ↦ ∫ (a : X), A.indicator (fun x ↦ 1) a ∂π x₀)
   sorry
 
-private lemma condexp_simpleFunc_ae_eq_integral_kernel (f : @SimpleFunc X 𝓧 ℝ) :
-    condexp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)) := by
+private lemma condExp_simpleFunc_ae_eq_integral_kernel (f : @SimpleFunc X 𝓧 ℝ) :
+    condExp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)) := by
   induction' f using SimpleFunc.induction with c A A_mble
   case h_ind =>
     sorry
   case h_add => sorry
 
-lemma condexp_ae_eq_integral_kernel (f : X → ℝ) :
-    condexp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)) := sorry
+lemma condExp_ae_eq_integral_kernel (f : X → ℝ) :
+    condExp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)) := sorry
 
 end ProbabilityTheory.Kernel
