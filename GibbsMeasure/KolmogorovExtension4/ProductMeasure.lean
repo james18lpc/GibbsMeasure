@@ -158,3 +158,4 @@ theorem lintegral_measurable [DecidableEq ι] {s : Finset ι}
     (x : (i : ι) → X i) : ∫⁻ y, f y ∂productMeasure μ = (∫⋯∫⁻_s, f ∂μ) x := sorry
 
 end ProductMeasure
+end MeasureTheory

@@ -71,7 +71,7 @@ section IsIndep
 `Λ₁ Λ₂`. -/
 def IsIndep (γ : Specification S E) : Prop :=
   ∀ ⦃Λ₁ Λ₂⦄ [DecidableEq S] , (γ Λ₁).comap id cylinderEvents_le_pi ∘ₖ γ Λ₂ = (γ (Λ₁ ∪ Λ₂)).comap id
-      (measurable_id'' $ by gcongr; exact Finset.subset_union_right)
+      (measurable_id'' <| by gcongr; exact Finset.subset_union_right)
 
 end IsIndep
 
@@ -192,7 +192,7 @@ def isssdFun (ν : Measure E) (Λ : Finset S) : Kernel[cylinderEvents Λᶜ] (S 
 lemma isssdFun_comp_isssdFun [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
     (isssdFun ν Λ₁).comap id cylinderEvents_le_pi ∘ₖ isssdFun ν Λ₂ =
       (isssdFun ν (Λ₁ ∪ Λ₂)).comap id
-        (measurable_id'' $ by gcongr; exact Finset.subset_union_right) :=
+        (measurable_id'' <| by gcongr; exact Finset.subset_union_right) :=
   sorry
 
 /-- The **Independent Specification with Single Spin Distribution**.
@@ -212,7 +212,7 @@ def isssd : Specification S E where
 lemma isssd_comp_isssd [DecidableEq S] (Λ₁ Λ₂ : Finset S) :
     (isssd ν Λ₁).comap id cylinderEvents_le_pi ∘ₖ isssd ν Λ₂ =
       (isssd ν (Λ₁ ∪ Λ₂)).comap id
-        (measurable_id'' $ by gcongr; exact Finset.subset_union_right) := isssdFun_comp_isssdFun ..
+        (measurable_id'' <| by gcongr; exact Finset.subset_union_right) := isssdFun_comp_isssdFun ..
 
 protected lemma IsProper.isssd : (isssd (S := S) ν).IsProper := by
   refine IsProper.of_inter_eq_indicator_mul fun Λ A hA B hB x ↦ ?_
@@ -333,7 +333,7 @@ lemma modification_apply (γ : Specification S E) (ρ : Finset S → (S → E) �
 protected lemma IsProper.modification (hγ : γ.IsProper) {hρ} : (γ.modification ρ hρ).IsProper := by
   refine IsProper.of_inter_eq_indicator_mul fun Λ A hA B hB η ↦ ?_
   rw [modification_apply, withDensity_apply _ hA,
-    withDensity_apply _ (hA.inter $ cylinderEvents_le_pi _ hB),
+    withDensity_apply _ (hA.inter <| cylinderEvents_le_pi _ hB),
     hγ.setLIntegral_inter_eq_indicator_mul_setLIntegral _ (hρ.measurable _) hA hB]
 
 /-- A premodifier is a family indexed by finsets `Λ : Finset S` of densities

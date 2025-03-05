@@ -36,7 +36,7 @@ jobs:
       - name: Copy README.md to website/index.md
         run: cp README.md website/index.md
 
-      - name: Print files to upstream
+      - name: Upstreaming dashboard
         run: |
           mkdir -p website/_includes
           python3 scripts/upstreaming_dashboard.py
@@ -50,19 +50,21 @@ jobs:
       - name: Build project
         run: ~/.elan/bin/lake build GibbsMeasure
 
-      - name: Cache dependencies docs
-        uses: actions/cache@v3
+      - name: File dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install graphviz -y
+          ~/.elan/bin/lake exe graph website/file_deps.pdf
+
+      - name: Cache documentation
+        uses: actions/cache@v4
         with:
-          path: docbuild/.lake/build/doc
+          path: website/docs
           key: MathlibDoc-${{ hashFiles('lake-manifest.json') }}
-          restore-keys: |
-            MathlibDoc-
+          restore-keys: MathlibDoc-
 
       - name: Build documentation
-        working-directory: docbuild
-        run: |
-          ~/.elan/bin/lake exe cache get || true
-          ~/.elan/bin/lake build GibbsMeasure:docs
+        run: scripts/build_docs.sh
 
       - name: Build blueprint and copy to `website/blueprint`
         uses: xu-cheng/texlive-action@v2
@@ -80,8 +82,7 @@ jobs:
             inv all
 
       - name: Copy documentation to `website/docs`
-        run: |
-          mv docbuild/.lake/build/doc website/docs
+        run: mv docs/build/* website/docs
 
       - name: Bundle dependencies
         uses: ruby/setup-ruby@v1
@@ -95,18 +96,14 @@ jobs:
         run: JEKYLL_ENV=production bundle exec jekyll build
 
       - name: Upload docs & blueprint artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: website/_site
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
 
       - name: Check declarations
         run: |
             ~/.elan/bin/lake exe checkdecls blueprint/lean_decls
-
-      - name: Make sure the cache works
-        run: |
-          mv website/docs docbuild/.lake/build/doc

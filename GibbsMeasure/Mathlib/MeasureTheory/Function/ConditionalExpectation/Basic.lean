@@ -42,3 +42,5 @@ lemma toReal_ae_eq_indicator_condexp_iff_forall_meas_inter_eq (hm : m ≤ m0)
     [SigmaFinite (μ.trim hm)] {g : α → ℝ≥0∞} {s : Set α} :
     (fun a ↦ (g a).toReal) =ᵐ[μ] μ[s.indicator 1| m] ↔
       ∀ t, MeasurableSet[m] t → μ (s ∩ t) = ∫⁻ a in t, g a ∂μ := sorry
+
+end MeasureTheory

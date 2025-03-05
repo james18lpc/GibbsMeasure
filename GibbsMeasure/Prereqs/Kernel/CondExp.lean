@@ -57,7 +57,8 @@ private lemma condexp_const_indicator_ae_eq_integral_kernel (c : ℝ) (A_mble : 
   have smul_eq : A.indicator (fun _ ↦ (c : ℝ)) = c • A.indicator (fun _ ↦ (1 : ℝ)) := by
     apply funext
     intro x
-    have hidentityc : (c • A.indicator (fun _ ↦ (1 : ℝ))) x = c * (A.indicator (fun _ ↦ (1 : ℝ)) x) := rfl
+    have hidentityc :
+      (c • A.indicator (fun _ ↦ (1 : ℝ))) x = c * (A.indicator (fun _ ↦ (1 : ℝ)) x) := rfl
     rw [hidentityc]
     if hinA : x ∈ A then
       rw [indicator_of_mem hinA, indicator_of_mem hinA]
@@ -99,3 +100,5 @@ private lemma condexp_simpleFunc_ae_eq_integral_kernel (f : @SimpleFunc X 𝓧 �
 
 lemma condexp_ae_eq_integral_kernel (f : X → ℝ) :
     condexp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)) := sorry
+
+end ProbabilityTheory.Kernel
