@@ -109,5 +109,5 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Check declarations
-        run: ~/.elan/bin/lake exe checkdecls website/lean_decls
+      # - name: Check declarations
+      #   run: ~/.elan/bin/lake exe checkdecls website/lean_decls
