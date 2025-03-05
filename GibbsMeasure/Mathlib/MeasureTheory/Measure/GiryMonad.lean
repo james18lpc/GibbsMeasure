@@ -1,4 +1,3 @@
-import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Basic
 import Mathlib.MeasureTheory.Measure.GiryMonad
 
 open scoped ENNReal
@@ -17,7 +16,7 @@ theorem measurable_of_measurable_coe' (t : Set (Set α)) (μ : β → Measure[.g
   · rintro g hg_meas hg
     dsimp at hg
     rw [← iUnion_disjointed]
-    simp_rw [measure_iUnion (disjoint_disjointed _) (.disjointed' hg_meas)]
+    simp_rw [measure_iUnion (disjoint_disjointed _) (.disjointed hg_meas)]
     refine .ennreal_tsum fun i ↦ ?_
     sorry
 
