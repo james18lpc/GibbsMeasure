@@ -90,10 +90,9 @@ private lemma condExp_const_indicator_ae_eq_integral_kernel (c : ℝ) (A_mble : 
 
 private lemma condExp_simpleFunc_ae_eq_integral_kernel (f : @SimpleFunc X 𝓧 ℝ) :
     condExp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)) := by
-  induction' f using SimpleFunc.induction with c A A_mble
-  case h_ind =>
-    sorry
-  case h_add => sorry
+  induction f using SimpleFunc.induction with
+  | const => sorry
+  | add => sorry
 
 lemma condExp_ae_eq_integral_kernel (f : X → ℝ) :
     condExp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)) := sorry

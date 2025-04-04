@@ -129,7 +129,7 @@ lemma lcondExp_bot' [hμ : NeZero μ] (f : α → ℝ≥0∞) :
   · have h : ¬SigmaFinite (μ.trim bot_le) := by rwa [sigmaFinite_trim_bot_iff]
     rw [not_isFiniteMeasure_iff] at hμ_finite
     rw [lcondExp_of_not_sigmaFinite bot_le h]
-    simp only [hμ_finite, ENNReal.top_toNNReal, GroupWithZero.inv_zero, zero_smul]
+    simp only [hμ_finite, ENNReal.toNNReal_top, GroupWithZero.inv_zero, zero_smul]
     rfl
   sorry
   -- have h_meas : Measurable[⊥] (μ⁻[f|⊥]) := measurable_lcondExp
@@ -148,7 +148,7 @@ lemma lcondExp_bot_ae_eq (f : α → ℝ≥0∞) :
   · exact .of_forall <| congr_fun (lcondExp_bot' f)
 
 lemma lcondExp_bot [IsProbabilityMeasure μ] (f : α → ℝ≥0∞) : μ⁻[f|⊥] = fun _ => ∫⁻ x, f x ∂μ := by
-  refine (lcondExp_bot' f).trans ?_; rw [measure_univ, ENNReal.one_toNNReal, inv_one, one_smul]
+  refine (lcondExp_bot' f).trans ?_; rw [measure_univ, ENNReal.toNNReal_one, inv_one, one_smul]
 
 lemma lcondExp_add : μ⁻[f + g|m] =ᵐ[μ] μ⁻[f|m] + μ⁻[g|m] := by
   by_cases hm : m ≤ m₀

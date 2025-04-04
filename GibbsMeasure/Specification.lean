@@ -182,7 +182,7 @@ private lemma measurable_isssdFun (Λ : Finset S) :
   · sorry
 
 /-- Auxiliary definition for `Specification.isssd`. -/
-@[simps (config := .asFn)]
+@[simps -fullyApplied]
 def isssdFun (ν : Measure E) (Λ : Finset S) : Kernel[cylinderEvents Λᶜ] (S → E) (S → E) :=
   @Kernel.mk _ _ (_) _
     (fun η ↦ Measure.map (juxt Λ η) (Measure.pi fun _ : Λ ↦ ν))
