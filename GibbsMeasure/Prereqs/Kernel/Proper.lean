@@ -14,7 +14,7 @@ namespace ProbabilityTheory.Kernel
 variable {X : Type*} {𝓑 𝓧 : MeasurableSpace X} {π : Kernel[𝓑, 𝓧] X X} {A B : Set X}
   {f g : X → ℝ≥0∞} {x₀ : X}
 
-lemma IsProper.integral_indicator_mul_indicator (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
+private lemma IsProper.integral_indicator_mul_indicator (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
  (hA : MeasurableSet[𝓧] A) (hB : MeasurableSet[𝓑] B) : (∫ x, (B.indicator 1 x * A.indicator 1 x) ∂(π x₀)
   = ((B.indicator 1 x₀) * (∫ x, A.indicator 1 x ∂(π x₀)) :ℝ))  := by
       rw [integral_eq_lintegral_of_nonneg_ae]
