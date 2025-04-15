@@ -1,6 +1,8 @@
 import GibbsMeasure.KolmogorovExtension4.ProductMeasure
+import GibbsMeasure.Mathlib.Data.ENNReal.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique
+import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.Prod
 import GibbsMeasure.Mathlib.Probability.Kernel.Condexp
