@@ -9,7 +9,6 @@ import Mathlib.Probability.Kernel.Proper
 
 We define the notion of properness for measure kernels and highlight important consequences.
 -/
-
 open MeasureTheory ENNReal NNReal Set
 open scoped ProbabilityTheory
 
@@ -35,6 +34,7 @@ private lemma IsProper.integral_indicator_mul_indicator (hπ : IsProper π) (h�
         (by measurability)]
       simp [ofReal_mul]
 
+
 lemma indicator_eq_mul_one (f: X → ℝ) (B: Set X): B.indicator f = (B.indicator 1)*f := by
   ext x
   by_cases hxiB:x ∈ B <;> simp [hxiB]
@@ -45,9 +45,12 @@ lemma integral_indicator_of_mul_indicator (f: X → ℝ) (B: Set X) {μ : Measur
    rw [indicator_eq_mul_one f B]
    rfl
 
+
+variable {f : X → ℝ}
 private lemma IsProper.integral_indicator_mul (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
     (hf : Integrable[𝓧] f (π x₀)) (hB : MeasurableSet[𝓑] B):
-      ∫ x, (B.indicator 1 x) * (f x) ∂(π x₀) = B.indicator 1 x₀ * ∫ x, f x ∂(π x₀) := by
+      ∫ x, (B.indicator 1 x) *  (f x)  ∂(π x₀) = 
+        (B.indicator 1 x₀) * (∫ x, (f x) ∂(π x₀)) := by
         apply Integrable.induction (μ:=(π x₀)) (fun (h:X→ℝ) ↦ Integrable[𝓧] h (π x₀) →
          ∫ x, (B.indicator 1 x) * (h x) ∂(π x₀) = B.indicator 1 x₀ * ∫ x, h x ∂(π x₀))
         · intro c S hmS bpS _
@@ -64,7 +67,7 @@ private lemma IsProper.integral_indicator_mul (hπ : IsProper π) (h𝓑𝓧 : �
            rhs
            intro x
            rw [mul_add]
-          have disj':  Disjoint (Function.support ((B.indicator 1)*f)) 
+          have disj':  Disjoint (Function.support ((B.indicator 1)*f))
            (Function.support ((B.indicator 1)*g)) := by
             simp
             refine (Disjoint.inter_left' B ?_)
@@ -99,7 +102,7 @@ private lemma IsProper.integral_indicator_mul (hπ : IsProper π) (h𝓑𝓧 : �
            intro f intf
            rw [←norm_sub_eq_zero_iff]
           simp [L1.integrable_coeFn]
-          refine IsClosed.preimage (f := fun g:↥(Lp ℝ 1 (π x₀)) ↦ ∫ (x : X), B.indicator 1 x * g x 
+          refine IsClosed.preimage (f := fun g:↥(Lp ℝ 1 (π x₀)) ↦ ∫ (x : X), B.indicator 1 x * g x
            ∂π x₀ - B.indicator 1 x₀ * ∫ (x : X), g x ∂π x₀ ) ?_ (t := {0}) ?_
           · refine Continuous.sub ?_ ?_
             · simp only [integral_indicator_of_mul_indicator]
