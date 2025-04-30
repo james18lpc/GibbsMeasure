@@ -46,8 +46,8 @@ lemma integral_indicator_of_mul_indicator (f: X → ℝ) (B: Set X) {μ : Measur
    rfl
 
 
-variable {f : X → ℝ}
-private lemma IsProper.integral_indicator_mul (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
+
+private lemma IsProper.integral_indicator_mul {f : X → ℝ} (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
     (hf : Integrable[𝓧] f (π x₀)) (hB : MeasurableSet[𝓑] B):
       ∫ x, (B.indicator 1 x) *  (f x)  ∂(π x₀) = 
         (B.indicator 1 x₀) * (∫ x, (f x) ∂(π x₀)) := by
