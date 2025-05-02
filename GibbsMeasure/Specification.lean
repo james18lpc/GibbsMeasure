@@ -150,7 +150,7 @@ lemma isGibbsMeasure_iff_frequently_bind_eq (hγ : γ.IsProper) [IsFiniteMeasure
   refine ⟨Filter.Frequently.of_forall, fun h Λ ↦ ?_⟩
   obtain ⟨Λ', h, hΛ'⟩ := h.forall_exists_of_atTop Λ
   rw [← hΛ', Measure.bind_bind, funext (γ.bind h)] <;>
-    exact (γ _).measurable.mono cylinderEvents_le_pi le_rfl
+    exact ((γ _).measurable.mono cylinderEvents_le_pi le_rfl).aemeasurable
 
 end IsGibbsMeasure
 
