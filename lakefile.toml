@@ -1,4 +1,5 @@
 name = "GibbsMeasure"
+keywords = ["math", "probability", "measure-theory", "statistical-physics", "percolation", "ising-model"]
 defaultTargets = ["GibbsMeasure"]
 
 [leanOptions]
