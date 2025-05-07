@@ -1,7 +1,6 @@
 import GibbsMeasure.Mathlib.Data.ENNReal.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Basic
-import Mathlib.MeasureTheory.Integral.Bochner
-import Mathlib.MeasureTheory.Integral.SetIntegral
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.Probability.Kernel.Proper
 
 /-!

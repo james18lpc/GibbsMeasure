@@ -56,7 +56,7 @@ open Measure
 instance {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y] {μ : Measure X} {κ : Kernel X Y}
     [IsProbabilityMeasure μ] [IsMarkovKernel κ] : IsProbabilityMeasure (μ.bind κ) := by
   constructor
-  rw [bind_apply MeasurableSet.univ (Kernel.measurable κ)]
+  rw [bind_apply MeasurableSet.univ (Kernel.aemeasurable κ)]
   simp
 
 theorem Measure.map_bind {X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y]
@@ -64,8 +64,8 @@ theorem Measure.map_bind {X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y]
     (μ : Measure X) (κ : Kernel X Y) (f : Y → Z) (mf : Measurable f) :
     (μ.bind κ).map f = μ.bind (Kernel.map κ f) := by
   ext s ms
-  rw [Measure.map_apply mf ms, Measure.bind_apply ms (Kernel.measurable _),
-    Measure.bind_apply (mf ms) (Kernel.measurable _)]
+  rw [Measure.map_apply mf ms, Measure.bind_apply ms (Kernel.aemeasurable _),
+    Measure.bind_apply (mf ms) (Kernel.aemeasurable _)]
   simp_rw [Kernel.map_apply' _ mf _ ms]
 
 theorem map_bind_eq_bind_comap {X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y]
@@ -73,9 +73,9 @@ theorem map_bind_eq_bind_comap {X Y Z : Type*} [MeasurableSpace X] [MeasurableSp
     (μ : Measure X) (κ : Kernel Y Z) (f : X → Y) (mf : Measurable f) :
     (μ.map f).bind κ = μ.bind (Kernel.comap κ f mf) := by
   ext s ms
-  rw [Measure.bind_apply ms (Kernel.measurable _), lintegral_map, Measure.bind_apply ms]
+  rw [Measure.bind_apply ms (Kernel.aemeasurable _), lintegral_map, Measure.bind_apply ms]
   · rfl
-  · exact Kernel.measurable _
+  · exact Kernel.aemeasurable _
   · exact Kernel.measurable_coe _ ms
   · exact mf
 
