@@ -1,4 +1,6 @@
 import GibbsMeasure.Mathlib.Data.ENNReal.Basic
+import GibbsMeasure.Mathlib.MeasureTheory.Function.L1Space.Integrable
+import GibbsMeasure.Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.Set
 import Mathlib.Probability.Kernel.Proper
@@ -45,42 +47,12 @@ lemma integral_indicator_of_mul_indicator (f: X → ℝ) (B: Set X) {μ : Measur
 private lemma IsProper.integral_indicator_mul {f : X → ℝ} (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
   (hf : Integrable[𝓧] f (π x₀)) (hB : MeasurableSet[𝓑] B) :
       ∫ x, B.indicator 1 x * f x ∂(π x₀) = B.indicator 1 x₀ * ∫ x, f x ∂(π x₀) := by
-  refine Integrable.induction _ ?_ ?_ ?_ ?_ hf
-  · intro c S hmS bpS
-    rw [integral_indicator_const (μ := π x₀) c hmS]
-    simp_rw [← smul_indicator_one_apply, smul_eq_mul, ← mul_assoc]
-    simp only [mul_comm, mul_assoc]
-    rw [integral_const_mul, integral_indicator_mul_indicator hπ h𝓑𝓧 hmS hB, ← mul_assoc]
-    rw [integral_indicator_one (μ := π x₀) hmS]
-    ring
-  · intro f g disj intf intg
-    simp_all
-    intro hp1 hp2
-    conv_lhs =>
-      rhs
-      intro x
-      rw [mul_add]
-    have intBf: Integrable (μ := (π x₀)) (B.indicator 1 * f : X → ℝ ) := by
-      have t1 := Integrable.indicator intf (h𝓑𝓧 B hB)
-      have t2:B.indicator f =B.indicator 1 * f:= by
-        ext x
-        by_cases hxiB: x ∈ B
-        · simp [hxiB]
-        · simp [hxiB]
-      rw [t2] at t1
-      exact t1
-    have intBg: Integrable (μ := (π x₀)) (B.indicator 1 * g : X → ℝ ) := by
-      have t1 := Integrable.indicator intg (h𝓑𝓧 B hB)
-      rw [indicator_eq_mul_one g B] at t1
-      exact t1
-    rw [integral_add intf intg]
-    have fun_add x : B.indicator 1 x * f x + B.indicator 1 x * g x
-      = (B.indicator 1 * f : X → ℝ) x + (B.indicator 1 * g : X → ℝ) x := by simp
-    simp [fun_add]
-    simp_rw [integral_add intBf intBg]
-    simp
-    rw [hp1, hp2]
-    ring
+  refine Integrable.induction _ (fun c S hmS bpS ↦ ?_) (fun f g _ hfint hgint hf hg ↦ ?_) ?_ ?_ hf
+  · simp [← smul_indicator_one_apply, mul_left_comm, integral_const_mul,
+      integral_indicator_mul_indicator hπ h𝓑𝓧 hmS hB]
+  · have : Integrable (fun x ↦ B.indicator 1 x * f x) (π x₀) := by simp [h𝓑𝓧 _ hB, *]
+    have : Integrable (fun x ↦ B.indicator 1 x * g x) (π x₀) := by simp [h𝓑𝓧 _ hB, *]
+    simp [mul_add, integral_add, *]
   · conv =>
       rhs
       rhs
@@ -98,7 +70,7 @@ private lemma IsProper.integral_indicator_mul {f : X → ℝ} (hπ : IsProper π
         · simp only [← L1.integral_eq_integral]
           refine L1.continuous_integral
     · exact isClosed_singleton
-  · intro k g hfAEg Intf hfIND
+  · intro k g hfAEg hf hfIND
     have t1 := hfIND
     rw [← integral_congr_ae hfAEg]
     have :  B.indicator (1 * g) =ᵐ[π x₀] (B.indicator 1) *k := by
