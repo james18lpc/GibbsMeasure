@@ -328,7 +328,11 @@ lemma modification_apply (γ : Specification S E) (ρ : Finset S → (S → E) �
 
 @[simp] lemma modification_modification (γ : Specification S E) (ρ₁ ρ₂ : Finset S → (S → E) → ℝ≥0∞)
     (hρ₁ : γ.IsModifier ρ₁) (hρ₂ : (γ.modification ρ₁ hρ₁).IsModifier ρ₂) :
-    (γ.modification ρ₁ hρ₁).modification ρ₂ hρ₂ = γ.modification (ρ₁ * ρ₂) (hρ₁.mul hρ₂) := sorry
+    (γ.modification ρ₁ hρ₁).modification ρ₂ hρ₂ = γ.modification (ρ₁ * ρ₂) (hρ₁.mul hρ₂) := by
+  ext Λ σ s hs
+  simp only [modification_apply, Pi.mul_apply]
+  rw [withDensity_apply _ hs, withDensity_apply _ hs,
+    setLIntegral_withDensity_eq_setLIntegral_mul _ (hρ₁.measurable Λ) (hρ₂.1 Λ) hs]
 
 protected lemma IsProper.modification (hγ : γ.IsProper) {hρ} : (γ.modification ρ hρ).IsProper := by
   refine IsProper.of_inter_eq_indicator_mul fun Λ A hA B hB η ↦ ?_
