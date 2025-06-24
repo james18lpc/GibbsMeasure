@@ -64,20 +64,14 @@ private lemma condExp_const_indicator_ae_eq_integral_kernel (c : ℝ) (A_mble : 
       rw [indicator_of_mem hinA, indicator_of_mem hinA]
       exact Eq.symm (MulOneClass.mul_one c)
     else
-      rw[indicator_of_not_mem hinA, indicator_of_not_mem hinA]
+      rw [indicator_of_notMem hinA, indicator_of_notMem hinA]
       exact Eq.symm (CommMonoidWithZero.mul_zero c)
   have foo : c • condExp 𝓑 μ (A.indicator (fun _ ↦ (1 : ℝ)))
      =ᵐ[μ] condExp 𝓑 μ (A.indicator (fun _ ↦ (c : ℝ))) := by
     rw [smul_eq]
     exact (condExp_smul (μ := μ) c (A.indicator (fun _ ↦ (1 : ℝ))) 𝓑).symm
   nth_rw 2 [smul_eq]
-  have int_smul (x₀ : X) := @integral_smul X ℝ _ ℝ _ _ 𝓧 (π x₀) _ _ c
-    (A.indicator (fun _ ↦ (1 : ℝ)))
-  --simp_rw [@integral_smul X ℝ _ ℝ _ _ 𝓧 (π _) _ _ c (A.indicator (fun _ ↦ (1 : ℝ)))]
-  --apply this.symm
-  simp at *
-  simp_rw [int_smul]
-  --rw [smul_eq]
+  simp [integral_const_mul]
   apply foo.symm.trans
   have : c • (fun x₀ ↦ ∫ (a : X), A.indicator (fun x ↦ (1 : ℝ)) a ∂π x₀)
      = fun x₀ ↦ c * ∫ (a : X), A.indicator (fun x ↦ (1 : ℝ)) a ∂π x₀ := by
