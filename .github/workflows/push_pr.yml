@@ -41,9 +41,6 @@ jobs:
       - name: Get cache
         run: ~/.elan/bin/lake exe cache get || true
 
-      - name: Build project
-        run: ~/.elan/bin/lake build Toric
-
       - name: Cache documentation
         uses: actions/cache@v4
         with:
