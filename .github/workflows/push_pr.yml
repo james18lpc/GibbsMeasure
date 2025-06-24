@@ -17,11 +17,11 @@ jobs:
       - name: Don't 'import Mathlib', use precise imports
         if: always()
         run: |
-          ! (find Toric -name "*.lean" -type f -print0 | xargs -0 grep -E -n '^import Mathlib$')
+          ! (find GibbsMeasure -name "*.lean" -type f -print0 | xargs -0 grep -E -n '^import Mathlib$')
 
-      - name: Files in Toric.Mathlib can't import Toric files outside Toric.Mathlib
+      - name: Files in GibbsMeasure.Mathlib can't import GibbsMeasure files outside GibbsMeasure.Mathlib
         run: |
-          ! (find Toric/Mathlib -name "*.lean" -type f -print0 | xargs -0 grep -E -n '^import Toric.(?!Mathlib)')
+          ! (find GibbsMeasure/Mathlib -name "*.lean" -type f -print0 | xargs -0 grep -E -n '^import GibbsMeasure.(?!Mathlib)')
 
   build_project:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
         run: ~/.elan/bin/lake exe cache get || true
 
       - name: Build project
-        run: ~/.elan/bin/lake build Toric
+        run: ~/.elan/bin/lake build
 
       - name: Cache documentation
         uses: actions/cache@v4
