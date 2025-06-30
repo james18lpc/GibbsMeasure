@@ -102,15 +102,12 @@ private lemma IsProper.integral_mul' (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ �
          ((π x₀).trim h𝓑𝓧) := by
            apply (@integrable_add_of_disjoint X ℝ 𝓑 (inferInstance) (μ := (π x₀).trim h𝓑𝓧)
             (f * f1) (f  * f2) disj' ?_ ?_).mp hpos
-           · rw [stronglyMeasurable_iff_measurable]
-             have f1_meas :=  measurable_ofIntegrable (m:=𝓑) trimcomp Intf1
-             have f_meas:@Measurable X ℝ 𝓑 (inferInstance) f := measurable_ofIntegrable (m:=𝓑)
-              trimcomp hf
-             apply Measurable.mul
-             · exact f_meas
-             · exact f1_meas
-           · rw [stronglyMeasurable_iff_measurable]
-             have f2_meas :=  measurable_ofIntegrable (m:=𝓑) trimcomp Intf2
+           <;> rw [stronglyMeasurable_iff_measurable]
+           ·  have f1_meas :=  measurable_ofIntegrable (m:=𝓑) trimcomp Intf1
+              apply Measurable.mul
+              · exact f_meas
+              · exact f1_meas
+           · have f2_meas :=  measurable_ofIntegrable (m:=𝓑) trimcomp Intf2
              apply Measurable.mul
              · exact f_meas
              · exact f2_meas
