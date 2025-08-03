@@ -4,7 +4,9 @@ import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique
 import GibbsMeasure.Mathlib.MeasureTheory.Function.L1Space.Integrable
 import GibbsMeasure.Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFuncDensLp
+import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
+import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFuncDenseLp
+import GibbsMeasure.Mathlib.MeasureTheory.Function.StronglyMeasurable.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Integral.Bochner.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.AEMeasurable
