@@ -168,7 +168,7 @@ private lemma measurable_isssdFun (Λ : Finset S) :
     have hA' : MeasurableSet (Function.eval s ⁻¹' A : Set (S → E)) := sorry
     have come_on η := Measure.map_apply (α := ((Λ : Set S)) → E) (β := S → E)
       (f := juxt (Λ : Set S) η) (μ := Measure.pi fun _ : Λ ↦ ν) Measurable.juxt hA'
-    simp only [come_on, ← preimage_comp, Function.comp, Function.eval]
+    simp only [come_on, ← preimage_comp]
     by_cases hs : s ∈ Λ
     · simp [Function.comp_def, juxt_apply_of_mem (Finset.mem_coe.2 hs)]
     · classical

@@ -33,9 +33,9 @@ private lemma IsProper.integral_indicator_mul_indicator (hπ : IsProper π) (h�
     _ = (B.indicator 1 x₀ * ∫⁻ x, A.indicator 1 x ∂π x₀).toReal := by
       rw [hπ.lintegral_mul h𝓑𝓧 (by measurability) (by measurability)]
     _ = B.indicator 1 x₀ * ∫ x, A.indicator 1 x ∂π x₀ := by
-      rw [integral_eq_lintegral_of_nonneg_ae (.of_forall <| by simp [indicator_nonneg, mul_nonneg])
+      rw [integral_eq_lintegral_of_nonneg_ae (.of_forall <| by simp [indicator_nonneg])
         (by measurability)]
-      simp [ofReal_mul]
+      simp
 
 private lemma IsProper.integral_indicator_mul {f : X → ℝ} (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
     (hf : Integrable[𝓧] f (π x₀)) (hB : MeasurableSet[𝓑] B) :
@@ -49,7 +49,7 @@ private lemma IsProper.integral_indicator_mul {f : X → ℝ} (hπ : IsProper π
     simp [mul_add, integral_add, *]
   · refine isClosed_eq ?_ <| by fun_prop
     simpa [integral_indicator (h𝓑𝓧 B hB), ← indicator_mul_left] using continuous_setIntegral _
-  · simpa [integral_congr_ae <| .mul .rfl hfg, integral_congr_ae hfg] using hf
+  · simpa [integral_congr_ae <| .fun_mul .rfl hfg, integral_congr_ae hfg] using hf
 
 lemma IsProper.integral_mul (hπ : IsProper π) (h𝓑𝓧 : 𝓑 ≤ 𝓧) (f g : X → ℝ) (x₀ : X)
     (hf : Integrable[𝓧] f (π x₀)) (hg : Integrable[𝓑] (f * g) (@Measure.map _ _ 𝓧 𝓑 id (π x₀))) :
