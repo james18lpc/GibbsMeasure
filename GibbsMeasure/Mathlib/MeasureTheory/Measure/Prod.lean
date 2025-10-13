@@ -1,26 +1,43 @@
 import Mathlib.MeasureTheory.Measure.Prod
+import Mathlib.Probability.HasLaw
 
-namespace MeasureTheory.Measure
 variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
 
 open Set
+namespace ProbabilityTheory
+open MeasureTheory
 
-omit [MeasurableSpace X] [MeasurableSpace Y] in
-private lemma preimage_fst_prod {X Y} (s : Set X) :
-  (Prod.fst : X × Y → X) ⁻¹' s = s ×ˢ (univ : Set Y) := by
-  ext p; rcases p with ⟨x, y⟩
-  simp [Set.mem_preimage, Set.mem_prod]
+-- General facts: the total mass of P equals the total mass of the law μ.
+section
+variable {Ω 𝓧 : Type*} [MeasurableSpace Ω] [MeasurableSpace 𝓧]
+variable {P : Measure Ω} {μ : Measure 𝓧} {X : Ω → 𝓧} {x : 𝓧}
 
-omit [MeasurableSpace X] [MeasurableSpace Y] in
-private lemma preimage_snd_prod {X Y} (t : Set Y) :
-  (Prod.snd : X × Y → Y) ⁻¹' t = (univ : Set X) ×ˢ t := by
-  ext p; rcases p with ⟨x, y⟩
-  simp [Set.mem_preimage, Set.mem_prod]
+/-- If `X` has law `μ` under `P`, then `P univ = μ univ`. -/
+lemma HasLaw.measure_univ_eq (h : ProbabilityTheory.HasLaw X μ P) : P univ = μ univ := by
+  have hmap_congr :
+      P.map X = P.map (h.aemeasurable.mk X) := Measure.map_congr h.aemeasurable.ae_eq_mk
+  have hmap_univ :
+      (P.map (h.aemeasurable.mk X)) univ = P univ := by
+    simp [Measure.map_apply h.aemeasurable.measurable_mk MeasurableSet.univ, preimage_univ]
+  have hmapX_univ : (P.map X) univ = P univ := by
+    simpa using (congrArg (fun m => m univ) hmap_congr).trans hmap_univ
+  simpa [h.map_eq] using hmapX_univ.symm
+
+/-- If `X` has Dirac law under `P`, then `P` has total mass `1`. -/
+lemma HasLaw.measure_univ_of_dirac (h : ProbabilityTheory.HasLaw X
+    (Measure.dirac x) P) : P univ = 1 := by
+  have hx : (Measure.dirac x) univ = 1 := by simp
+  simpa [hx] using h.measure_univ_eq
+
+end
+end ProbabilityTheory
+
+namespace MeasureTheory.Measure
 
 section
 
 variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
-open Set
+open Set ProbabilityTheory
 
 -- Total mass from a Dirac marginal
 lemma measure_univ_of_marg_snd_dirac
@@ -70,7 +87,6 @@ lemma rect_of_marg_snd_dirac
     (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
     ∀ s t, MeasurableSet s → MeasurableSet t →
       μ (s ×ˢ t) = (Measure.map Prod.fst μ) s * (Measure.dirac y) t := by
-  classical
   intro s t hs ht
   by_cases hyt : y ∈ t
   · have h_univ_tcompl_zero : μ (univ ×ˢ tᶜ) = 0 := by
@@ -80,7 +96,7 @@ lemma rect_of_marg_snd_dirac
         rw [← marg_Y]; rw [marg_Y]; rw [← marg_Y]; aesop
       have : μ (Prod.snd ⁻¹' (tᶜ)) = 0 := by
         simpa [Measure.map_apply measurable_snd ht.compl, hdirac] using h'
-      simpa only [preimage_snd_prod] using this
+      simpa only [Set.univ_prod] using this
     have h_stcompl_zero : μ (s ×ˢ tᶜ) = 0 := by
       refine measure_mono_null ?_ h_univ_tcompl_zero
       exact prod_mono (fun ⦃a⦄ a ↦ trivial) fun ⦃a⦄ a ↦ a
@@ -110,7 +126,7 @@ lemma rect_of_marg_snd_dirac
         exact (dirac_eq_zero_iff_not_mem ht).mpr hyt
       have : μ (Prod.snd ⁻¹' t) = 0 := by
         simpa [Measure.map_apply measurable_snd ht, hdirac] using h'
-      simpa [preimage_snd_prod] using this
+      simpa [Set.univ_prod] using this
     have h_st_zero : μ (s ×ˢ t) = 0 := by
       refine measure_mono_null ?_ h_univ_t_zero
       exact prod_mono (fun ⦃a⦄ a ↦ trivial) fun ⦃a⦄ a ↦ a
@@ -120,7 +136,6 @@ lemma eq_prod_of_marg_snd_dirac
     (μ : Measure (X × Y)) (y : Y)
     (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
     μ = (Measure.map Prod.fst μ).prod (Measure.dirac y) := by
-  classical
   have hμ_univ : μ univ = 1 := measure_univ_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
   have hνX_univ : (Measure.map Prod.fst μ) univ = 1 := by
     simp [Measure.map_apply measurable_fst MeasurableSet.univ, preimage_univ, hμ_univ]
@@ -133,17 +148,29 @@ lemma eq_prod_of_marg_snd_dirac
     (μ := Measure.map Prod.fst μ) (ν := Measure.dirac y) (μν := μ) hrect)
   simpa using hprod.symm
 
+-- Factorization as a pushforward from the first marginal
 lemma eq_mapMk_of_marg_snd_dirac
     (μ : Measure (X × Y)) (y : Y)
     (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
     μ = Measure.map (fun x : X => (x, y)) (Measure.map Prod.fst μ) := by
+  have h := eq_prod_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
   haveI : IsFiniteMeasure (Measure.map Prod.fst μ) :=
     isFinite_map_fst_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
   haveI : SigmaFinite (Measure.map Prod.fst μ) := by infer_instance
   haveI : IsFiniteMeasure (Measure.dirac y) := by infer_instance
   haveI : SigmaFinite (Measure.dirac y) := by infer_instance
-  have h := eq_prod_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
-  simpa [Measure.prod_dirac] using h
+  have hm :
+      (Measure.map Prod.fst μ).prod (Measure.dirac y)
+        = Measure.map (fun x : X => (x, y)) (Measure.map Prod.fst μ) := by
+    simpa using (Measure.prod_dirac (μ := Measure.map Prod.fst μ) (y := y))
+  exact h.trans hm
+
+/-- If a random variable has Dirac law, then the joint measure factors as a pushforward -/
+lemma HasLaw.eq_map_mk_of_dirac {P : Measure (X × Y)} {y : Y}
+    (h : ProbabilityTheory.HasLaw (Prod.snd : X × Y → Y) (Measure.dirac y) P) :
+    P = Measure.map (fun x => (x, y)) (Measure.map Prod.fst P) := by
+  simpa [h.map_eq] using
+    (eq_mapMk_of_marg_snd_dirac (μ := P) (y := y) (marg_Y := h.map_eq))
 
 lemma eq_prod_of_marg_fst_dirac
     (μ : Measure (X × Y)) (x : X)
@@ -228,4 +255,95 @@ lemma eq_mapMk_of_dirac_left
 
 end
 
-end MeasureTheory.Measure
+namespace ProbabilityTheory
+open MeasureTheory
+
+section
+variable {Ω X Y : Type*} [MeasurableSpace Ω] [MeasurableSpace X] [MeasurableSpace Y]
+variable {P : Measure Ω} {Xf : Ω → X} {Yf : Ω → Y} {μX : Measure X} {μY : Measure Y} {y : Y} {x : X}
+
+/-- If the second coordinate has Dirac law, the joint law is the pushforward of the first law. -/
+lemma law_pair_eq_map_mk_of_snd_dirac
+    (hX : ProbabilityTheory.HasLaw Xf μX P) (hY : ProbabilityTheory.HasLaw Yf (Measure.dirac y) P) :
+    P.map (fun ω => (Xf ω, Yf ω)) = Measure.map (fun x : X => (x, y)) μX := by
+  set μ := Measure.map (fun ω => (Xf ω, Yf ω)) P
+  have hpair_ae : AEMeasurable (fun ω => (Xf ω, Yf ω)) P :=
+    hX.aemeasurable.prodMk hY.aemeasurable
+  have hmap_snd :=
+    (AEMeasurable.map_map_of_aemeasurable (μ := P)
+      (g := Prod.snd) (f := fun ω => (Xf ω, Yf ω))
+      (measurable_snd.aemeasurable) hpair_ae)
+  have hcomp_snd : (Prod.snd ∘ fun ω => (Xf ω, Yf ω)) = Yf := by
+    funext ω; simp
+  have margY : Measure.map Prod.snd μ = Measure.dirac y := by
+    simpa [μ, hcomp_snd, hY.map_eq] using hmap_snd
+  have hmap_fst :=
+    (AEMeasurable.map_map_of_aemeasurable (μ := P)
+      (g := Prod.fst) (f := fun ω => (Xf ω, Yf ω))
+      (measurable_fst.aemeasurable) hpair_ae)
+  have hcomp_fst : (Prod.fst ∘ fun ω => (Xf ω, Yf ω)) = Xf := by
+    funext ω; simp
+  have margX : Measure.map Prod.fst μ = Measure.map Xf P := by
+    simpa [μ, hcomp_fst] using hmap_fst
+  have hμ :=
+    MeasureTheory.Measure.eq_mapMk_of_marg_snd_dirac (μ := μ) (y := y) (marg_Y := margY)
+  simpa [μ, margX, hX.map_eq] using hμ
+
+/-- Symmetric version: if the first coordinate has Dirac law, the joint law is a pushforward
+from the second law. -/
+lemma law_pair_eq_map_mk_of_fst_dirac
+    (hY : ProbabilityTheory.HasLaw Yf μY P) (hX : ProbabilityTheory.HasLaw Xf (Measure.dirac x) P) :
+    P.map (fun ω => (Xf ω, Yf ω)) = Measure.map (fun z : Y => (x, z)) μY := by
+  set μ := Measure.map (fun ω => (Xf ω, Yf ω)) P
+  have hpair_ae : AEMeasurable (fun ω => (Xf ω, Yf ω)) P :=
+    hX.aemeasurable.prodMk hY.aemeasurable
+  have hmap_fst :=
+    (AEMeasurable.map_map_of_aemeasurable (μ := P)
+      (g := Prod.fst) (f := fun ω => (Xf ω, Yf ω))
+      (measurable_fst.aemeasurable) hpair_ae)
+  have hcomp_fst : (Prod.fst ∘ fun ω => (Xf ω, Yf ω)) = Xf := by
+    funext ω; simp
+  have margX : Measure.map Prod.fst μ = Measure.dirac x := by
+    simpa [μ, hcomp_fst, hX.map_eq] using hmap_fst
+  have hmap_snd :=
+    (AEMeasurable.map_map_of_aemeasurable (μ := P)
+      (g := Prod.snd) (f := fun ω => (Xf ω, Yf ω))
+      (measurable_snd.aemeasurable) hpair_ae)
+  have hcomp_snd : (Prod.snd ∘ fun ω => (Xf ω, Yf ω)) = Yf := by
+    funext ω; simp
+  have margY' : Measure.map Prod.snd μ = Measure.map Yf P := by
+    simpa [μ, hcomp_snd] using hmap_snd
+  have hμ :=
+    MeasureTheory.Measure.eq_mapMk_of_marg_fst_dirac (μ := μ) (x := x) (marg_X := margX)
+  simpa [μ, margY', hY.map_eq] using hμ
+end
+section
+variable {Ω X Y : Type*} [MeasurableSpace Ω] [MeasurableSpace X] [MeasurableSpace Y]
+variable {P : Measure Ω} {Xf : Ω → X} {Yf : Ω → Y} {μX : Measure X} {μY : Measure Y} {y : Y} {x : X}
+
+/-- HasLaw formulation: if `Yf` has Dirac law, then the pair has law given by pushing `μX`
+through `(x ↦ (x,y))`. -/
+lemma HasLaw.pair_of_snd_dirac
+    (hX : ProbabilityTheory.HasLaw Xf μX P)
+    (hY : ProbabilityTheory.HasLaw Yf (Measure.dirac y) P) :
+    ProbabilityTheory.HasLaw (fun ω => (Xf ω, Yf ω))
+      (Measure.map (fun x : X => (x, y)) μX) P := by
+  refine ⟨hX.aemeasurable.prodMk hY.aemeasurable, ?_⟩
+  simpa using
+    (law_pair_eq_map_mk_of_snd_dirac (Xf := Xf) (Yf := Yf) (μX := μX) (y := y) hX hY)
+
+/-- Symmetric HasLaw formulation: if `Xf` has Dirac law, then the pair’s law is the pushforward
+of `μY` through `(z ↦ (x,z))`. -/
+lemma HasLaw.pair_of_fst_dirac
+    (hY : ProbabilityTheory.HasLaw Yf μY P)
+    (hX : ProbabilityTheory.HasLaw Xf (Measure.dirac x) P) :
+    ProbabilityTheory.HasLaw (fun ω => (Xf ω, Yf ω))
+      (Measure.map (fun z : Y => (x, z)) μY) P := by
+  refine ⟨hX.aemeasurable.prodMk hY.aemeasurable, ?_⟩
+  simpa using
+    (law_pair_eq_map_mk_of_fst_dirac (Xf := Xf) (Yf := Yf) (μY := μY) (x := x) hY hX)
+
+end
+end ProbabilityTheory
+end Measure
+end MeasureTheory
