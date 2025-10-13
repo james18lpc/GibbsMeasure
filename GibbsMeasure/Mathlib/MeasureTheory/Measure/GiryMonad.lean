@@ -10,7 +10,7 @@ This theorem requires `IsPiSystem t`. Without it, the induction strategy fails b
 the predicate `P(s) := Measurable (fun b => μ b s)` is not closed under intersections,
 which are needed for the disjointification step in the countable union case.
 -/
-theorem measurable_of_measurable_coe'
+theorem measurable_of_isPiSystem_generateFrom
     (t : Set (Set α)) (μ : β → Measure[.generateFrom t] α)
     [∀ b, IsProbabilityMeasure (μ b)]
     (hpi : IsPiSystem t)
