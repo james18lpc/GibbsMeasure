@@ -18,19 +18,6 @@ section
 variable {E : Type*}
   [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
-omit [NormedSpace ℝ E] [CompleteSpace E] in
-/-- If `μ s < ∞`, then the indicator of a constant function on `s` is integrable. -/
-lemma integrable_indicator_const
-    (hs : MeasurableSet s) (hμs : μ s < ∞) (c : E) :
-    Integrable (s.indicator (fun _ : α => c)) μ := by
-  classical
-  have hfin : (μ.restrict s) Set.univ < ∞ := by
-    simpa [Measure.restrict_apply, Set.univ_inter] using hμs
-  have _ : IsFiniteMeasure (μ.restrict s) := ⟨hfin⟩
-  have h_int_restrict : Integrable (fun _ : α => c) (μ.restrict s) := integrable_const c
-  have h_on : IntegrableOn (fun _ : α => c) s μ := by
-    simp [IntegrableOn]
-  exact IntegrableOn.integrable_indicator h_int_restrict hs
 section
 --variable [NormedSpace ℝ E]
 open Classical
@@ -89,8 +76,17 @@ theorem toReal_ae_eq_indicator_condExp_of_forall_setLIntegral_eq (hm : m ≤ m0)
   refine ae_eq_condExp_of_forall_setIntegral_eq (m := m) (m₀ := m0) (μ := μ)
     (f := s.indicator fun _ : α => (1 : ℝ))
     hm ?_ ?_ ?_ ?_
-  · exact integrable_indicator_const (μ := μ) (s := s) (E := ℝ)
-      hs_meas (lt_top_iff_ne_top.mpr hs) (1 : ℝ)
+  · -- given hs : MeasurableSet s, hμs : μ s < ∞
+    have : IntegrableOn (fun _ : α => (1 : ℝ)) s μ := by
+    -- use `μ.restrict s` finite to get integrable const
+      haveI : IsFiniteMeasure (μ.restrict s) := ⟨by
+        simp [Measure.restrict_apply, Set.univ_inter];
+        exact measure_lt_top_of_subset (fun ⦃a⦄ a ↦ a) hs⟩
+      simp [IntegrableOn]
+    have h_int : Integrable (s.indicator fun _ : α => (1 : ℝ)) μ :=
+      IntegrableOn.integrable_indicator this hs_meas
+    exact h_int
+    --  (integrable_indicator_iff hs).2 this
   · intro t ht hμt
     have h_int :
         Integrable (fun a => (g a).toReal) (μ.restrict t) :=
@@ -139,11 +135,19 @@ lemma toReal_ae_eq_indicator_condExp_iff_forall_meas_inter_eq (hm : m ≤ m0)
     ∀ t, MeasurableSet[m] t → μ (s ∩ t) = ∫⁻ a in t, g a ∂μ := by
   constructor
   · intro h_eq t ht
-    have h_int_f : Integrable (s.indicator fun _ : α => (1 : ℝ)) μ :=
-      integrable_indicator_const (μ := μ) (s := s) (E := ℝ)
-        hs_meas (lt_top_iff_ne_top.mpr hs_finite) (1 : ℝ)
-    have h_int_eq :=
-      setIntegral_condExp (m := m) (m₀ := m0) (μ := μ) hm h_int_f ht
+    have : IntegrableOn (fun _ : α => (1 : ℝ)) s μ := by
+      haveI : IsFiniteMeasure (μ.restrict s) :=
+        ⟨by
+          simp [Measure.restrict_apply, Set.univ_inter]
+          exact measure_lt_top_of_subset (fun ⦃a⦄ a ↦ a) hs_finite⟩
+      simp [IntegrableOn]
+    have h_int : Integrable (s.indicator fun _ : α => (1 : ℝ)) μ :=
+      IntegrableOn.integrable_indicator this hs_meas
+    have h_int_eq :
+        ∫ x in t, (μ[s.indicator (fun _ : α => (1 : ℝ))|m]) x ∂μ
+          = ∫ x in t, s.indicator (fun _ : α => (1 : ℝ)) x ∂μ :=
+      setIntegral_condExp (m := m) (m₀ := m0) (μ := μ)
+        (f := s.indicator (fun _ : α => (1 : ℝ))) hm h_int ht
     have h_rhs := setIntegral_indicator_one (μ := μ) (s := s) hs_meas t
     have h_eq_restrict :
         (fun x => (g x).toReal) =ᵐ[μ.restrict t] (fun x => (μ[s.indicator 1|m]) x) := by
