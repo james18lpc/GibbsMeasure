@@ -164,9 +164,10 @@ lemma lcondExp_add : μ⁻[f + g|m] =ᵐ[μ] μ⁻[f|m] + μ⁻[g|m] := by
 
 lemma lcondExp_finset_sum {ι : Type*} {s : Finset ι} {f : ι → α → ℝ≥0∞} :
     μ⁻[∑ i ∈ s, f i|m] =ᵐ[μ] ∑ i ∈ s, μ⁻[f i|m] := by
-  induction' s using Finset.induction_on with i s his heq hf
-  · rw [Finset.sum_empty, Finset.sum_empty, lcondExp_zero]
-  · rw [Finset.sum_insert his, Finset.sum_insert his]
+  induction s using Finset.induction_on with
+  | empty => rw [Finset.sum_empty, Finset.sum_empty, lcondExp_zero]
+  | insert i s his heq =>
+    rw [Finset.sum_insert his, Finset.sum_insert his]
     exact lcondExp_add.trans (EventuallyEq.rfl.add heq)
 
 lemma lcondExp_smul (c : ℝ≥0) (f : α → ℝ≥0∞) : μ⁻[c • f|m] =ᵐ[μ] c • μ⁻[f|m] := by
