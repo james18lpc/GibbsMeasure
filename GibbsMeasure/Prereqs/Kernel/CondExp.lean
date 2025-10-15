@@ -432,20 +432,15 @@ private lemma integrable_integral_of_integrable_bind
     [IsFiniteMeasure μ] [IsMarkovKernel π] (h𝓑𝓧 : 𝓑 ≤ 𝓧) {s : Set X} {f : X → ℝ}
     (hf_meas : Measurable f) (hf_int : Integrable f ((μ.restrict s).bind π)) :
     Integrable (fun x => ∫ y, f y ∂(π x)) (μ.restrict s) := by
-  -- Use Fubini to relate integrability on the bind to integrability of the iterated integral
   have hκ : AEMeasurable (fun x => π x) (μ.restrict s) :=
     (π.measurable.mono h𝓑𝓧 le_rfl).aemeasurable.restrict
-  -- ∫⁻ x, ∫⁻ y, ‖f y‖ₑ ∂(π x) ∂(μ.restrict s) = ∫⁻ y, ‖f y‖ₑ ∂((μ.restrict s).bind π)
   have h_lintegral_eq :
       ∫⁻ x, ∫⁻ y, ‖f y‖ₑ ∂(π x) ∂(μ.restrict s) = ∫⁻ y, ‖f y‖ₑ ∂((μ.restrict s).bind π) := by
     rw [Measure.lintegral_bind hκ hf_meas.enorm.aemeasurable]
-  -- Build Integrable by (a) measurability and (b) finite ∫⁻ ‖·‖ₑ bound
   refine integrable_of_lintegral_ennnorm_lt_top ?_ ?_
-  · -- measurability of x ↦ ∫ f d(π x)
-    exact (((hf_meas.stronglyMeasurable.integral_kernel
+  · exact (((hf_meas.stronglyMeasurable.integral_kernel
       (κ := π)).mono h𝓑𝓧).aestronglyMeasurable).restrict
-  · -- bound ∫⁻ ‖∫ f d(π x)‖ₑ by the double lintegral of ‖f‖
-    have hfin : ∫⁻ x, ∫⁻ y, ‖f y‖ₑ ∂(π x) ∂(μ.restrict s) < ∞ := by
+  · have hfin : ∫⁻ x, ∫⁻ y, ‖f y‖ₑ ∂(π x) ∂(μ.restrict s) < ∞ := by
       rw [h_lintegral_eq]; exact hf_int.2
     have hpt :
         ∀ᵐ x ∂(μ.restrict s),
@@ -469,31 +464,25 @@ private lemma tendsto_setIntegral_integral_approxOn
   set φ := fun n => SimpleFunc.approxOn f hf (range f ∪ {0}) 0 (by simp) n
   have hκ : AEMeasurable (fun x => π x) (μ.restrict s) :=
     (π.measurable.mono h𝓑𝓧 le_rfl).aemeasurable.restrict
-  -- For a.e. x, f is integrable w.r.t. π x
   have h_int_ae : ∀ᵐ x ∂(μ.restrict s), Integrable f (π x) := by
-    -- Use Fubini on the lintegral of ‖f‖ to get finiteness a.e.
     have h_lintegral : ∫⁻ x in s, ∫⁻ y, ‖f y‖ₑ ∂(π x) ∂μ < ∞ := by
       have h_eq :
           (∫⁻ x in s, ∫⁻ y, ‖f y‖ₑ ∂(π x) ∂μ)
             = ∫⁻ y, ‖f y‖ₑ ∂((μ.restrict s).bind π) := by
         rw [Measure.lintegral_bind hκ hf.enorm.aemeasurable]
       simpa [h_eq] using hf_int.2
-    -- Measurability of x ↦ ∫⁻ ‖f‖ₑ ∂(π x)
     haveI : IsSFiniteKernel π := inferInstance
     have hf_enorm : Measurable fun y : X => ‖f y‖ₑ := hf.enorm
     have h_meas : Measurable (fun x => ∫⁻ y, ‖f y‖ₑ ∂(π x)) :=
       ((Measurable.lintegral_kernel (κ := π) (f := fun y => ‖f y‖ₑ) hf_enorm).mono h𝓑𝓧 le_rfl)
-    -- Conclude integrability a.e. from finiteness of ∫⁻ ‖f‖ₑ
     have h_fin_ae :
         ∀ᵐ x ∂(μ.restrict s), (∫⁻ y, ‖f y‖ₑ ∂(π x)) < ∞ :=
       ae_lt_top (μ := μ.restrict s) h_meas h_lintegral.ne
     exact h_fin_ae.mono
       (fun x hx => integrable_of_lintegral_ennnorm_lt_top hf.aestronglyMeasurable hx)
-  -- a.e. pointwise convergence of the inner integrals
   have h_conv : ∀ᵐ x ∂(μ.restrict s),
       Tendsto (fun n => ∫ y, φ n y ∂(π x)) atTop (𝓝 (∫ y, f y ∂(π x))) :=
     h_int_ae.mono (fun x hx => tendsto_integral_approxOn_ae (π := π) hf x hx)
-  -- For each n, x ↦ ∫ φ n d(π x) is integrable on μ.restrict s
   have h_int_φ : ∀ n, Integrable (fun x => ∫ y, φ n y ∂(π x)) (μ.restrict s) := by
     intro n
     refine integrable_integral_of_integrable_bind (μ := μ) (π := π) h𝓑𝓧
@@ -501,20 +490,16 @@ private lemma tendsto_setIntegral_integral_approxOn
     haveI : IsFiniteMeasure (((μ.restrict s).bind π)) :=
       isFiniteMeasure_bind_restrict (μ := μ) (π := π) h𝓑𝓧 s
     exact SimpleFunc.integrable_of_isFiniteMeasure _
-  -- Pointwise a.e. bound by an integrable dominating function in x
   have h_bound : ∀ n, ∀ᵐ x ∂(μ.restrict s),
       ‖∫ y, φ n y ∂(π x)‖ ≤ ∫ y, ‖f y‖ + ‖f y‖ ∂(π x) := by
     intro n
-    -- a.e. in x, we have Integrable ‖f‖ w.r.t. π x
     have h_int_norm_ae :
         ∀ᵐ x ∂(μ.restrict s), Integrable (fun y => ‖f y‖) (π x) :=
       h_int_ae.mono (fun x hx => hx.norm)
     refine h_int_norm_ae.mono ?_
     intro x hx_int
-    -- First, use ‖∫ g‖ ≤ ∫ ‖g‖
     have h1 : ‖∫ y, φ n y ∂(π x)‖ ≤ ∫ y, ‖φ n y‖ ∂(π x) :=
       MeasureTheory.norm_integral_le_integral_norm _
-    -- Then, compare ∫ ‖φ n‖ ≤ ∫ (‖f‖+‖f‖) by pointwise bound and integrability
     have h2 : ∫ y, ‖φ n y‖ ∂(π x) ≤ ∫ y, ‖f y‖ + ‖f y‖ ∂(π x) := by
       refine MeasureTheory.integral_mono
         ((SimpleFunc.integrable_of_isFiniteMeasure _).norm)
@@ -523,14 +508,12 @@ private lemma tendsto_setIntegral_integral_approxOn
           intro y
           exact norm_approxOn_le_norm hf y n)
     exact h1.trans h2
-  -- The dominating function is integrable in x
   have h_dom : Integrable (fun x => ∫ y, ‖f y‖ + ‖f y‖ ∂(π x)) (μ.restrict s) := by
     have h_norm_int : Integrable (fun y => ‖f y‖) ((μ.restrict s).bind π) := hf_int.norm
     exact integrable_integral_of_integrable_bind (μ := μ) (π := π) h𝓑𝓧
       (s := s) (f := fun y => ‖f y‖ + ‖f y‖)
       (hf_meas := (Measurable.add hf.norm hf.norm))
       (hf_int := h_norm_int.add h_norm_int)
-  -- Dominated convergence on the outer integral in x
   exact
     tendsto_integral_of_dominated_convergence
       (fun x => ∫ y, ‖f y‖ + ‖f y‖ ∂(π x))
@@ -566,19 +549,16 @@ private lemma integral_bind_kernel_restrict
     have : Integrable (fun y => ‖f₀ y‖) (((μ.restrict s).bind π)) :=
       (hf_int.congr hf_eq_f₀).norm
     exact this.add this
-  -- LHS: convergence in bind measure
   have h_lhs : Tendsto (fun n => ∫ y, φ_seq n y ∂(((μ.restrict s).bind π))) atTop
       (𝓝 (∫ y, f₀ y ∂(((μ.restrict s).bind π)))) :=
     tendsto_integral_of_dominated_convergence
       (fun y => ‖f₀ y‖ + ‖f₀ y‖)
       (fun n => (h_int_φ n).aestronglyMeasurable)
       h_dom_int h_bound h_tendsto
-  -- RHS: convergence of iterated integral
   have h_rhs : Tendsto (fun n => ∫ x in s, ∫ y, φ_seq n y ∂(π x) ∂μ) atTop
       (𝓝 (∫ x in s, ∫ y, f₀ y ∂(π x) ∂μ)) :=
     tendsto_setIntegral_integral_approxOn (μ := μ) (π := π) h𝓑𝓧
       (s := s) (f := f₀) hf₀_meas (hf_int.congr hf_eq_f₀)
-  -- The sequences are pointwise equal by h_simple, so they have the same limit
   have h_eq_limit : ∫ y, f₀ y ∂((μ.restrict s).bind π) = ∫ x in s, ∫ y, f₀ y ∂(π x) ∂μ := by
     have : (fun n => ∫ y, φ_seq n y ∂((μ.restrict s).bind π))
         = (fun n => ∫ x in s, ∫ y, φ_seq n y ∂(π x) ∂μ) := funext h_simple
@@ -599,7 +579,7 @@ private lemma integral_bind_kernel_restrict
 integral. -/
 lemma condExp_ae_eq_integral_kernel
     [π.IsCondExp μ] [IsFiniteMeasure μ] [IsFiniteKernel π]
-    (h𝓑𝓧 : 𝓑 ≤ 𝓧) (f : X → ℝ)-- (hf_meas : Measurable[𝓧] f)
+    (h𝓑𝓧 : 𝓑 ≤ 𝓧) (f : X → ℝ) -- (hf_meas : Measurable[𝓧] f)
     (hf_int : Integrable f μ)
     (hg_int : Integrable (fun x₀ ↦ ∫ x, f x ∂(π x₀)) μ)
     (hg_aesm : AEStronglyMeasurable[𝓑] (fun x₀ ↦ ∫ x, f x ∂(π x₀)) μ)
@@ -611,7 +591,6 @@ lemma condExp_ae_eq_integral_kernel
   · intro s _ _
     exact hg_int.integrableOn
   · intro s hs _
-    -- Show ((μ.restrict s).bind π) = μ.restrict s using the IsCondExp property
     have h_iff_A
         (A : Set X) (hA : MeasurableSet[𝓧] A) :
         (μ[A.indicator 1|𝓑] =ᵐ[μ] fun a ↦ (π a A).toReal) ↔
@@ -643,11 +622,8 @@ lemma condExp_ae_eq_integral_kernel
               simpa using hAs.symm
         _ = (μ.restrict s) A := by
               simp [Measure.restrict_apply, hA]
-    -- With ((μ.restrict s).bind π) = μ.restrict s, apply the restricted Fubini identity
     have hf_int_restrict_bind : Integrable f (((μ.restrict s).bind π)) := by
       simpa [h_bind_restrict] using hf_int.restrict
-    -- ∫ x∈s, ∫ y, f y d(π x) dμ = ∫ f d(((μ.restrict s).bind π)) =
-    -- ∫ f d(μ.restrict s) = ∫ x∈s, f x dμ
     simpa [h_bind_restrict, lintegral_restrict] using
       (integral_bind_kernel_restrict (μ := μ) (π := π) h𝓑𝓧 (s := s) (f := f)
         (hf_int := hf_int_restrict_bind)).symm
