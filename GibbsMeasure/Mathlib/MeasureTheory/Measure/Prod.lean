@@ -58,35 +58,35 @@ lemma measure_univ_of_marg_fst_dirac
 lemma map_fst_univ_of_marg_snd_dirac
     (μ : Measure (X × Y)) (y : Y)
     (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
-    (Measure.map Prod.fst μ) univ = 1 := by
+    μ.map Prod.fst univ = 1 := by
   have hμ := measure_univ_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
   simp [Measure.map_apply measurable_fst MeasurableSet.univ, preimage_univ, hμ]
 
 lemma map_snd_univ_of_marg_fst_dirac
     (μ : Measure (X × Y)) (x : X)
-    (marg_X : Measure.map Prod.fst μ = Measure.dirac x) :
-    (Measure.map Prod.snd μ) univ = 1 := by
+    (marg_X : μ.map Prod.fst = Measure.dirac x) :
+    μ.map Prod.snd univ = 1 := by
   have hμ := measure_univ_of_marg_fst_dirac (μ := μ) (x := x) marg_X
   simp [Measure.map_apply measurable_snd MeasurableSet.univ, preimage_univ, hμ]
 
 lemma isFinite_map_fst_of_marg_snd_dirac
     (μ : Measure (X × Y)) (y : Y)
-    (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
-    IsFiniteMeasure (Measure.map Prod.fst μ) :=
+    (marg_Y : μ.map Prod.snd = Measure.dirac y) :
+    IsFiniteMeasure (μ.map Prod.fst) :=
   ⟨by simp [map_fst_univ_of_marg_snd_dirac (μ := μ) (y := y) marg_Y]⟩
 
 lemma isFinite_map_snd_of_marg_fst_dirac
     (μ : Measure (X × Y)) (x : X)
-    (marg_X : Measure.map Prod.fst μ = Measure.dirac x) :
+    (marg_X : μ.map Prod.fst = Measure.dirac x) :
     IsFiniteMeasure (Measure.map Prod.snd μ) :=
   ⟨by simp [map_snd_univ_of_marg_fst_dirac (μ := μ) (x := x) marg_X]⟩
 
 -- Rectangle formula from a Dirac marginal on the right
 lemma rect_of_marg_snd_dirac
     (μ : Measure (X × Y)) (y : Y)
-    (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
+    (marg_Y : μ.map Prod.snd = Measure.dirac y) :
     ∀ s t, MeasurableSet s → MeasurableSet t →
-      μ (s ×ˢ t) = (Measure.map Prod.fst μ) s * (Measure.dirac y) t := by
+      μ (s ×ˢ t) = (μ.map Prod.fst) s * (Measure.dirac y) t := by
   intro s t hs ht
   by_cases hyt : y ∈ t
   · have h_univ_tcompl_zero : μ (univ ×ˢ tᶜ) = 0 := by
@@ -134,25 +134,25 @@ lemma rect_of_marg_snd_dirac
 
 lemma eq_prod_of_marg_snd_dirac
     (μ : Measure (X × Y)) (y : Y)
-    (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
-    μ = (Measure.map Prod.fst μ).prod (Measure.dirac y) := by
+    (marg_Y : μ.map Prod.snd = Measure.dirac y) :
+    μ = (μ.map Prod.fst).prod (Measure.dirac y) := by
   have hμ_univ : μ univ = 1 := measure_univ_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
-  have hνX_univ : (Measure.map Prod.fst μ) univ = 1 := by
+  have hνX_univ : (μ.map Prod.fst) univ = 1 := by
     simp [Measure.map_apply measurable_fst MeasurableSet.univ, preimage_univ, hμ_univ]
-  haveI : IsFiniteMeasure (Measure.map Prod.fst μ) := ⟨by simp [hνX_univ]⟩
-  haveI : SigmaFinite (Measure.map Prod.fst μ) := by infer_instance
+  haveI : IsFiniteMeasure (μ.map Prod.fst) := ⟨by simp [hνX_univ]⟩
+  haveI : SigmaFinite (μ.map Prod.fst) := by infer_instance
   haveI : IsFiniteMeasure (Measure.dirac y) := ⟨by simp⟩
   haveI : SigmaFinite (Measure.dirac y) := by infer_instance
   have hrect := rect_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
   have hprod := (Measure.prod_eq
-    (μ := Measure.map Prod.fst μ) (ν := Measure.dirac y) (μν := μ) hrect)
+    (μ := μ.map Prod.fst) (ν := Measure.dirac y) (μν := μ) hrect)
   simpa using hprod.symm
 
 -- Factorization as a pushforward from the first marginal
 lemma eq_mapMk_of_marg_snd_dirac
     (μ : Measure (X × Y)) (y : Y)
-    (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
-    μ = Measure.map (fun x : X => (x, y)) (Measure.map Prod.fst μ) := by
+    (marg_Y : μ.map Prod.snd = Measure.dirac y) :
+    μ = Measure.map (fun x : X => (x, y)) (μ.map Prod.fst) := by
   have h := eq_prod_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
   haveI : IsFiniteMeasure (Measure.map Prod.fst μ) :=
     isFinite_map_fst_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
@@ -160,22 +160,22 @@ lemma eq_mapMk_of_marg_snd_dirac
   haveI : IsFiniteMeasure (Measure.dirac y) := by infer_instance
   haveI : SigmaFinite (Measure.dirac y) := by infer_instance
   have hm :
-      (Measure.map Prod.fst μ).prod (Measure.dirac y)
-        = Measure.map (fun x : X => (x, y)) (Measure.map Prod.fst μ) := by
-    simpa using (Measure.prod_dirac (μ := Measure.map Prod.fst μ) (y := y))
+      (μ.map Prod.fst).prod (Measure.dirac y)
+        = Measure.map (fun x : X => (x, y)) (μ.map Prod.fst) := by
+    simpa using (Measure.prod_dirac (μ := μ.map Prod.fst) (y := y))
   exact h.trans hm
 
 /-- If a random variable has Dirac law, then the joint measure factors as a pushforward -/
 lemma HasLaw.eq_map_mk_of_dirac {P : Measure (X × Y)} {y : Y}
     (h : ProbabilityTheory.HasLaw (Prod.snd : X × Y → Y) (Measure.dirac y) P) :
-    P = Measure.map (fun x => (x, y)) (Measure.map Prod.fst P) := by
+    P = Measure.map (fun x => (x, y)) (P.map Prod.fst) := by
   simpa [h.map_eq] using
     (eq_mapMk_of_marg_snd_dirac (μ := P) (y := y) (marg_Y := h.map_eq))
 
 lemma eq_prod_of_marg_fst_dirac
     (μ : Measure (X × Y)) (x : X)
-    (marg_X : Measure.map Prod.fst μ = Measure.dirac x) :
-    μ = (Measure.dirac x).prod (Measure.map Prod.snd μ) := by
+    (marg_X : μ.map Prod.fst = Measure.dirac x) :
+    μ = (Measure.dirac x).prod (μ.map Prod.snd) := by
   classical
   have h_swap_eq : Measure.map Prod.snd (Measure.map Prod.swap μ) = Measure.dirac x := by
     simpa [Measure.snd, Measure.fst, marg_X] using (Measure.snd_map_swap (ρ := μ))
@@ -190,7 +190,7 @@ lemma eq_prod_of_marg_fst_dirac
       Prod.swap_swap, Measure.map_id] using this
   haveI : IsFiniteMeasure (Measure.map Prod.snd μ) :=
     isFinite_map_snd_of_marg_fst_dirac (μ := μ) (x := x) marg_X
-  haveI : SigmaFinite (Measure.map Prod.snd μ) := by infer_instance
+  haveI : SigmaFinite (μ.map Prod.snd) := by infer_instance
   haveI : IsFiniteMeasure (Measure.dirac x) := by infer_instance
   haveI : SigmaFinite (Measure.dirac x) := by infer_instance
   have hswap := Measure.prod_swap (μ := Measure.map Prod.snd μ) (ν := Measure.dirac x)
@@ -201,57 +201,57 @@ lemma eq_prod_of_marg_fst_dirac
 
 lemma eq_mapMk_of_marg_fst_dirac
     (μ : Measure (X × Y)) (x : X)
-    (marg_X : Measure.map Prod.fst μ = Measure.dirac x) :
-    μ = Measure.map (fun y : Y => (x, y)) (Measure.map Prod.snd μ) := by
+    (marg_X : μ.map Prod.fst = Measure.dirac x) :
+    μ = Measure.map (fun y : Y => (x, y)) (μ.map Prod.snd) := by
   have h := eq_prod_of_marg_fst_dirac (μ := μ) (x := x) marg_X
-  haveI : IsFiniteMeasure (Measure.map Prod.snd μ) :=
+  haveI : IsFiniteMeasure (μ.map Prod.snd) :=
     isFinite_map_snd_of_marg_fst_dirac (μ := μ) (x := x) marg_X
-  haveI : SigmaFinite (Measure.map Prod.snd μ) := by infer_instance
+  haveI : SigmaFinite (μ.map Prod.snd) := by infer_instance
   haveI : IsFiniteMeasure (Measure.dirac x) := by infer_instance
   haveI : SigmaFinite (Measure.dirac x) := by infer_instance
   have hm :
-      (Measure.dirac x).prod (Measure.map Prod.snd μ)
-        = Measure.map (fun y : Y => (x, y)) (Measure.map Prod.snd μ) := by
-    simpa using (Measure.dirac_prod (x := x) (ν := Measure.map Prod.snd μ))
+      (Measure.dirac x).prod (μ.map Prod.snd)
+        = Measure.map (fun y : Y => (x, y)) (μ.map Prod.snd) := by
+    simpa using (Measure.dirac_prod (x := x) (ν := μ.map Prod.snd))
   exact h.trans hm
 
 lemma eq_prod_of_dirac_right
     (ν : Measure X) (y : Y) (μ : Measure (X × Y))
-    (marg_X : Measure.map Prod.fst μ = ν)
-    (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
+    (marg_X : μ.map Prod.fst = ν)
+    (marg_Y : μ.map Prod.snd = Measure.dirac y) :
     μ = ν.prod (Measure.dirac y) := by
   simpa [marg_X] using
-    (eq_prod_of_marg_snd_dirac (μ := μ) (y := y) marg_Y)
+    eq_prod_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
 
 lemma eq_prod_of_dirac_left
     (x : X) (ν : Measure Y) (μ : Measure (X × Y))
-    (marg_X : Measure.map Prod.fst μ = Measure.dirac x)
-    (marg_Y : Measure.map Prod.snd μ = ν) :
+    (marg_X : μ.map Prod.fst = Measure.dirac x)
+    (marg_Y : μ.map Prod.snd = ν) :
     μ = (Measure.dirac x).prod ν := by
   simpa [marg_Y] using
-    (eq_prod_of_marg_fst_dirac (μ := μ) (x := x) marg_X)
+    eq_prod_of_marg_fst_dirac (μ := μ) (x := x) marg_X
 
 lemma eq_mapMk_of_dirac_right
     (ν : Measure X) (y : Y) (μ : Measure (X × Y))
-    (marg_X : Measure.map Prod.fst μ = ν)
-    (marg_Y : Measure.map Prod.snd μ = Measure.dirac y) :
+    (marg_X : μ.map Prod.fst = ν)
+    (marg_Y : μ.map Prod.snd = Measure.dirac y) :
     μ = Measure.map (fun x : X => (x, y)) ν := by
-  haveI : IsFiniteMeasure (Measure.map Prod.fst μ) :=
+  haveI : IsFiniteMeasure (μ.map Prod.fst) :=
     isFinite_map_fst_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
-  haveI : SigmaFinite (Measure.map Prod.fst μ) := by infer_instance
+  haveI : SigmaFinite (μ.map Prod.fst) := by infer_instance
   simpa [marg_X] using
-    (eq_mapMk_of_marg_snd_dirac (μ := μ) (y := y) marg_Y)
+    eq_mapMk_of_marg_snd_dirac (μ := μ) (y := y) marg_Y
 
 lemma eq_mapMk_of_dirac_left
     (x : X) (ν : Measure Y) (μ : Measure (X × Y))
-    (marg_X : Measure.map Prod.fst μ = Measure.dirac x)
-    (marg_Y : Measure.map Prod.snd μ = ν) :
+    (marg_X : μ.map Prod.fst = Measure.dirac x)
+    (marg_Y : μ.map Prod.snd = ν) :
     μ = Measure.map (fun y : Y => (x, y)) ν := by
-  haveI : IsFiniteMeasure (Measure.map Prod.snd μ) :=
+  haveI : IsFiniteMeasure (μ.map Prod.snd) :=
     isFinite_map_snd_of_marg_fst_dirac (μ := μ) (x := x) marg_X
-  haveI : SigmaFinite (Measure.map Prod.snd μ) := by infer_instance
+  haveI : SigmaFinite (μ.map Prod.snd) := by infer_instance
   simpa [marg_Y] using
-    (eq_mapMk_of_marg_fst_dirac (μ := μ) (x := x) marg_X)
+    eq_mapMk_of_marg_fst_dirac (μ := μ) (x := x) marg_X
 
 end
 
@@ -283,7 +283,7 @@ lemma law_pair_eq_map_mk_of_snd_dirac
       (measurable_fst.aemeasurable) hpair_ae)
   have hcomp_fst : (Prod.fst ∘ fun ω => (Xf ω, Yf ω)) = Xf := by
     funext ω; simp
-  have margX : Measure.map Prod.fst μ = Measure.map Xf P := by
+  have margX : μ.map Prod.fst = P.map Xf := by
     simpa [μ, hcomp_fst] using hmap_fst
   have hμ :=
     MeasureTheory.Measure.eq_mapMk_of_marg_snd_dirac (μ := μ) (y := y) (marg_Y := margY)
@@ -303,7 +303,7 @@ lemma law_pair_eq_map_mk_of_fst_dirac
       (measurable_fst.aemeasurable) hpair_ae)
   have hcomp_fst : (Prod.fst ∘ fun ω => (Xf ω, Yf ω)) = Xf := by
     funext ω; simp
-  have margX : Measure.map Prod.fst μ = Measure.dirac x := by
+  have margX : μ.map Prod.fst = Measure.dirac x := by
     simpa [μ, hcomp_fst, hX.map_eq] using hmap_fst
   have hmap_snd :=
     (AEMeasurable.map_map_of_aemeasurable (μ := P)
@@ -311,7 +311,7 @@ lemma law_pair_eq_map_mk_of_fst_dirac
       (measurable_snd.aemeasurable) hpair_ae)
   have hcomp_snd : (Prod.snd ∘ fun ω => (Xf ω, Yf ω)) = Yf := by
     funext ω; simp
-  have margY' : Measure.map Prod.snd μ = Measure.map Yf P := by
+  have margY' : μ.map Prod.snd = P.map Yf := by
     simpa [μ, hcomp_snd] using hmap_snd
   have hμ :=
     MeasureTheory.Measure.eq_mapMk_of_marg_fst_dirac (μ := μ) (x := x) (marg_X := margX)
@@ -330,7 +330,7 @@ lemma HasLaw.pair_of_snd_dirac
       (Measure.map (fun x : X => (x, y)) μX) P := by
   refine ⟨hX.aemeasurable.prodMk hY.aemeasurable, ?_⟩
   simpa using
-    (law_pair_eq_map_mk_of_snd_dirac (Xf := Xf) (Yf := Yf) (μX := μX) (y := y) hX hY)
+    law_pair_eq_map_mk_of_snd_dirac (Xf := Xf) (Yf := Yf) (μX := μX) (y := y) hX hY
 
 /-- Symmetric HasLaw formulation: if `Xf` has Dirac law, then the pair’s law is the pushforward
 of `μY` through `(z ↦ (x,z))`. -/
@@ -341,7 +341,7 @@ lemma HasLaw.pair_of_fst_dirac
       (Measure.map (fun z : Y => (x, z)) μY) P := by
   refine ⟨hX.aemeasurable.prodMk hY.aemeasurable, ?_⟩
   simpa using
-    (law_pair_eq_map_mk_of_fst_dirac (Xf := Xf) (Yf := Yf) (μY := μY) (x := x) hY hX)
+    law_pair_eq_map_mk_of_fst_dirac (Xf := Xf) (Yf := Yf) (μY := μY) (x := x) hY hX
 
 end
 end ProbabilityTheory
