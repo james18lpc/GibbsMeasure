@@ -115,7 +115,7 @@ lemma rect_of_marg_snd_dirac
       exact h_union
     have h_s_univ_eq' : μ (s ×ˢ t) = μ (Prod.fst ⁻¹' s) := by
       simp [h_s_univ_eq, h_stcompl_zero, add_comm]
-    have : μ (s ×ˢ t) = (Measure.map Prod.fst μ) s := by
+    have : μ (s ×ˢ t) = (μ.map Prod.fst) s := by
       have h_map : μ (Prod.fst ⁻¹' s) = (Measure.map Prod.fst μ) s := by
         rw [Measure.map_apply measurable_fst hs]
       exact h_s_univ_eq'.trans h_map
@@ -275,7 +275,7 @@ lemma law_pair_eq_map_mk_of_snd_dirac
       (measurable_snd.aemeasurable) hpair_ae)
   have hcomp_snd : (Prod.snd ∘ fun ω => (Xf ω, Yf ω)) = Yf := by
     funext ω; simp
-  have margY : Measure.map Prod.snd μ = Measure.dirac y := by
+  have margY : μ.map Prod.snd = Measure.dirac y := by
     simpa [μ, hcomp_snd, hY.map_eq] using hmap_snd
   have hmap_fst :=
     (AEMeasurable.map_map_of_aemeasurable (μ := P)
