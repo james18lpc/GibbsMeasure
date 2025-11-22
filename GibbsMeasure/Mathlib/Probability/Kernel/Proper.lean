@@ -29,14 +29,13 @@ private lemma IsProper.integral_indicator_mul_indicator (h𝓑𝓧 : 𝓑 ≤ �
     _ = (∫⁻ x, .ofReal (B.indicator 1 x * A.indicator 1 x) ∂π x₀).toReal :=
       integral_eq_lintegral_of_nonneg_ae (.of_forall <| by simp [indicator_nonneg, mul_nonneg])
         (by measurability)
-    _ = (∫⁻ x, B.indicator 1 x * A.indicator 1 x ∂π x₀).toReal := by
-      simp [ofReal_mul, indicator_nonneg]
+    _ = (∫⁻ x, B.indicator 1 x * A.indicator 1 x ∂π x₀).toReal := by simp [indicator_nonneg]
     _ = (B.indicator 1 x₀ * ∫⁻ x, A.indicator 1 x ∂π x₀).toReal := by
       rw [hπ.lintegral_mul h𝓑𝓧 (by measurability) (by measurability)]
     _ = B.indicator 1 x₀ * ∫ x, A.indicator 1 x ∂π x₀ := by
-      rw [integral_eq_lilntegral_of_nonneg_ae (.of_forall <| by simp [indicator_nonneg])
+      rw [integral_eq_lintegral_of_nonneg_ae (.of_forall <| by simp [indicator_nonneg])
         (by measurability)]
-      simp [ofReal_mul]
+      simp
 
 variable [IsFiniteKernel π]
 
@@ -49,31 +48,21 @@ private lemma IsProper.integral_simpleFunc_mul_indicator (h𝓑𝓧 : 𝓑 ≤ �
     ext x; by_cases hxA : x ∈ A <;> simp [hxA]
   rw [hmul_to_indicator]
   refine @SimpleFunc.induction X ℝ 𝓑 inferInstance
-      (fun g ↦ ∫ (x : X), A.indicator (⇑g) x ∂π x₀ = g x₀ * ∫ (x : X), A.indicator 1 x ∂π x₀)
+      (fun g ↦ ∫ x, A.indicator g x ∂π x₀ = g x₀ * ∫ x, A.indicator 1 x ∂π x₀)
       (fun c S hS ↦ ?_)
       (fun f g disj hf hg ↦ ?_) g
-  · have hindrw :
-        (fun x ↦ A.indicator (S.indicator (fun _ ↦ c)) x)
-          = (fun x ↦ c * (S.indicator 1 x * A.indicator 1 x)) := by
-      ext x; by_cases hxA : x ∈ A <;> by_cases hxS : x ∈ S <;>
-        simp [hxA, hxS]
-    calc
+  · calc
       ∫ x, A.indicator (S.indicator (fun _ ↦ c)) x ∂π x₀
         = c * ∫ x, S.indicator 1 x * A.indicator 1 x ∂π x₀ := by
-            simp [hindrw,integral_const_mul]
+        rw [← integral_const_mul]
+        congr! with _ x
+        by_cases hxA : x ∈ A <;> by_cases hxS : x ∈ S <;> simp [hxA, hxS]
       _ = c * (S.indicator 1 x₀ * ∫ x, A.indicator 1 x ∂π x₀) := by
-            simp [hπ.integral_indicator_mul_indicator h𝓑𝓧 hA hS]
+        simp [hπ.integral_indicator_mul_indicator h𝓑𝓧 hA hS]
       _ = S.indicator (fun _ ↦ c) x₀ * ∫ x, A.indicator 1 x ∂π x₀ := by
         by_cases hxS : x₀ ∈ S <;> simp [hxS]
-  · have hindAdd : (fun x ↦ A.indicator (⇑f + ⇑g) x) =
-      (fun x ↦ A.indicator (⇑f) x + A.indicator (⇑g) x) := by
-      ext x; by_cases hxA : x ∈ A <;> simp [hxA]
-    obtain ⟨Cf, hCf'⟩ := exists_forall_norm_indicator_le (mα := 𝓑) A f
-    obtain ⟨Cg, hCg'⟩ := exists_forall_norm_indicator_le (mα := 𝓑) A g
-    have hadd := integral_add (f := fun x ↦ A.indicator (⇑f) x)
-      (g := fun x ↦ A.indicator (⇑g) x) (μ := π x₀) (integrable_indicator f hA (π x₀) h𝓑𝓧)
-      (integrable_indicator g hA (π x₀) h𝓑𝓧)
-    simpa [hf, hg, ←add_mul, hindAdd] using hadd
+  · simp only [SimpleFunc.coe_add, indicator_add', Pi.add_apply, add_mul, ← hf, ← hg]
+    apply MeasureTheory.integral_add <;> exact .indicator (integrable_of_isFiniteMeasure' h𝓑𝓧 _) hA
 
 private lemma IsProper.integral_bdd_mul_indicator (h𝓑𝓧 : 𝓑 ≤ 𝓧) (hπ : IsProper π)
     (hA : MeasurableSet[𝓧] A) (hg : StronglyMeasurable[𝓑] g) (hgbdd : ∃ C, ∀ x, ‖g x‖ ≤ C)

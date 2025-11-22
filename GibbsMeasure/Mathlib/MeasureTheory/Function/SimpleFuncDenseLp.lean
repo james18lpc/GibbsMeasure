@@ -1,3 +1,4 @@
+import GibbsMeasure.Mathlib.MeasureTheory.Function.SimpleFunc
 import Mathlib.MeasureTheory.Function.SimpleFuncDenseLp
 import Mathlib.MeasureTheory.Integral.IntegrableOn
 
@@ -18,4 +19,10 @@ lemma Integrable.induction' (P : ∀ f : α → E, Integrable f μ → Prop)
     ∀ (f : α → E) (hf : Integrable f μ), P f hf := by
   sorry
 
-end MeasureTheory
+namespace SimpleFunc
+variable {mα₀ : MeasurableSpace α}
+
+lemma integrable_of_isFiniteMeasure' (hα : mα₀ ≤ mα) [IsFiniteMeasure μ] (f : α →ₛ[mα₀] E) :
+    Integrable f μ := sorry
+
+end MeasureTheory.SimpleFunc
