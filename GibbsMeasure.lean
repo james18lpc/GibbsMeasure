@@ -9,9 +9,9 @@ import GibbsMeasure.Mathlib.MeasureTheory.MeasurableSpace.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.Prod
 import GibbsMeasure.Mathlib.Probability.Kernel.Condexp
+import GibbsMeasure.Mathlib.Probability.Kernel.Proper
 import GibbsMeasure.Prereqs.Filtration.Consistent
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.CondExp
-import GibbsMeasure.Prereqs.Kernel.Proper
 import GibbsMeasure.Prereqs.LebesgueCondExp
 import GibbsMeasure.Specification
