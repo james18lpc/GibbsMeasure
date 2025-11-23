@@ -5,20 +5,21 @@ open scoped ENNReal
 namespace MeasureTheory.Measure
 variable {α β : Type*} [MeasurableSpace β]
 
-theorem measurable_of_measurable_coe' (t : Set (Set α)) (μ : β → Measure[.generateFrom t] α)
-    [∀ b, IsProbabilityMeasure (μ b)] (h : ∀ s ∈ t, Measurable fun b => μ b s) : Measurable μ := by
-  refine @measurable_of_measurable_coe _ _ (_) _ _ fun {s} hs ↦
-    MeasurableSpace.generateFrom_induction (p := fun s _ ↦ Measurable fun b ↦ μ b s) t
-      (fun s hs _ ↦ h s hs) (by simp) ?_ ?_ _ hs
-  · rintro s hs_meas hs
-    simp_rw [prob_compl_eq_one_sub hs_meas]
-    exact hs.const_sub _
-  · rintro g hg_meas hg
-    dsimp at hg
-    rw [← iUnion_disjointed]
-    simp_rw [measure_iUnion (disjoint_disjointed _) (.disjointed hg_meas)]
-    refine .ennreal_tsum fun i ↦ ?_
-    sorry
+/--
+This theorem requires `IsPiSystem t`. Without it, the induction strategy fails because
+the predicate `P(s) := Measurable (fun b => μ b s)` is not closed under intersections,
+which are needed for the disjointification step in the countable union case.
+-/
+theorem measurable_of_isPiSystem_generateFrom
+    (t : Set (Set α)) (μ : β → Measure[.generateFrom t] α)
+    [∀ b, IsProbabilityMeasure (μ b)]
+    (hpi : IsPiSystem t)
+    (h : ∀ s ∈ t, Measurable fun b => μ b s) : Measurable μ := by
+  let _ : MeasurableSpace α := MeasurableSpace.generateFrom t
+  change Measurable (μ : β → Measure α)
+  simpa using
+    (Measurable.measure_of_isPiSystem_of_isProbabilityMeasure
+      (μ := μ) (S := t) (hgen := rfl) (hpi := hpi) (h_basic := h))
 
 variable {mα : MeasurableSpace α} {s : Set α}
 

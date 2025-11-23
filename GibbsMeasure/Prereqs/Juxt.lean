@@ -18,12 +18,18 @@ lemma measurable_coordinate_projection_2 {Δ : Set S} {x : S} (h : x ∈ Δ) :
   exact key.mono (le_iSup₂_of_le x h (fun s a ↦ a)) le_rfl
 
 lemma Measurable.juxt : Measurable (juxt Λ η) := by
-  -- rw [measurable_pi_iff]
-  --simp [juxt]
-  --intro x
-
-  --exact?
-  --exact measurable_pi_apply _
-  sorry
+  classical
+  letI : MeasurableSpace E := 𝓔
+  refine (measurable_pi_iff).2 (fun x => ?_)
+  by_cases hx : x ∈ Λ
+  · have hix : Measurable (fun ζ : Λ → E => ζ ⟨x, hx⟩) :=
+      measurable_pi_apply (⟨x, hx⟩ : Λ)
+    convert hix using 1
+    ext ζ
+    exact juxt_apply_of_mem hx ζ
+  · have : Measurable (fun _ : Λ → E => η x) := measurable_const
+    convert this using 1
+    ext ζ
+    exact juxt_apply_of_not_mem hx ζ
 
 end juxt
