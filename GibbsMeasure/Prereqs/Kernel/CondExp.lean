@@ -22,7 +22,7 @@ lemma isCondExp_iff_bind_eq_left (hπ : π.IsProper) (h𝓑𝓧 : 𝓑 ≤ 𝓧)
   · rw [hπ.setLIntegral_eq_comp h𝓑𝓧 hA hB, eq_comm]
     exact h _ (by measurability)
 
-lemma condExp_ae_eq_kernel_apply [IsFiniteMeasure μ] [IsFiniteKernel π]
+lemma condExp_ae_eq_kernel_apply
     (h : ∀ (f : X → ℝ), Bornology.IsBounded (Set.range f) → Measurable[𝓧] f →
       condExp 𝓑 μ f =ᵐ[μ] (fun x₀ ↦ ∫ x, f x ∂(π x₀)))
     {A : Set X} (A_mble : MeasurableSet[𝓧] A) :
