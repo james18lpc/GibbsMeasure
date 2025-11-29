@@ -139,5 +139,4 @@ lemma IsProper.integral_bdd_mul (h𝓑𝓧 : 𝓑 ≤ 𝓧) (hπ : IsProper π) 
       filter_upwards [hf] with x hx; simp [hx]
     simpa [integral_congr_ae this, integral_congr_ae hf] using hgf₁
 
-
 end ProbabilityTheory.Kernel

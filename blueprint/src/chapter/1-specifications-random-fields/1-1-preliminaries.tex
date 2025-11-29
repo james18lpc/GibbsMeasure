@@ -80,16 +80,16 @@ Let $(X, \MCX)$ be a measurable space, let $\MCB$ be a sub $\sigma$-algebra of $
 \begin{lemma}[Integral characterisation of proper kernels]
     \label{lem:proper-ker-integral}
     \uses{def:proper-ker}
-    \lean{ProbabilityTheory.Kernel.IsProper.integral_mul}
+    \lean{ProbabilityTheory.Kernel.IsProper.integral_bdd_mul}
     \leanok{}
 
-    If $\pi$ is a proper Markov kernel, then
+    If $\pi$ is a proper Markov kernel and $g$ is a bounded function, then
     \[\int f(x) g(x)\ \pi(dx\mid x_0) = g(x_0)\int f(x)\ \pi(dx\mid x_0)\]
     for all $x_0 \in X$ and functions $f, g : X \to \R$ such that $f$ is bounded $\MCX$-measurable and $g$ is bounded $\MCB$-measurable.
 \end{lemma}
 \begin{proof}
     % \uses{}
-    % \leanok
+    \leanok
 
     Standard machine.
 \end{proof}
