@@ -90,17 +90,17 @@ lemma IsProper.integral_bdd_mul (h𝓑𝓧 : 𝓑 ≤ 𝓧) (hπ : IsProper π) 
       hπ.integral_bdd_mul_indicator h𝓑𝓧 hs hg ⟨C, hC⟩]
   | add f₁ f₂ hf₁ hf₂ _ hgf₁ hgf₂ =>
     have : Integrable (fun x ↦ g x * f₁ x) (π x₀) :=
-      hf₁.bdd_mul (hg.mono h𝓑𝓧).aestronglyMeasurable ⟨C, hC⟩
+      hf₁.bdd_mul (hg.mono h𝓑𝓧).aestronglyMeasurable <| .of_forall hC
     have : Integrable (fun x ↦ g x * f₂ x) (π x₀) :=
-      hf₂.bdd_mul (hg.mono h𝓑𝓧).aestronglyMeasurable ⟨C, hC⟩
+      hf₂.bdd_mul (hg.mono h𝓑𝓧).aestronglyMeasurable <| .of_forall hC
     simp [mul_add, integral_add, *]
   | isClosed =>
     refine isClosed_eq ?_ <| by fun_prop
     refine Metric.continuous_iff.mpr fun f2 ε hε ↦ ⟨ε / C, div_pos hε hpC, fun a ha ↦ ?_⟩
     have hInt1 : Integrable (fun x ↦ g x * a x) (π x₀) :=
-      (L1.integrable_coeFn a).bdd_mul (hg.mono h𝓑𝓧).aestronglyMeasurable ⟨C, hC⟩
+      (L1.integrable_coeFn a).bdd_mul (hg.mono h𝓑𝓧).aestronglyMeasurable <| .of_forall hC
     have hInt2 : Integrable (fun x ↦ g x * f2 x) (π x₀) :=
-      (L1.integrable_coeFn f2).bdd_mul (hg.mono h𝓑𝓧).aestronglyMeasurable ⟨C, hC⟩
+      (L1.integrable_coeFn f2).bdd_mul (hg.mono h𝓑𝓧).aestronglyMeasurable <| .of_forall hC
     have hsub :
         ‖∫ x, g x * a x ∂π x₀ - ∫ x, g x * f2 x ∂π x₀‖ = ‖∫ x, g x * a x - g x * f2 x ∂π x₀‖ := by
       simp [integral_sub hInt1 hInt2]
@@ -113,7 +113,7 @@ lemma IsProper.integral_bdd_mul (h𝓑𝓧 : 𝓑 ≤ 𝓧) (hπ : IsProper π) 
             = g x * (a x - f2 x) := by simp [mul_sub]
         _ = g x * (a - f2) x := by simp [hmul.symm]
     have hIntDiff : Integrable (fun x ↦ g x * (a - f2) x) (π x₀) :=
-      (L1.integrable_coeFn (a - f2)).bdd_mul ((hg.mono h𝓑𝓧).aestronglyMeasurable) ⟨C, hC⟩
+      (L1.integrable_coeFn (a - f2)).bdd_mul ((hg.mono h𝓑𝓧).aestronglyMeasurable) <| .of_forall hC
     have hdInt : Integrable (fun x ↦ C * ‖(a - f2) x‖) (π x₀) :=
       ((L1.integrable_coeFn (a - f2)).norm.smul C)
     have hle_ae : (fun x ↦ ‖g x * (a - f2) x‖) ≤ᵐ[π x₀] (fun x ↦ C * ‖(a - f2) x‖) :=
