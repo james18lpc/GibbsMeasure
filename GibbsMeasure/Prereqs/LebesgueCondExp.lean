@@ -2,7 +2,7 @@ import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import GibbsMeasure.Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique
 
 open ENNReal NNReal Filter
-open scoped Classical Topology
+open scoped Topology
 
 namespace MeasureTheory
 variable {α : Type*} {m m₀ : MeasurableSpace α} {μ : Measure[m₀] α} [SigmaFinite μ] {f g : α → ℝ≥0∞}
@@ -15,6 +15,7 @@ the following conditions holds:
 * `μ` is not σ-finite with respect to `m`,
 * `f` is not `μ`-integrable. -/
 noncomputable def lcondExp : α → ℝ≥0∞ :=
+  open scoped Classical in
   if hm : m ≤ m₀ then
     if _h : SigmaFinite (μ.trim hm) then
       if Measurable[m] f then f
@@ -36,6 +37,7 @@ lemma lcondExp_of_not_le (hm_not : ¬m ≤ m₀) : μ⁻[f|m] = 0 := by rw [lcon
 lemma lcondExp_of_not_sigmaFinite (hm : m ≤ m₀) (hμm_not : ¬SigmaFinite (μ.trim hm)) :
     μ⁻[f|m] = 0 := by rw [lcondExp, dif_pos hm, dif_neg hμm_not]
 
+open scoped Classical in
 lemma lcondExp_of_sigmaFinite (hm : m ≤ m₀) [hμm : SigmaFinite (μ.trim hm)] :
     μ⁻[f|m] = if Measurable[m] f then f else if hf : Measurable[m₀] f then
       ENNReal.ofReal ∘
@@ -164,11 +166,9 @@ lemma lcondExp_add : μ⁻[f + g|m] =ᵐ[μ] μ⁻[f|m] + μ⁻[g|m] := by
 
 lemma lcondExp_finset_sum {ι : Type*} {s : Finset ι} {f : ι → α → ℝ≥0∞} :
     μ⁻[∑ i ∈ s, f i|m] =ᵐ[μ] ∑ i ∈ s, μ⁻[f i|m] := by
-  induction s using Finset.induction_on with
+  induction s using Finset.cons_induction_on with
   | empty => rw [Finset.sum_empty, Finset.sum_empty, lcondExp_zero]
-  | insert i s his heq =>
-    rw [Finset.sum_insert his, Finset.sum_insert his]
-    exact lcondExp_add.trans (EventuallyEq.rfl.add heq)
+  | cons i s his heq => simpa using lcondExp_add.trans (EventuallyEq.rfl.add heq)
 
 lemma lcondExp_smul (c : ℝ≥0) (f : α → ℝ≥0∞) : μ⁻[c • f|m] =ᵐ[μ] c • μ⁻[f|m] := by
   by_cases hm : m ≤ m₀

@@ -71,7 +71,7 @@ private lemma condExp_const_indicator_ae_eq_integral_kernel (c : ℝ) (A_mble : 
     rw [smul_eq]
     exact (condExp_smul (μ := μ) c (A.indicator (fun _ ↦ (1 : ℝ))) 𝓑).symm
   nth_rw 2 [smul_eq]
-  simp [integral_const_mul]
+  simp only [Pi.smul_apply, smul_eq_mul, integral_const_mul]
   apply foo.symm.trans
   have : c • (fun x₀ ↦ ∫ (a : X), A.indicator (fun x ↦ (1 : ℝ)) a ∂π x₀)
      = fun x₀ ↦ c * ∫ (a : X), A.indicator (fun x ↦ (1 : ℝ)) a ∂π x₀ := by

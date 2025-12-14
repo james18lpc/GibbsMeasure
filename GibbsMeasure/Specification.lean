@@ -1,8 +1,8 @@
 import GibbsMeasure.Mathlib.MeasureTheory.Measure.GiryMonad
-import GibbsMeasure.KolmogorovExtension4.ProductMeasure
 import GibbsMeasure.Prereqs.Filtration.Consistent
 import GibbsMeasure.Prereqs.Juxt
 import GibbsMeasure.Prereqs.Kernel.CondExp
+import Mathlib.Probability.ProductMeasure
 
 /-!
 # Gibbs measures
@@ -228,7 +228,7 @@ section ProductMeasure
 
 /-- The product measure `ν ^ S` is a `isssd μ`-Gibbs measure. -/
 lemma isGibbsMeasure_isssd_productMeasure (ν : Measure E) [IsProbabilityMeasure ν] :
-    (isssd ν).IsGibbsMeasure (productMeasure fun _ : S ↦  ν) := by
+    (isssd ν).IsGibbsMeasure (.infinitePi fun _ : S ↦  ν) := by
   rintro Λ
   sorry
 
@@ -342,9 +342,9 @@ protected lemma IsProper.modification (hγ : γ.IsProper) {hρ} : (γ.modificati
 
 /-- A premodifier is a family indexed by finsets `Λ : Finset S` of densities
 `ρ Λ : (S → E) → ℝ≥0∞` such that:
-* Each `ρ Λ` is measurable.
+* each `ρ Λ` is measurable,
 * `ρ Λ₂ ζ * ρ Λ₁ η = ρ Λ₁ ζ * ρ Λ₂ η` for all `Λ₁ Λ₂ : Finset S` and `ζ η : S → E` such that
-  `Λ₁ ⊆ Λ₂` and `∀ (s : Λ₁ᶜ), ζ s = η s`-/
+  `Λ₁ ⊆ Λ₂` and `∀ (s : Λ₁ᶜ), ζ s = η s`. -/
 structure IsPremodifier [MeasurableSpace E] (ρ : Finset S → (S → E) → ℝ≥0∞) : Prop where
   measurable Λ : Measurable (ρ Λ)
   comm_of_subset ⦃Λ₁ Λ₂ : Finset S⦄ ⦃ζ η : S → E⦄ (hΛ : Λ₁ ⊆ Λ₂)

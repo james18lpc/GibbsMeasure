@@ -10,8 +10,6 @@ variable {α F F' 𝕜 : Type*} {p : ℝ≥0∞} [RCLike 𝕜]
   [NormedAddCommGroup F']
   [NormedSpace 𝕜 F'] [NormedSpace ℝ F'] [CompleteSpace F']
 
-open scoped Classical
-
 variable {m m0 : MeasurableSpace α} {μ : Measure α} {f g : α → F'} {s : Set α}
 
 -- /-- **Uniqueness of the conditional expectation**
